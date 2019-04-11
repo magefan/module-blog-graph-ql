@@ -2,34 +2,16 @@
 # Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
 
 type Query {
-    blogPost (
-        id: Int @doc(description: "Id of the blog post")
-    ): BlogPost @resolver(class: "Magefan\\BlogGraphQl\\Model\\Resolver\\Post") @doc(description: "The blog post query returns information about a blog post")
-    blogPosts (
-        identifiers: [Int] @doc(description: "IDs of the blog posts")
-    ): CmsBlocks @resolver(class: "Magento\\BlogGraphQl\\Model\\Resolver\\Posts") @doc(description: "The blog posts query returns information about blog posts")
-
-
-    blogCategory (
-        id: Int @doc(description: "Id of the blog category")
-    ): BlogCategory @resolver(class: "Magefan\\BlogGraphQl\\Model\\Resolver\\Category") @doc(description: "The blog category query returns information about a blog category")
-    blogCategorys (
-        identifiers: [Int] @doc(description: "IDs of the blog categorys")
-    ): CmsBlocks @resolver(class: "Magento\\BlogGraphQl\\Model\\Resolver\\Categorys") @doc(description: "The blog categorys query returns information about blog categorys")
-
-
-    blogTag (
-        id: Int @doc(description: "Id of the blog tag")
-    ): BlogTag @resolver(class: "Magefan\\BlogGraphQl\\Model\\Resolver\\Tag") @doc(description: "The blog tag query returns information about a blog tag")
-    blogTags (
-        identifiers: [Int] @doc(description: "IDs of the blog tags")
-    ): CmsBlocks @resolver(class: "Magento\\BlogGraphQl\\Model\\Resolver\\Tags") @doc(description: "The blog tags query returns information about blog tags")
-
-    blogAuthor (
-        id: Int @doc(description: "Id of the blog author")
-    ): BlogAuthor @resolver(class: "Magefan\\BlogGraphQl\\Model\\Resolver\\Author") @doc(description: "The blog author query returns information about a blog author")
-    blogAuthors (
-        identifiers: [Int] @doc(description: "IDs of the blog authors")
-    ): CmsBlocks @resolver(class: "Magento\\BlogGraphQl\\Model\\Resolver\\Authors") @doc(description: "The blog authors query returns information about blog authors")
+    pickUpStores:pickUpStoresOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Store") @doc(description: "")
 }
-
+type pickUpStoresOutput {
+    total_count:  Int @doc(description: "")
+    items: [pickUpStore] @doc(description: "")
+}
+type pickUpStore {
+    name: String @doc(description: ""),
+    street: String @doc(description: ""),
+    street_num: String @doc(description: ""),
+    city: String @doc(description: ""),
+    postcode: String @doc(description: ""),
+}

@@ -1,0 +1,59 @@
+# Copyright © Magefan (support@magefan.com). All rights reserved.
+# Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+
+
+
+type Query {
+    cmsPage (
+        id: Int @doc(description: "Id of the CMS page")
+    ): CmsPage @resolver(class: "Magento\\CmsGraphQl\\Model\\Resolver\\Page") @doc(description: "The CMS page query returns information about a CMS page")
+    cmsBlocks (
+        identifiers: [String] @doc(description: "Identifiers of the CMS blocks")
+    ): CmsBlocks @resolver(class: "Magento\\CmsGraphQl\\Model\\Resolver\\Blocks") @doc(description: "The CMS block query returns information about CMS blocks")
+}
+
+type CmsPage @doc(description: "CMS page defines all CMS page information") {
+    url_key: String @doc(description: "URL key of CMS page")
+    title: String @doc(description: "CMS page title")
+    content: String @doc(description: "CMS page content")
+    content_heading: String @doc(description: "CMS page content heading")
+    page_layout: String @doc(description: "CMS page content heading")
+    meta_title: String @doc(description: "CMS page meta title")
+    meta_description: String @doc(description: "CMS page meta description")
+    meta_keywords: String @doc(description: "CMS page meta keywords")
+}
+
+
+
+
+type Query {
+    blogPost (
+        id: Int @doc(description: "Id of the blog post")
+    ): BlogPost @resolver(class: "Magefan\\BlogGraphQl\\Model\\Resolver\\Post") @doc(description: "The blog post query returns information about a blog post")
+    blogPosts (
+        identifiers: [Int] @doc(description: "IDs of the blog posts")
+    ): CmsBlocks @resolver(class: "Magento\\BlogGraphQl\\Model\\Resolver\\Posts") @doc(description: "The blog posts query returns information about blog posts")
+
+
+    blogCategory (
+        id: Int @doc(description: "Id of the blog category")
+    ): BlogCategory @resolver(class: "Magefan\\BlogGraphQl\\Model\\Resolver\\Category") @doc(description: "The blog category query returns information about a blog category")
+    blogCategorys (
+        identifiers: [Int] @doc(description: "IDs of the blog categorys")
+    ): CmsBlocks @resolver(class: "Magento\\BlogGraphQl\\Model\\Resolver\\Categorys") @doc(description: "The blog categorys query returns information about blog categorys")
+
+
+    blogTag (
+        id: Int @doc(description: "Id of the blog tag")
+    ): BlogTag @resolver(class: "Magefan\\BlogGraphQl\\Model\\Resolver\\Tag") @doc(description: "The blog tag query returns information about a blog tag")
+    blogTags (
+        identifiers: [Int] @doc(description: "IDs of the blog tags")
+    ): CmsBlocks @resolver(class: "Magento\\BlogGraphQl\\Model\\Resolver\\Tags") @doc(description: "The blog tags query returns information about blog tags")
+
+    blogAuthor (
+        id: Int @doc(description: "Id of the blog author")
+    ): BlogAuthor @resolver(class: "Magefan\\BlogGraphQl\\Model\\Resolver\\Author") @doc(description: "The blog author query returns information about a blog author")
+    blogAuthors (
+        identifiers: [Int] @doc(description: "IDs of the blog authors")
+    ): CmsBlocks @resolver(class: "Magento\\BlogGraphQl\\Model\\Resolver\\Authors") @doc(description: "The blog authors query returns information about blog authors")
+}
