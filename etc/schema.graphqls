@@ -2,16 +2,50 @@
 # Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
 
 type Query {
-    pickUpStores:pickUpStoresOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Store") @doc(description: "")
+    blogPost (
+        id: Int @doc(description: "Id of the Blog Post")
+    ): BlogPost @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Post") @doc(description: "")
+    #blogCategory (
+        #id: Int @doc(description: "Id of the Blog Category")
+    #): BlogCategory @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Category") @doc(description: "")
 }
-type pickUpStoresOutput {
-    total_count:  Int @doc(description: "")
-    items: [pickUpStore] @doc(description: "")
-}
-type pickUpStore {
-    name: String @doc(description: ""),
-    street: String @doc(description: ""),
-    street_num: String @doc(description: ""),
-    city: String @doc(description: ""),
-    postcode: String @doc(description: ""),
+
+type BlogPost {
+    url_key: String @doc(description: "URL key of Blog Post")
+    title: String @doc(description: "Blog Post title")
+    meta_title: String @doc(description: "Blog Post Meta title")
+    meta_keywords: String @doc(description: "Blog Post Meta keywords")
+    meta_description: String @doc(description: "Blog Post Meta description")
+    og_title: String @doc(description: "Blog Post Og title")
+    og_description: String @doc(description: "Blog Post Og description")
+    og_image: String @doc(description: "Blog Post Og image")
+    og_type: String @doc(description: "Blog Post Og type")
+    content_heading: String @doc(description: "Blog Post Content heading")
+    content: String @doc(description: "Blog Post content")
+    creation_time: String @doc(description: "Blog Post Creation time")
+    update_time: String @doc(description: "Blog Post Update time")
+    publish_time: String @doc(description: "Blog Post Publish time")
+    is_active: Int @doc(description: "Blog Post Is active")
+    include_in_recent: Int @doc(description: "Blog Post Include in recent")
+    position: Int @doc(description: "Blog Post Position")
+    featured_img: String @doc(description: "Blog Post Featured image")
+    #author_id: String @doc(description: "Blog Post Author id")
+    author_id: Int @doc(description: "Blog Post Author id")
+    page_layout: String @doc(description: "Blog Post Page_layout")
+    layout_update_xml: String @doc(description: "Blog Post Layout update xml")
+    custom_theme: String @doc(description: "Blog Post Custom theme")
+    custom_layout: String @doc(description: "Blog Post Custom layout")
+    custom_layout_update_xml: String @doc(description: "Blog Post Custom layout update xml")
+    custom_theme_from: String @doc(description: "Blog Post Custom theme from")
+    custom_theme_to: String @doc(description: "Blog Post Custom theme to")
+    media_gallery: String @doc(description: "Blog Post Media gallery")
+    secret: String @doc(description: "Blog Post Secret")
+    views_count: Int @doc(description: "Blog Post Views count")
+    is_recent_posts_skip: Int @doc(description: "Blog Post Is recent posts skip")
+    short_content: String @doc(description: "Blog Post Short content")
+    #fb_auto_publish: Int @doc(description: "Blog Post Fb auto publish")
+    #fb_post_format: String @doc(description: "Blog Post Fb post format")
+    #fb_published: Int @doc(description: "Blog Post Fb published")
+    #rp_conditions_serialized: String @doc(description: "Blog Post Rp conditions serialized")
+    #rp_conditions_generation_time: String @doc(description: "Blog Post Rp conditions generation time")
 }

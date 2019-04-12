@@ -37,9 +37,9 @@ class Post implements ResolverInterface
         array $value = null,
         array $args = null
     ) {
-        $postId = $this->getPageId($args);
-        $postsData = $this->postDataProvider->getPosts();
-        return $postsData;
+        $postId = $this->getPostId($args);
+        $postsData = $this->getPostData($postId);
+        return  $postsData;
     }
 
     /**
@@ -50,7 +50,7 @@ class Post implements ResolverInterface
     private function getPostId(array $args): int
     {
         if (!isset($args['id'])) {
-            throw new GraphQlInputException(__('"Page id should be specified'));
+            throw new GraphQlInputException(__('"Post id should be specified'));
         }
 
         return (int)$args['id'];
@@ -64,10 +64,10 @@ class Post implements ResolverInterface
     private function getPostData(int $postId): array
     {
         try {
-            $pageData = $this->postDataProvider->getData($postId);
+            $postData = $this->postDataProvider->getData($postId);
         } catch (NoSuchEntityException $e) {
             throw new GraphQlNoSuchEntityException(__($e->getMessage()), $e);
         }
-        return $pageData;
+        return $postData;
     }
 }

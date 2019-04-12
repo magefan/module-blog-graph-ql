@@ -41,7 +41,7 @@ class Post
     }
 
     /**
-     * @param int $pageId
+     * @param int $postId
      * @return array
      * @throws NoSuchEntityException
      */
@@ -55,16 +55,46 @@ class Post
 
         $renderedContent = $this->widgetFilter->filter($post->getContent());
 
-        $pageData = [
+        $postData = [
             'url_key' => $post->getIdentifier(),
-            /*PageInterface::TITLE => $page->getTitle(),
-            PageInterface::CONTENT => $renderedContent,
-            PageInterface::CONTENT_HEADING => $page->getContentHeading(),
-            PageInterface::PAGE_LAYOUT => $page->getPageLayout(),
-            PageInterface::META_TITLE => $page->getMetaTitle(),
-            PageInterface::META_DESCRIPTION => $page->getMetaDescription(),
-            PageInterface::META_KEYWORDS => $page->getMetaKeywords(),*/
+            'title' => $post->getTitle(),
+            'meta_title' => $post->getMetaTitle(),
+            'meta_keywords' => $post->getMetaKeywords(),
+            'meta_description' => $post->getMetaDescription(),
+            'og_title' => $post->getOgTitle(),
+            'og_description' => $post->getOgDescription(),
+            'og_image' => $post->getOgImage(),
+            'og_type' => $post->getOgType(),
+            'content_heading' => $post->getData('content_heading'),
+            'content' => $renderedContent,
+            'creation_time' => $post->getData('creation_time'),
+            'update_time' => $post->getUpdatedAt(),
+            'publish_time' => $post->getPublishDate(),
+            'is_active' => $post->getData('is_active'),
+            'include_in_recent' => $post->getData('include_in_recent'),
+            'position' => $post->getData('position'),
+            'featured_img' => $post->getFeaturedImage(),
+            //'author_id' => $post->getAuthor(),
+            'author_id' => $post->getData('author_id'),
+            'page_layout' => $post->getData('page_layout'),
+            'layout_update_xml' => $post->getData('layout_update_xml'),
+            'custom_theme' => $post->getData('custom_theme'),
+            'custom_layout' => $post->getData('custom_layout'),
+            'custom_layout_update_xml' => $post->getData('custom_layout_update_xml'),
+            'custom_theme_from' => $post->getData('custom_theme_from'),
+            'custom_theme_to' => $post->getData('custom_theme_to'),
+            //'media_gallery' => $post->getGalleryImages(),
+            'media_gallery' => $post->getData('media_gallery'),
+            'secret' => $post->getSecret(),
+            'views_count' => $post->getData('views_count'),
+            'is_recent_posts_skip' => $post->getData('is_recent_posts_skip'),
+            'short_content' => $post->getData('short_content'),
+            //'fb_auto_publish' => $post->getData('fb_auto_publish'), // BlogPlus
+            //'fb_post_format' => $post->getData('fb_post_format'), // BlogPlus
+            //'fb_published' => $post->getData('fb_published'), // BlogPlus
+            //'rp_conditions_serialized' => $post->getData('rp_conditions_serialized'), // BlogPlus
+            //'rp_conditions_generation_time' => $post->getData('rp_conditions_generation_time'), // BlogPlus
         ];
-        return $pageData;
+        return $postData;
     }
 }
