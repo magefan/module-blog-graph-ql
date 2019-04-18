@@ -15,23 +15,23 @@ use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 
 /**
- * Class Post
+ * Class Comment
  * @package Magefan\BlogGraphQl\Model\Resolver
  */
-class Post implements ResolverInterface
+class Comment implements ResolverInterface
 {
     /**
-     * @var DataProvider\Post
+     * @var DataProvider\Comment
      */
-    private $postDataProvider;
+    private $commentDataProvider;
 
     /**
-     * Post constructor.
-     * @param DataProvider\Post $postDataProvider
+     * Comment constructor.
+     * @param DataProvider\Comment $commentDataProvider
      */
-    public function __construct(DataProvider\Post $postDataProvider)
+    public function __construct(DataProvider\Comment $commentDataProvider)
     {
-        $this->postDataProvider = $postDataProvider;
+        $this->commentDataProvider = $commentDataProvider;
     }
 
     /**
@@ -44,9 +44,9 @@ class Post implements ResolverInterface
         array $value = null,
         array $args = null
     ) {
-        $postId = $this->getPostId($args);
-        $postData = $this->getPostData($postId);
-        return  $postData;
+        $commentId = $this->getCommentId($args);
+        $commentData = $this->getCommentData($commentId);
+        return  $commentData;
     }
 
     /**
@@ -54,27 +54,27 @@ class Post implements ResolverInterface
      * @return int
      * @throws GraphQlInputException
      */
-    private function getPostId(array $args): int
+    private function getCommentId(array $args): int
     {
         if (!isset($args['id'])) {
-            throw new GraphQlInputException(__('"Post id should be specified'));
+            throw new GraphQlInputException(__('"Comment id should be specified'));
         }
 
         return (int)$args['id'];
     }
 
     /**
-     * @param int $postId
+     * @param int $commentId
      * @return array
      * @throws GraphQlNoSuchEntityException
      */
-    private function getPostData(int $postId): array
+    private function getCommentData(int $commentId): array
     {
         try {
-            $postData = $this->postDataProvider->getData($postId);
+            $commentData = $this->commentDataProvider->getData($commentId);
         } catch (NoSuchEntityException $e) {
             throw new GraphQlNoSuchEntityException(__($e->getMessage()), $e);
         }
-        return $postData;
+        return $commentData;
     }
 }

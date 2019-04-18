@@ -22,9 +22,20 @@ type CmsPage @doc(description: "CMS page defines all CMS page information") {
     meta_description: String @doc(description: "CMS page meta description")
     meta_keywords: String @doc(description: "CMS page meta keywords")
 }
+----------------
+type EntityUrl @doc(description: "EntityUrl is an output object containing the `id`, `canonical_url`, and `type` attributes") {
+    id: Int @doc(description: "The ID assigned to the object associated with the specified url. This could be a product ID, category ID, or page ID.")
+    canonical_url: String @doc(description: "The internal relative URL. If the specified  url is a redirect, the query returns the redirected URL, not the original.")
+    type: UrlRewriteEntityTypeEnum @doc(description: "One of PRODUCT, CATEGORY, or CMS_PAGE.")
+}
 
+type Query {
+    urlResolver(url: String!): EntityUrl @resolver(class: "Magento\\UrlRewriteGraphQl\\Model\\Resolver\\UrlRewrite") @doc(description: "The urlResolver query returns the canonical URL for a specified product, category or CMS page")
+}
 
-
+enum UrlRewriteEntityTypeEnum {
+}
+-----------------
 
 type Query {
     blogPost (

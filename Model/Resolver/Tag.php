@@ -15,23 +15,23 @@ use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 
 /**
- * Class Post
+ * Class Tag
  * @package Magefan\BlogGraphQl\Model\Resolver
  */
-class Post implements ResolverInterface
+class Tag implements ResolverInterface
 {
     /**
-     * @var DataProvider\Post
+     * @var DataProvider\Tag
      */
-    private $postDataProvider;
+    private $tagDataProvider;
 
     /**
-     * Post constructor.
-     * @param DataProvider\Post $postDataProvider
+     * Tag constructor.
+     * @param DataProvider\Tag $tagDataProvider
      */
-    public function __construct(DataProvider\Post $postDataProvider)
+    public function __construct(DataProvider\Tag $tagDataProvider)
     {
-        $this->postDataProvider = $postDataProvider;
+        $this->tagDataProvider = $tagDataProvider;
     }
 
     /**
@@ -44,9 +44,9 @@ class Post implements ResolverInterface
         array $value = null,
         array $args = null
     ) {
-        $postId = $this->getPostId($args);
-        $postData = $this->getPostData($postId);
-        return  $postData;
+        $tagId = $this->getTagId($args);
+        $tagData = $this->getTagData($tagId);
+        return  $tagData;
     }
 
     /**
@@ -54,27 +54,27 @@ class Post implements ResolverInterface
      * @return int
      * @throws GraphQlInputException
      */
-    private function getPostId(array $args): int
+    private function getTagId(array $args): int
     {
         if (!isset($args['id'])) {
-            throw new GraphQlInputException(__('"Post id should be specified'));
+            throw new GraphQlInputException(__('"Tag id should be specified'));
         }
 
         return (int)$args['id'];
     }
 
     /**
-     * @param int $postId
+     * @param int $tagId
      * @return array
      * @throws GraphQlNoSuchEntityException
      */
-    private function getPostData(int $postId): array
+    private function getTagData(int $tagId): array
     {
         try {
-            $postData = $this->postDataProvider->getData($postId);
+            $tagData = $this->tagDataProvider->getData($tagId);
         } catch (NoSuchEntityException $e) {
             throw new GraphQlNoSuchEntityException(__($e->getMessage()), $e);
         }
-        return $postData;
+        return $tagData;
     }
 }

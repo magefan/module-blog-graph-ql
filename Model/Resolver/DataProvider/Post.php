@@ -47,7 +47,7 @@ class Post
      */
     public function getData(int $postId): array
     {
-        $post= $this->postRepository->getById($postId);
+        $post = $this->postRepository->getById($postId);
 
         if (false === $post->isActive()) {
             throw new NoSuchEntityException();

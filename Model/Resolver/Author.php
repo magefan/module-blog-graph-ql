@@ -15,23 +15,23 @@ use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 
 /**
- * Class Post
+ * Class Author
  * @package Magefan\BlogGraphQl\Model\Resolver
  */
-class Post implements ResolverInterface
+class Author implements ResolverInterface
 {
     /**
-     * @var DataProvider\Post
+     * @var DataProvider\Author
      */
-    private $postDataProvider;
+    private $authorDataProvider;
 
     /**
-     * Post constructor.
-     * @param DataProvider\Post $postDataProvider
+     * Author constructor.
+     * @param DataProvider\Author $authorDataProvider
      */
-    public function __construct(DataProvider\Post $postDataProvider)
+    public function __construct(DataProvider\Author $authorDataProvider)
     {
-        $this->postDataProvider = $postDataProvider;
+        $this->authorDataProvider = $authorDataProvider;
     }
 
     /**
@@ -44,9 +44,9 @@ class Post implements ResolverInterface
         array $value = null,
         array $args = null
     ) {
-        $postId = $this->getPostId($args);
-        $postData = $this->getPostData($postId);
-        return  $postData;
+        $authorId = $this->getAuthorId($args);
+        $authorData = $this->getAuthorData($authorId);
+        return  $authorData;
     }
 
     /**
@@ -54,27 +54,27 @@ class Post implements ResolverInterface
      * @return int
      * @throws GraphQlInputException
      */
-    private function getPostId(array $args): int
+    private function getAuthorId(array $args): int
     {
         if (!isset($args['id'])) {
-            throw new GraphQlInputException(__('"Post id should be specified'));
+            throw new GraphQlInputException(__('"Author id should be specified'));
         }
 
         return (int)$args['id'];
     }
 
     /**
-     * @param int $postId
+     * @param int $authorId
      * @return array
      * @throws GraphQlNoSuchEntityException
      */
-    private function getPostData(int $postId): array
+    private function getAuthorData(int $authorId): array
     {
         try {
-            $postData = $this->postDataProvider->getData($postId);
+            $authorData = $this->authorDataProvider->getData($authorId);
         } catch (NoSuchEntityException $e) {
             throw new GraphQlNoSuchEntityException(__($e->getMessage()), $e);
         }
-        return $postData;
+        return $authorData;
     }
 }

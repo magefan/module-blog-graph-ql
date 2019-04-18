@@ -15,23 +15,22 @@ use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 
 /**
- * Class Post
+ * Class Category
  * @package Magefan\BlogGraphQl\Model\Resolver
  */
-class Post implements ResolverInterface
+class Category implements ResolverInterface
 {
     /**
-     * @var DataProvider\Post
+     * @var DataProvider\Category
      */
-    private $postDataProvider;
+    private $categoryDataProvider;
 
     /**
-     * Post constructor.
-     * @param DataProvider\Post $postDataProvider
+     * @param DataProvider\Category $categoryRepository
      */
-    public function __construct(DataProvider\Post $postDataProvider)
+    public function __construct(DataProvider\Category $categoryDataProvider)
     {
-        $this->postDataProvider = $postDataProvider;
+        $this->categoryDataProvider = $categoryDataProvider;
     }
 
     /**
@@ -44,9 +43,9 @@ class Post implements ResolverInterface
         array $value = null,
         array $args = null
     ) {
-        $postId = $this->getPostId($args);
-        $postData = $this->getPostData($postId);
-        return  $postData;
+        $categoryId = $this->getCategoryId($args);
+        $categoryData = $this->getCategoryData($categoryId);
+        return  $categoryData;
     }
 
     /**
@@ -54,27 +53,27 @@ class Post implements ResolverInterface
      * @return int
      * @throws GraphQlInputException
      */
-    private function getPostId(array $args): int
+    private function getCategoryId(array $args): int
     {
         if (!isset($args['id'])) {
-            throw new GraphQlInputException(__('"Post id should be specified'));
+            throw new GraphQlInputException(__('"Category id should be specified'));
         }
 
         return (int)$args['id'];
     }
 
     /**
-     * @param int $postId
+     * @param int $categoryId
      * @return array
      * @throws GraphQlNoSuchEntityException
      */
-    private function getPostData(int $postId): array
+    private function getCategoryData(int $categoryId): array
     {
         try {
-            $postData = $this->postDataProvider->getData($postId);
+            $categoryData = $this->categoryDataProvider->getData($categoryId);
         } catch (NoSuchEntityException $e) {
             throw new GraphQlNoSuchEntityException(__($e->getMessage()), $e);
         }
-        return $postData;
+        return $categoryData;
     }
 }

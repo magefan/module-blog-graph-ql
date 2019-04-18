@@ -5,9 +5,18 @@ type Query {
     blogPost (
         id: Int @doc(description: "Id of the Blog Post")
     ): BlogPost @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Post") @doc(description: "")
-    #blogCategory (
-        #id: Int @doc(description: "Id of the Blog Category")
-    #): BlogCategory @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Category") @doc(description: "")
+    blogCategory (
+        id: Int @doc(description: "Id of the Blog Category")
+    ): BlogCategory @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Category") @doc(description: "")
+    blogTag (
+        id: Int @doc(description: "Id of the Blog Tag")
+    ): BlogTag @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Tag") @doc(description: "")
+    blogAuthor (
+        id: Int @doc(description: "Id of the Blog Author")
+    ): BlogAuthor @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Author") @doc(description: "")
+    blogComment (
+        id: Int @doc(description: "Id of the Blog Comment")
+    ): BlogComment @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Comment") @doc(description: "")
 }
 
 type BlogPost {
@@ -48,4 +57,57 @@ type BlogPost {
     #fb_published: Int @doc(description: "Blog Post Fb published")
     #rp_conditions_serialized: String @doc(description: "Blog Post Rp conditions serialized")
     #rp_conditions_generation_time: String @doc(description: "Blog Post Rp conditions generation time")
+}
+type BlogCategory {
+    url_key: String @doc(description: "URL key of Blog Category")
+    title: String @doc(description: "Blog Category title")
+    meta_title: String @doc(description: "Blog Category Meta title")
+    meta_keywords: String @doc(description: "Blog Category Meta keywords")
+    meta_description: String @doc(description: "Blog Category Meta description")
+    content_heading: String @doc(description: "Blog Category Content heading")
+    content: String @doc(description: "Blog Category content")
+    path: String @doc(description: "Blog Category Path")
+    position: Int @doc(description: "Blog Category Position")
+    posts_sort_by: Int @doc(description: "Blog Category Posts sort by")
+    include_in_menu: Int @doc(description: "Blog Category Include in menu")
+    is_active: Int @doc(description: "Blog Category Is active")
+    display_mode: Int @doc(description: "Blog Category Display mode")
+    page_layout: String @doc(description: "Blog Category Page_layout")
+    layout_update_xml: String @doc(description: "Blog Category Layout update xml")
+    custom_theme: String @doc(description: "Blog Category Custom theme")
+    custom_layout: String @doc(description: "Blog Category Custom layout")
+    custom_layout_update_xml: String @doc(description: "Blog Category Custom layout update xml")
+    custom_theme_from: String @doc(description: "Blog Category Custom theme from")
+    custom_theme_to: String @doc(description: "Blog Category Custom theme to")
+}
+type BlogTag {
+    url_key: String @doc(description: "URL key of Blog Tag")
+    title: String @doc(description: "Blog Tag title")
+    meta_robots: String @doc(description: "Blog Tag Meta robots")
+    meta_description: String @doc(description: "Blog Tag Meta description")
+    meta_keywords: String @doc(description: "Blog Tag Meta keywords")
+    meta_title: String @doc(description: "Blog Tag Meta title")
+    page_layout: String @doc(description: "Blog Tag Page_layout")
+    is_active: Int @doc(description: "Blog Tag Is active")
+    content: String @doc(description: "Blog Tag content")
+    layout_update_xml: String @doc(description: "Blog Tag Layout update xml")
+    custom_theme: String @doc(description: "Blog Tag Custom theme")
+    custom_layout: String @doc(description: "Blog Tag Custom layout")
+    custom_layout_update_xml: String @doc(description: "Blog Tag Custom layout update xml")
+    custom_theme_from: String @doc(description: "Blog Tag Custom theme from")
+    custom_theme_to: String @doc(description: "Blog Tag Custom theme to")
+}
+type BlogAuthor {
+    url_key: String @doc(description: "URL key of Blog Author")
+    title: String @doc(description: "Blog Author title")
+    name: String @doc(description: "Blog Author Name")
+    url: String @doc(description: "Blog Author Url")
+    author_url: String @doc(description: "Blog Author Author url")
+    is_active: Int @doc(description: "Blog Author Is active")
+    created: String @doc(description: "Blog Author Created")
+}
+type BlogComment {
+    comment_id: String @doc(description: "Blog  Comment Comment id")
+    creation_time: String @doc(description: "Blog Comment Creation time")
+    is_active: Int @doc(description: "Blog Comment Is active")
 }
