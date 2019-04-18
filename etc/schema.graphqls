@@ -17,6 +17,26 @@ type Query {
     blogComment (
         id: Int @doc(description: "Id of the Blog Comment")
     ): BlogComment @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Comment") @doc(description: "")
+    blogPosts(
+        #search: String @doc(description: "Performs a full-text search using the specified key words."),
+        filter: BlogPostsFilterInput @doc(description: "Identifies which product attributes to search for and return.")
+        pageSize: Int = 5 @doc(description: "Specifies the maximum number of results to return at once. This attribute is optional."),
+        currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1."),
+    ):blogPostsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Posts") @doc(description: "he posts query searches for posts that match the criteria specified in the search and filter attributes")
+}
+input BlogPostsFilterInput {
+    title: FilterTypeInput @doc(description: ""),
+    or: BlogPostsFilterInput @doc(description: "The keyword required to perform a logical OR comparison")
+}
+
+type blogPostsOutput {
+    total_count:  Int @doc(description: "")
+    items: [BlogPosti] @doc(description: "")
+}
+
+type BlogPosti {
+    title: String @doc(description: ""),
+    content: String @doc(description: "")
 }
 
 type BlogPost {
