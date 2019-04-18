@@ -74,8 +74,8 @@ class Post
             'include_in_recent' => $post->getData('include_in_recent'),
             'position' => $post->getData('position'),
             'featured_img' => $post->getFeaturedImage(),
-            //'author_id' => $post->getAuthor(),
-            'author_id' => $post->getData('author_id'),
+            'author' => $post->getAuthor()->getName(), //object Author
+            //'author_id' => $post->getData('author_id'),
             'page_layout' => $post->getData('page_layout'),
             'layout_update_xml' => $post->getData('layout_update_xml'),
             'custom_theme' => $post->getData('custom_theme'),
@@ -83,7 +83,7 @@ class Post
             'custom_layout_update_xml' => $post->getData('custom_layout_update_xml'),
             'custom_theme_from' => $post->getData('custom_theme_from'),
             'custom_theme_to' => $post->getData('custom_theme_to'),
-            //'media_gallery' => $post->getGalleryImages(),
+            //'media_gallery' => $post->getGalleryImages(), //array
             'media_gallery' => $post->getData('media_gallery'),
             'secret' => $post->getSecret(),
             'views_count' => $post->getData('views_count'),

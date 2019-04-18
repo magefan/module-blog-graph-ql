@@ -55,8 +55,20 @@ class Comment
 
         $commentData = [
             'comment_id' => $comment->getData('comment_id'),
-            'creation_time' => $comment->getPublishDate(),
+            'parent_id' => $comment->getParentComment(),
+            'post_id' => $comment->getPostId(),
+            'customer_id' => $comment->getCustomerId(),
+            'admin_id' => $comment->getAdminId(),
             'is_active' => $comment->isActive(),
+            'author_type' => $comment->getAuthorType(),
+            'author_nickname' => $comment->getAuthorNickname(),
+            'author_email' => $comment->getAuthorEmail(),
+            'text' => $comment->getText(),
+            'creation_time' => $comment->getPublishDate(),
+            'update_time' => $comment->getUpdateTime(),
+            //'child_id' => $comment->getChildComments(), //object Comment\Collection
+            //'post' => $comment->getPost(), //object Post
+            //'author' => $comment->getAuthor(), //object Author
         ];
         return $commentData;
     }
