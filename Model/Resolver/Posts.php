@@ -11,7 +11,7 @@ use Magento\Framework\GraphQl\Query\Resolver\Argument\SearchCriteria\Builder as 
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
-use Magefan\BlogGraphQl\Model\Posts\GetList;
+use Magefan\Blog\Api\PostRepositoryInterface;
 
 /**
  * Class Posts
@@ -20,22 +20,25 @@ use Magefan\BlogGraphQl\Model\Posts\GetList;
 class Posts implements ResolverInterface
 {
     /**
-     * @var GetList
-     */
-    private $getList;
-    /**
      * @var SearchCriteriaBuilder
      */
     private $searchCriteriaBuilder;
     /**
-     * PickUpStoresList constructor.
-     * @param GetList $getList
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @var PostRepositoryInterface
      */
-    public function __construct(GetList $getList, SearchCriteriaBuilder $searchCriteriaBuilder)
-    {
-        $this->getList = $getList;
+    private $postRepository;
+
+    /**
+     * Posts constructor.
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param PostRepositoryInterface $postRepository
+     */
+    public function __construct(
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        PostRepositoryInterface $postRepository
+    ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->postRepository = $postRepository;
     }
     /**
      * @inheritdoc
@@ -50,7 +53,7 @@ class Posts implements ResolverInterface
         $searchCriteria = $this->searchCriteriaBuilder->build('di_build_magefan_blog_post', $args);
         $searchCriteria->setCurrentPage($args['currentPage']);
         $searchCriteria->setPageSize($args['pageSize']);
-        $searchResult = $this->getList->execute($searchCriteria);
+        $searchResult = $this->postRepository->getList($searchCriteria);
         return [
             'total_count' => $searchResult->getTotalCount(),
             'items' => $searchResult->getItems()

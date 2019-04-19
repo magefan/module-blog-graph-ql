@@ -26,10 +26,12 @@ class Category implements ResolverInterface
     private $categoryDataProvider;
 
     /**
-     * @param DataProvider\Category $categoryRepository
+     * Category constructor.
+     * @param DataProvider\Category $categoryDataProvider
      */
-    public function __construct(DataProvider\Category $categoryDataProvider)
-    {
+    public function __construct(
+        DataProvider\Category $categoryDataProvider
+    ) {
         $this->categoryDataProvider = $categoryDataProvider;
     }
 
