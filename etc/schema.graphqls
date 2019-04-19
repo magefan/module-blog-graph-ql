@@ -14,33 +14,35 @@ type Query {
     blogAuthor (
         id: Int @doc(description: "Id of the Blog Author")
     ): BlogAuthor @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Author") @doc(description: "")
-    blogComment (
-        id: Int @doc(description: "Id of the Blog Comment")
-    ): BlogComment @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Comment") @doc(description: "")
     blogPosts(
+        #search: String @doc(description: "Performs a full-text search using the specified key words.")
+        filter: BlogPostsFilterInput @doc(description: "Identifies which post attributes to search for and return.")
+        pageSize: Int = 5 @doc(description: "Specifies the maximum number of results to return at once. This attribute is optional.")
+        currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1.")
+    ):blogPostsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Posts") @doc(description: "The posts query searches for posts that match the criteria specified in the search and filter attributes")
+    blogComments(
         #search: String @doc(description: "Performs a full-text search using the specified key words."),
-        filter: BlogPostsFilterInput @doc(description: "Identifies which product attributes to search for and return.")
+        filter: BlogCommentsFilterInput @doc(description: "Identifies which post attributes to search for and return."),
         pageSize: Int = 5 @doc(description: "Specifies the maximum number of results to return at once. This attribute is optional."),
         currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1."),
-    ):blogPostsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Posts") @doc(description: "he posts query searches for posts that match the criteria specified in the search and filter attributes")
+    ):blogCommentsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Comments") @doc(description: "The comments query searches for posts that match the criteria specified in the search and filter attributes")
 }
+
 input BlogPostsFilterInput {
-    title: FilterTypeInput @doc(description: ""),
+    title: FilterTypeInput @doc(description: "")
+    author_id: FilterTypeInput @doc(description: "")
+    publish_time: FilterTypeInput @doc(description: "")
     or: BlogPostsFilterInput @doc(description: "The keyword required to perform a logical OR comparison")
 }
 
 type blogPostsOutput {
     total_count:  Int @doc(description: "")
-    items: [BlogPosti] @doc(description: "")
-}
-
-type BlogPosti {
-    title: String @doc(description: ""),
-    content: String @doc(description: "")
+    items: [BlogPost] @doc(description: "")
 }
 
 type BlogPost {
     url_key: String @doc(description: "URL key of Blog Post")
+    identifier: String @doc(description: "URL key of Blog Post")
     title: String @doc(description: "Blog Post title")
     meta_title: String @doc(description: "Blog Post Meta title")
     meta_keywords: String @doc(description: "Blog Post Meta keywords")
@@ -59,7 +61,7 @@ type BlogPost {
     position: Int @doc(description: "Blog Post Position")
     featured_img: String @doc(description: "Blog Post Featured image")
     author: String @doc(description: "Blog Post Author")
-    #author_id: Int @doc(description: "Blog Post Author id")
+    author_id: Int @doc(description: "Blog Post Author id")
     page_layout: String @doc(description: "Blog Post Page_layout")
     layout_update_xml: String @doc(description: "Blog Post Layout update xml")
     custom_theme: String @doc(description: "Blog Post Custom theme")
@@ -78,6 +80,7 @@ type BlogPost {
     #rp_conditions_serialized: String @doc(description: "Blog Post Rp conditions serialized")
     #rp_conditions_generation_time: String @doc(description: "Blog Post Rp conditions generation time")
 }
+
 type BlogCategory {
     url_key: String @doc(description: "URL key of Blog Category")
     title: String @doc(description: "Blog Category title")
@@ -100,6 +103,7 @@ type BlogCategory {
     custom_theme_from: String @doc(description: "Blog Category Custom theme from")
     custom_theme_to: String @doc(description: "Blog Category Custom theme to")
 }
+
 type BlogTag {
     url_key: String @doc(description: "URL key of Blog Tag")
     title: String @doc(description: "Blog Tag title")
@@ -117,6 +121,7 @@ type BlogTag {
     custom_theme_from: String @doc(description: "Blog Tag Custom theme from")
     custom_theme_to: String @doc(description: "Blog Tag Custom theme to")
 }
+
 type BlogAuthor {
     url_key: String @doc(description: "URL key of Blog Author")
     title: String @doc(description: "Blog Author title")
@@ -126,13 +131,24 @@ type BlogAuthor {
     is_active: Int @doc(description: "Blog Author Is active")
     created: String @doc(description: "Blog Author Created")
 }
+
+input BlogCommentsFilterInput {
+    post_id: FilterTypeInput @doc(description: "")
+    or: BlogCommentsFilterInput @doc(description: "The keyword required to perform a logical OR comparison")
+}
+
+type blogCommentsOutput {
+    total_count:  Int @doc(description: "")
+    items: [BlogComment] @doc(description: "")
+}
+
 type BlogComment {
+    post_id: Int @doc(description: "Blog  Comment Comment id")
     comment_id: Int @doc(description: "Blog  Comment Comment id")
     parent_id: Int @doc(description: "Blog  Comment Parent id")
-    post_id: Int @doc(description: "Blog  Comment Post id")
     customer_id: Int @doc(description: "Blog  Comment Customer id")
     admin_id: Int @doc(description: "Blog  Comment Admin id")
-    is_active: Int @doc(description: "Blog Comment Is active")
+    status: Int @doc(description: "Blog Comment Is active")
     author_type: Int @doc(description: "Blog Comment Author type")
     author_nickname: String @doc(description: "Blog Comment Author nickname")
     author_email: String @doc(description: "Blog Comment Author email")

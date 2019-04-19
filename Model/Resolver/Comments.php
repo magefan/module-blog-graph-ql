@@ -11,13 +11,13 @@ use Magento\Framework\GraphQl\Query\Resolver\Argument\SearchCriteria\Builder as 
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
-use Magefan\BlogGraphQl\Model\Posts\GetList;
+use Magefan\BlogGraphQl\Model\Comments\GetList;
 
 /**
- * Class Posts
+ * Class Comments
  * @package Magefan\BlogGraphQl\Model\Resolver
  */
-class Posts implements ResolverInterface
+class Comments implements ResolverInterface
 {
     /**
      * @var GetList
@@ -47,7 +47,7 @@ class Posts implements ResolverInterface
         array $value = null,
         array $args = null
     ) {
-        $searchCriteria = $this->searchCriteriaBuilder->build('di_build_magefan_blog_post', $args);
+        $searchCriteria = $this->searchCriteriaBuilder->build('magefan_blog_comments', $args);
         $searchCriteria->setCurrentPage($args['currentPage']);
         $searchCriteria->setPageSize($args['pageSize']);
         $searchResult = $this->getList->execute($searchCriteria);

@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Magefan\BlogGraphQl\Model\Posts;
+namespace Magefan\BlogGraphQl\Model\Comments;
 
 use Magento\Framework\GraphQl\Query\Resolver\Argument\FieldEntityAttributesInterface;
 use Magento\Framework\GraphQl\ConfigInterface;
 
 /**
  * Class FilterArgument
- * @package Magefan\BlogGraphQl\Model\Posts
+ * @package Magefan\BlogGraphQl\Model\Comments
  */
 class FilterArgument implements FieldEntityAttributesInterface
 {
@@ -36,7 +36,7 @@ class FilterArgument implements FieldEntityAttributesInterface
     {
         $fields = [];
         /** @var \Magento\Framework\GraphQl\Config\Element\Field $field */
-        foreach ($this->config->getConfigElement('BlogPost')->getFields() as $field) {
+        foreach ($this->config->getConfigElement('BlogComment')->getFields() as $field) {
             $fields[$field->getName()] = 'String';
         }
         return array_keys($fields);

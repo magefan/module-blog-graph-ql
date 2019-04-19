@@ -57,6 +57,7 @@ class Post
 
         $postData = [
             'url_key' => $post->getIdentifier(),
+            'identifier' => $post->getIdentifier(),
             'title' => $post->getTitle(),
             'meta_title' => $post->getMetaTitle(),
             'meta_keywords' => $post->getMetaKeywords(),
@@ -75,7 +76,7 @@ class Post
             'position' => $post->getData('position'),
             'featured_img' => $post->getFeaturedImage(),
             'author' => $post->getAuthor()->getName(), //object Author
-            //'author_id' => $post->getData('author_id'),
+            'author_id' => $post->getData('author_id'),
             'page_layout' => $post->getData('page_layout'),
             'layout_update_xml' => $post->getData('layout_update_xml'),
             'custom_theme' => $post->getData('custom_theme'),
