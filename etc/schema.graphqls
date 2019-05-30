@@ -3,33 +3,156 @@
 
 type Query {
     blogPost (
-        id: Int @doc(description: "Id of the blog post")
-    ): BlogPost @resolver(class: "Magefan\\BlogGraphQl\\Model\\Resolver\\Post") @doc(description: "The blog post query returns information about a blog post")
-    blogPosts (
-        identifiers: [Int] @doc(description: "IDs of the blog posts")
-    ): CmsBlocks @resolver(class: "Magento\\BlogGraphQl\\Model\\Resolver\\Posts") @doc(description: "The blog posts query returns information about blog posts")
-
-
+        id: Int @doc(description: "Id of the Blog Post")
+    ): BlogPost @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Post") @doc(description: "")
     blogCategory (
-        id: Int @doc(description: "Id of the blog category")
-    ): BlogCategory @resolver(class: "Magefan\\BlogGraphQl\\Model\\Resolver\\Category") @doc(description: "The blog category query returns information about a blog category")
-    blogCategorys (
-        identifiers: [Int] @doc(description: "IDs of the blog categorys")
-    ): CmsBlocks @resolver(class: "Magento\\BlogGraphQl\\Model\\Resolver\\Categorys") @doc(description: "The blog categorys query returns information about blog categorys")
-
-
+        id: Int @doc(description: "Id of the Blog Category")
+    ): BlogCategory @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Category") @doc(description: "")
     blogTag (
-        id: Int @doc(description: "Id of the blog tag")
-    ): BlogTag @resolver(class: "Magefan\\BlogGraphQl\\Model\\Resolver\\Tag") @doc(description: "The blog tag query returns information about a blog tag")
-    blogTags (
-        identifiers: [Int] @doc(description: "IDs of the blog tags")
-    ): CmsBlocks @resolver(class: "Magento\\BlogGraphQl\\Model\\Resolver\\Tags") @doc(description: "The blog tags query returns information about blog tags")
-
+        id: Int @doc(description: "Id of the Blog Tag")
+    ): BlogTag @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Tag") @doc(description: "")
     blogAuthor (
-        id: Int @doc(description: "Id of the blog author")
-    ): BlogAuthor @resolver(class: "Magefan\\BlogGraphQl\\Model\\Resolver\\Author") @doc(description: "The blog author query returns information about a blog author")
-    blogAuthors (
-        identifiers: [Int] @doc(description: "IDs of the blog authors")
-    ): CmsBlocks @resolver(class: "Magento\\BlogGraphQl\\Model\\Resolver\\Authors") @doc(description: "The blog authors query returns information about blog authors")
+        id: Int @doc(description: "Id of the Blog Author")
+    ): BlogAuthor @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Author") @doc(description: "")
+    blogPosts(
+        #search: String @doc(description: "Performs a full-text search using the specified key words.")
+        filter: BlogPostsFilterInput @doc(description: "Identifies which post attributes to search for and return.")
+        pageSize: Int = 5 @doc(description: "Specifies the maximum number of results to return at once. This attribute is optional.")
+        currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1.")
+        #sort: PostsSortInput @doc(description: "Specifies which attribute to sort on, and whether to return the results in ascending or descending order.")
+    ):blogPostsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Posts") @doc(description: "The posts query searches for posts that match the criteria specified in the search and filter attributes")
+    blogComments(
+        filter: BlogCommentsFilterInput @doc(description: "Identifies which comment attributes to search for and return."),
+        pageSize: Int = 5 @doc(description: "Specifies the maximum number of results to return at once. This attribute is optional."),
+        currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1."),
+    ):blogCommentsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Comments") @doc(description: "The comments query searches for posts that match the criteria specified in the search and filter attributes")
 }
 
+input BlogPostsFilterInput {
+    title: FilterTypeInput @doc(description: "")
+    author_id: FilterTypeInput @doc(description: "")
+    publish_time: FilterTypeInput @doc(description: "")
+    or: BlogPostsFilterInput @doc(description: "The keyword required to perform a logical OR comparison")
+}
+
+type blogPostsOutput {
+    total_count:  Int @doc(description: "")
+    items: [BlogPost] @doc(description: "")
+}
+
+type BlogPost {
+    url_key: String @doc(description: "URL key of Blog Post")
+    identifier: String @doc(description: "URL key of Blog Post")
+    title: String @doc(description: "Blog Post title")
+    meta_title: String @doc(description: "Blog Post Meta title")
+    meta_keywords: String @doc(description: "Blog Post Meta keywords")
+    meta_description: String @doc(description: "Blog Post Meta description")
+    og_title: String @doc(description: "Blog Post Og title")
+    og_description: String @doc(description: "Blog Post Og description")
+    og_image: String @doc(description: "Blog Post Og image")
+    og_type: String @doc(description: "Blog Post Og type")
+    content_heading: String @doc(description: "Blog Post Content heading")
+    content: String @doc(description: "Blog Post content")
+    creation_time: String @doc(description: "Blog Post Creation time")
+    update_time: String @doc(description: "Blog Post Update time")
+    publish_time: String @doc(description: "Blog Post Publish time")
+    is_active: Int @doc(description: "Blog Post Is active")
+    include_in_recent: Int @doc(description: "Blog Post Include in recent")
+    position: Int @doc(description: "Blog Post Position")
+    featured_img: String @doc(description: "Blog Post Featured image")
+    author: String @doc(description: "Blog Post Author")
+    author_id: Int @doc(description: "Blog Post Author id")
+    page_layout: String @doc(description: "Blog Post Page_layout")
+    layout_update_xml: String @doc(description: "Blog Post Layout update xml")
+    custom_theme: String @doc(description: "Blog Post Custom theme")
+    custom_layout: String @doc(description: "Blog Post Custom layout")
+    custom_layout_update_xml: String @doc(description: "Blog Post Custom layout update xml")
+    custom_theme_from: String @doc(description: "Blog Post Custom theme from")
+    custom_theme_to: String @doc(description: "Blog Post Custom theme to")
+    media_gallery: String @doc(description: "Blog Post Media gallery")
+    secret: String @doc(description: "Blog Post Secret")
+    views_count: Int @doc(description: "Blog Post Views count")
+    is_recent_posts_skip: Int @doc(description: "Blog Post Is recent posts skip")
+    short_content: String @doc(description: "Blog Post Short content")
+    #fb_auto_publish: Int @doc(description: "Blog Post Fb auto publish")
+    #fb_post_format: String @doc(description: "Blog Post Fb post format")
+    #fb_published: Int @doc(description: "Blog Post Fb published")
+    #rp_conditions_serialized: String @doc(description: "Blog Post Rp conditions serialized")
+    #rp_conditions_generation_time: String @doc(description: "Blog Post Rp conditions generation time")
+}
+
+type BlogCategory {
+    url_key: String @doc(description: "URL key of Blog Category")
+    title: String @doc(description: "Blog Category title")
+    meta_title: String @doc(description: "Blog Category Meta title")
+    meta_keywords: String @doc(description: "Blog Category Meta keywords")
+    meta_description: String @doc(description: "Blog Category Meta description")
+    content_heading: String @doc(description: "Blog Category Content heading")
+    content: String @doc(description: "Blog Category content")
+    path: String @doc(description: "Blog Category Path")
+    position: Int @doc(description: "Blog Category Position")
+    posts_sort_by: Int @doc(description: "Blog Category Posts sort by")
+    include_in_menu: Int @doc(description: "Blog Category Include in menu")
+    is_active: Int @doc(description: "Blog Category Is active")
+    display_mode: Int @doc(description: "Blog Category Display mode")
+    page_layout: String @doc(description: "Blog Category Page_layout")
+    layout_update_xml: String @doc(description: "Blog Category Layout update xml")
+    custom_theme: String @doc(description: "Blog Category Custom theme")
+    custom_layout: String @doc(description: "Blog Category Custom layout")
+    custom_layout_update_xml: String @doc(description: "Blog Category Custom layout update xml")
+    custom_theme_from: String @doc(description: "Blog Category Custom theme from")
+    custom_theme_to: String @doc(description: "Blog Category Custom theme to")
+}
+
+type BlogTag {
+    url_key: String @doc(description: "URL key of Blog Tag")
+    title: String @doc(description: "Blog Tag title")
+    meta_robots: String @doc(description: "Blog Tag Meta robots")
+    meta_description: String @doc(description: "Blog Tag Meta description")
+    meta_keywords: String @doc(description: "Blog Tag Meta keywords")
+    meta_title: String @doc(description: "Blog Tag Meta title")
+    page_layout: String @doc(description: "Blog Tag Page_layout")
+    is_active: Int @doc(description: "Blog Tag Is active")
+    content: String @doc(description: "Blog Tag content")
+    layout_update_xml: String @doc(description: "Blog Tag Layout update xml")
+    custom_theme: String @doc(description: "Blog Tag Custom theme")
+    custom_layout: String @doc(description: "Blog Tag Custom layout")
+    custom_layout_update_xml: String @doc(description: "Blog Tag Custom layout update xml")
+    custom_theme_from: String @doc(description: "Blog Tag Custom theme from")
+    custom_theme_to: String @doc(description: "Blog Tag Custom theme to")
+}
+
+type BlogAuthor {
+    url_key: String @doc(description: "URL key of Blog Author")
+    title: String @doc(description: "Blog Author title")
+    name: String @doc(description: "Blog Author Name")
+    url: String @doc(description: "Blog Author Url")
+    author_url: String @doc(description: "Blog Author Author url")
+    is_active: Int @doc(description: "Blog Author Is active")
+    created: String @doc(description: "Blog Author Created")
+}
+
+input BlogCommentsFilterInput {
+    post_id: FilterTypeInput @doc(description: "")
+    or: BlogCommentsFilterInput @doc(description: "The keyword required to perform a logical OR comparison")
+}
+
+type blogCommentsOutput {
+    total_count:  Int @doc(description: "")
+    items: [BlogComment] @doc(description: "")
+}
+
+type BlogComment {
+    post_id: Int @doc(description: "Blog  Comment Comment id")
+    comment_id: Int @doc(description: "Blog  Comment Comment id")
+    parent_id: Int @doc(description: "Blog  Comment Parent id")
+    customer_id: Int @doc(description: "Blog  Comment Customer id")
+    admin_id: Int @doc(description: "Blog  Comment Admin id")
+    status: Int @doc(description: "Blog Comment Is active")
+    author_type: Int @doc(description: "Blog Comment Author type")
+    author_nickname: String @doc(description: "Blog Comment Author nickname")
+    author_email: String @doc(description: "Blog Comment Author email")
+    text: String @doc(description: "Blog Comment Text")
+    creation_time: String @doc(description: "Blog Comment Creation time")
+    update_time: String @doc(description: "Blog Comment Update time")
+}
