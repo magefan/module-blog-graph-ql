@@ -59,7 +59,7 @@ class Author
             'name' => $author->getName(),
             'url' => $author->getUrl(),
             'author_url' => $author->getAuthorUrl(),
-            'created' => $author->getData('created'),
+            'creation_time' => $author->getData('creation_time'),
             'is_active' => $author->getData('is_active'),
         ];
         return $authorData;
