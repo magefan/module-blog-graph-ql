@@ -129,7 +129,7 @@ type BlogAuthor {
     url: String @doc(description: "Blog Author Url")
     author_url: String @doc(description: "Blog Author Author url")
     is_active: Int @doc(description: "Blog Author Is active")
-    created: String @doc(description: "Blog Author Created")
+    creation_time: String @doc(description: "Blog Author Created")
 }
 
 input BlogCommentsFilterInput {
