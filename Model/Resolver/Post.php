@@ -51,24 +51,24 @@ class Post implements ResolverInterface
 
     /**
      * @param array $args
-     * @return int
+     * @return string
      * @throws GraphQlInputException
      */
-    private function getPostId(array $args): int
+    private function getPostId(array $args): string
     {
         if (!isset($args['id'])) {
             throw new GraphQlInputException(__('"Post id should be specified'));
         }
 
-        return (int)$args['id'];
+        return (string)$args['id'];
     }
 
     /**
-     * @param int $postId
+     * @param string $postId
      * @return array
      * @throws GraphQlNoSuchEntityException
      */
-    private function getPostData(int $postId): array
+    private function getPostData(string $postId): array
     {
         try {
             $postData = $this->postDataProvider->getData($postId);

@@ -51,24 +51,24 @@ class Author implements ResolverInterface
 
     /**
      * @param array $args
-     * @return int
+     * @return string
      * @throws GraphQlInputException
      */
-    private function getAuthorId(array $args): int
+    private function getAuthorId(array $args): string
     {
         if (!isset($args['id'])) {
             throw new GraphQlInputException(__('"Author id should be specified'));
         }
 
-        return (int)$args['id'];
+        return (string)$args['id'];
     }
 
     /**
-     * @param int $authorId
+     * @param string $authorId
      * @return array
      * @throws GraphQlNoSuchEntityException
      */
-    private function getAuthorData(int $authorId): array
+    private function getAuthorData(string $authorId): array
     {
         try {
             $authorData = $this->authorDataProvider->getData($authorId);

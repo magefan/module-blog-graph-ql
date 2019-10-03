@@ -52,24 +52,24 @@ class Category implements ResolverInterface
 
     /**
      * @param array $args
-     * @return int
+     * @return string
      * @throws GraphQlInputException
      */
-    private function getCategoryId(array $args): int
+    private function getCategoryId(array $args): string
     {
         if (!isset($args['id'])) {
             throw new GraphQlInputException(__('"Category id should be specified'));
         }
 
-        return (int)$args['id'];
+        return (string)$args['id'];
     }
 
     /**
-     * @param int $categoryId
+     * @param string $categoryId
      * @return array
      * @throws GraphQlNoSuchEntityException
      */
-    private function getCategoryData(int $categoryId): array
+    private function getCategoryData(string $categoryId): array
     {
         try {
             $categoryData = $this->categoryDataProvider->getData($categoryId);

@@ -11,6 +11,8 @@
             <argument name="attributesInstances" xsi:type="array">
                 <item name="di_build_magefan_blog_post" xsi:type="object">Magefan\BlogGraphQl\Model\Posts\FilterArgument</item>
                 <item name="magefan_blog_comments" xsi:type="object">Magefan\BlogGraphQl\Model\Comments\FilterArgument</item>
+                <item name="magefan_blog_tags" xsi:type="object">Magefan\BlogGraphQl\Model\Tags\FilterArgument</item>
+                <item name="magefan_blog_categories" xsi:type="object">Magefan\BlogGraphQl\Model\Categories\FilterArgument</item>
             </argument>
         </arguments>
     </type>
