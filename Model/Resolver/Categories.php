@@ -34,7 +34,7 @@ class Categories implements ResolverInterface
     protected $categoryDataProvider;
 
     /**
-     * Comments constructor.
+     * Categories constructor.
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param CategoryRepositoryInterface $categoryRepositoryInterface
      * @param DataProvider\Category $categoryDataProvider
