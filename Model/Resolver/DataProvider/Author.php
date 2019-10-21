@@ -41,27 +41,14 @@ class Author
     }
 
     /**
-     * @param int $authorId
+     * @param string $authorId
      * @return array
-     * @throws NoSuchEntityException
      */
-    public function getData(int $authorId): array
+    public function getData(string $authorId): array
     {
-        $author = $this->authorRepository->getById($authorId);
+        $author = $this->authorRepository->getFactory()->create();
+        $author->getResource()->load($author, $authorId);
 
-        if (false === $author->getData('is_active')) {
-            throw new NoSuchEntityException();
-        }
-
-        $authorData = [
-            'url_key' => $author->getIdentifier(),
-            'title' => $author->getTitle(),
-            'name' => $author->getName(),
-            'url' => $author->getUrl(),
-            'author_url' => $author->getAuthorUrl(),
-            'creation_time' => $author->getData('creation_time'),
-            'is_active' => $author->getData('is_active'),
-        ];
-        return $authorData;
+        return $author->getDynamicData();
     }
 }

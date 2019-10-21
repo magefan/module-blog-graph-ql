@@ -51,24 +51,24 @@ class Tag implements ResolverInterface
 
     /**
      * @param array $args
-     * @return int
+     * @return string
      * @throws GraphQlInputException
      */
-    private function getTagId(array $args): int
+    private function getTagId(array $args): string
     {
         if (!isset($args['id'])) {
             throw new GraphQlInputException(__('"Tag id should be specified'));
         }
 
-        return (int)$args['id'];
+        return (string)$args['id'];
     }
 
     /**
-     * @param int $tagId
+     * @param string $tagId
      * @return array
      * @throws GraphQlNoSuchEntityException
      */
-    private function getTagData(int $tagId): array
+    private function getTagData(string $tagId): array
     {
         try {
             $tagData = $this->tagDataProvider->getData($tagId);

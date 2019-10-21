@@ -3,45 +3,62 @@
 
 type Query {
     blogPost (
-        id: Int @doc(description: "Id of the Blog Post")
+        id: String @doc(description: "Id of the Blog Post")
     ): BlogPost @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Post") @doc(description: "")
     blogCategory (
-        id: Int @doc(description: "Id of the Blog Category")
+        id: String @doc(description: "Id of the Blog Category")
     ): BlogCategory @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Category") @doc(description: "")
     blogTag (
-        id: Int @doc(description: "Id of the Blog Tag")
+        id: String @doc(description: "Id of the Blog Tag")
     ): BlogTag @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Tag") @doc(description: "")
     blogAuthor (
-        id: Int @doc(description: "Id of the Blog Author")
+        id: String @doc(description: "Id of the Blog Author")
     ): BlogAuthor @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Author") @doc(description: "")
     blogPosts(
-        #search: String @doc(description: "Performs a full-text search using the specified key words.")
         filter: BlogPostsFilterInput @doc(description: "Identifies which post attributes to search for and return.")
         pageSize: Int = 5 @doc(description: "Specifies the maximum number of results to return at once. This attribute is optional.")
         currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1.")
-        #sort: PostsSortInput @doc(description: "Specifies which attribute to sort on, and whether to return the results in ascending or descending order.")
-    ):blogPostsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Posts") @doc(description: "The posts query searches for posts that match the criteria specified in the search and filter attributes")
+        sort: [String] @doc(description: "Specifies which attribute to sort on, and whether to return the results in ascending or descending order.")
+    ): blogPostsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Posts") @doc(description: "The posts query searches for posts that match the criteria specified in the search and filter attributes")
     blogComments(
         filter: BlogCommentsFilterInput @doc(description: "Identifies which comment attributes to search for and return."),
         pageSize: Int = 5 @doc(description: "Specifies the maximum number of results to return at once. This attribute is optional."),
         currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1."),
     ):blogCommentsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Comments") @doc(description: "The comments query searches for posts that match the criteria specified in the search and filter attributes")
+    blogTags: blogTagsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Tags") @doc(description: "")
+    blogCategories: blogCategoriesOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Categories") @doc(description: "")
 }
 
 input BlogPostsFilterInput {
-    title: FilterTypeInput @doc(description: "")
     author_id: FilterTypeInput @doc(description: "")
+    tag_id: FilterTypeInput @doc(description: "")
+    category_id: FilterTypeInput @doc(description: "")
+    title: FilterTypeInput @doc(description: "")
+    content: FilterTypeInput @doc(description: "")
     publish_time: FilterTypeInput @doc(description: "")
+    search: FilterTypeInput @doc(description: "")
     or: BlogPostsFilterInput @doc(description: "The keyword required to perform a logical OR comparison")
 }
 
 type blogPostsOutput {
-    total_count:  Int @doc(description: "")
-    items: [BlogPost] @doc(description: "")
+    total_count: Int @doc(description: "")
+    total_pages: Int @doc(description: "")
+    items: [BlogPost] @doc(description: "An array of Blog posts")
+}
+
+type blogTagsOutput {
+    total_count: Int @doc(description: "")
+    items: [BlogTag] @doc(description: "")
+}
+
+type blogCategoriesOutput {
+    total_count: Int @doc(description: "")
+    items: [BlogCategory] @doc(description: "")
 }
 
 type BlogPost {
-    url_key: String @doc(description: "URL key of Blog Post")
+    post_id: Int @doc(description: "Id of the Blog Post")
+    post_url: String @doc(description: "Blog Post URL")
     identifier: String @doc(description: "URL key of Blog Post")
     title: String @doc(description: "Blog Post title")
     meta_title: String @doc(description: "Blog Post Meta title")
@@ -53,15 +70,23 @@ type BlogPost {
     og_type: String @doc(description: "Blog Post Og type")
     content_heading: String @doc(description: "Blog Post Content heading")
     content: String @doc(description: "Blog Post content")
+    filtered_content: String @doc(description: "Blog Post filtered content")
+    short_filtered_content: String @doc(description: "Blog Post short filtered content")
     creation_time: String @doc(description: "Blog Post Creation time")
     update_time: String @doc(description: "Blog Post Update time")
     publish_time: String @doc(description: "Blog Post Publish time")
     is_active: Int @doc(description: "Blog Post Is active")
     include_in_recent: Int @doc(description: "Blog Post Include in recent")
     position: Int @doc(description: "Blog Post Position")
-    featured_img: String @doc(description: "Blog Post Featured image")
-    author: String @doc(description: "Blog Post Author")
-    author_id: Int @doc(description: "Blog Post Author id")
+    first_image: String @doc(description: "Blog Post first image")
+    featured_image: String @doc(description: "Blog Post Featured image")
+    author: BlogAuthor @doc(description: "Blog Post Author")
+    author_id: Int @doc(description: "Blog Post Author Id")
+    search: String @doc(description: "Blog Post Search Term")
+    tag_id: Int @doc(description: "Blog Post Author Id")
+    category_id: Int @doc(description: "Blog Post Category Id")
+    tags: [BlogTag] @doc(description: "An array of related tags")
+    categories: [BlogCategory] @doc(description: "An array of related categories")
     page_layout: String @doc(description: "Blog Post Page_layout")
     layout_update_xml: String @doc(description: "Blog Post Layout update xml")
     custom_theme: String @doc(description: "Blog Post Custom theme")
@@ -82,7 +107,9 @@ type BlogPost {
 }
 
 type BlogCategory {
-    url_key: String @doc(description: "URL key of Blog Category")
+    category_id: Int @doc(description: "Id of the Blog Post Category")
+    category_url: String @doc(description: "URL of the Blog Post Category")
+    identifier: String @doc(description: "URL key of Blog Category")
     title: String @doc(description: "Blog Category title")
     meta_title: String @doc(description: "Blog Category Meta title")
     meta_keywords: String @doc(description: "Blog Category Meta keywords")
@@ -105,7 +132,9 @@ type BlogCategory {
 }
 
 type BlogTag {
-    url_key: String @doc(description: "URL key of Blog Tag")
+    tag_id: Int @doc(description: "Id of the Blog Post Tag")
+    tag_url: String @doc(description: "URL of Blog Tag")
+    identifier: String @doc(description: "URL key of Blog Tag")
     title: String @doc(description: "Blog Tag title")
     meta_robots: String @doc(description: "Blog Tag Meta robots")
     meta_description: String @doc(description: "Blog Tag Meta description")
@@ -123,7 +152,8 @@ type BlogTag {
 }
 
 type BlogAuthor {
-    url_key: String @doc(description: "URL key of Blog Author")
+    author_id: Int @doc(description: "Id of the Blog Post Author")
+    identifier: String @doc(description: "URL key of Blog Author")
     title: String @doc(description: "Blog Author title")
     name: String @doc(description: "Blog Author Name")
     url: String @doc(description: "Blog Author Url")
@@ -138,7 +168,7 @@ input BlogCommentsFilterInput {
 }
 
 type blogCommentsOutput {
-    total_count:  Int @doc(description: "")
+    total_count: Int @doc(description: "")
     items: [BlogComment] @doc(description: "")
 }
 
