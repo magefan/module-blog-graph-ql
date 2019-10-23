@@ -42,7 +42,8 @@ Try out our open demo and if you like our extension **please give us some star o
   * **IMPORTANT!** [Magefan Community Extension](https://github.com/magefan/module-community) >= 2.0.8 . Please install this extension first if you use installation via FTP.
   
 ## Online Documentation
-Coming soon...
+* [GraphQL queries Testing](https://magefan.com/magento2-blog-extension/graphql-queries-testing)
+* [Magento 2 Blog GraphQL Queries Examples](https://magefan.com/magento2-blog-extension/graphql-query-examples?secret=RGP7LIFnwKFvFlTPxPw2ws1G50LCLeJv)
 
 
 ## Installation Instruction
