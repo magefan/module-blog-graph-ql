@@ -1,4 +1,4 @@
-# [Magento 2 Blog GraphQL Extension](https://magefan.com/magento2-blog-extension) by Magefan
+# GraphQL for [Magento 2 Blog Module](https://magefan.com/magento2-blog-extension) by Magefan
 
 [![Total Downloads](https://poser.pugx.org/magefan/module-blog-graph-ql/downloads)](https://packagist.org/packages/magefan/module-blog)
 [![Latest Stable Version](https://poser.pugx.org/magefan/module-blog-graph-ql/v/stable)](https://packagist.org/packages/magefan/module-blog-graph-ql)
@@ -46,7 +46,7 @@ Coming soon...
 
 
 ## Installation Instruction
-Coming soon...
+* [Magento 2 Blog GraphQL Extension Installation](https://magefan.com/magento2-blog-extension/graph-ql-installation)
 
 
 ## Support
