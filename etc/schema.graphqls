@@ -27,6 +27,9 @@ type Query {
     ):blogCommentsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Comments") @doc(description: "The comments query searches for posts that match the criteria specified in the search and filter attributes")
     blogTags: blogTagsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Tags") @doc(description: "")
     blogCategories: blogCategoriesOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Categories") @doc(description: "")
+    urlResolver (
+        url: String @doc(description: "")
+    ): UrlResolver @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Url") @doc(description: "")
 }
 
 input BlogPostsFilterInput {
@@ -38,6 +41,11 @@ input BlogPostsFilterInput {
     publish_time: FilterTypeInput @doc(description: "")
     search: FilterTypeInput @doc(description: "")
     or: BlogPostsFilterInput @doc(description: "The keyword required to perform a logical OR comparison")
+}
+
+type UrlResolver {
+    id: Int @doc(description: "")
+    type: String @doc(description: "")
 }
 
 type blogPostsOutput {
