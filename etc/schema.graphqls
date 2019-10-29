@@ -42,6 +42,7 @@ input BlogPostsFilterInput {
 }
 
 enum UrlRewriteEntityTypeEnum {
+    BLOG_INDEX
     POST
     TAG
     AUTHOR
