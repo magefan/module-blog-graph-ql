@@ -46,8 +46,8 @@ enum UrlRewriteEntityTypeEnum {
     TAG
     AUTHOR
     COMMENT
-    SEARCH
     ARCHIVE
+    SEARCH
 }
 
 type EntityUrl @doc(description: "") {

@@ -11,7 +11,7 @@ use Magefan\Blog\Model\Category;
 use Magento\Store\Model\StoreManagerInterface;
 use Magefan\Blog\Model\Tag;
 use Magefan\Blog\Api\AuthorInterface;
-use Magefan\Blog\Model\Search;
+use Magento\Framework\Module\ModuleListInterface;
 
 /**
  * Blog Controller Router
@@ -33,6 +33,9 @@ class Router
      */
     protected $category;
 
+    /**
+     * @var int
+     */
     protected $blogObjectStoreId;
 
     /**
@@ -56,6 +59,11 @@ class Router
     protected $author;
 
     /**
+     * @var ModuleListInterface
+     */
+    protected $moduleList;
+
+    /**
      * Router constructor.
      * @param Url $url
      * @param Post $post
@@ -63,6 +71,7 @@ class Router
      * @param StoreManagerInterface $storeManager
      * @param Tag $tag
      * @param AuthorInterface $author
+     * @param ModuleListInterface $moduleList
      */
     public function __construct(
         Url $url,
@@ -70,7 +79,8 @@ class Router
         Category $category,
         StoreManagerInterface $storeManager,
         Tag $tag,
-        AuthorInterface $author
+        AuthorInterface $author,
+        ModuleListInterface $moduleList
     ) {
         $this->url = $url;
         $this->post = $post;
@@ -78,6 +88,7 @@ class Router
         $this->storeManager = $storeManager;
         $this->tag = $tag;
         $this->author = $author;
+        $this->moduleList = $moduleList;
     }
 
     /**
@@ -95,8 +106,7 @@ class Router
      */
     public function getBlogPage($identifier)
     {
-        $postId = $categoryId = $tagId = $authorId = null;
-
+        $postId = $categoryId = $tagId = $authorId = $archiveId = $searchId = null;
         $pathInfo = explode('/', $identifier);
         $blogRoute = $this->getBlogUrl()->getRoute();
 
@@ -114,14 +124,12 @@ class Router
             if (!isset($pathInfo[2]) || in_array($pathInfo[2], ['index', 'feed'])) {
                 //do nothing
             }
-        } elseif ($pathInfo[1] == $this->getBlogUrl()->getRoute($blogUrl::CONTROLLER_SEARCH)
-            && !empty($pathInfo[2])
-        ) {
-            //do nothing
         } else {
             $controllerName = null;
+
             if ($blogUrl::PERMALINK_TYPE_DEFAULT == $this->getBlogUrl()->getPermalinkType()) {
                 $controllerName = $this->getBlogUrl()->getControllerName($pathInfo[1]);
+
                 unset($pathInfo[1]);
             }
 
@@ -130,7 +138,11 @@ class Router
 
             if ($pathInfoCount == 1) {
                 if ((!$controllerName || $controllerName == $blogUrl::CONTROLLER_ARCHIVE)
-                    && $this->_isArchiveIdentifier($pathInfo[0])
+                    && $archiveId = $this->_isArchiveIdentifier($pathInfo[0])
+                ) {
+                    //do nothing
+                } elseif ((!$controllerName || $controllerName == $blogUrl::CONTROLLER_SEARCH)
+                    && $searchId = $this->_isSearchIdentifier($pathInfo[0])
                 ) {
                     //do nothing
                 } elseif ((!$controllerName || $controllerName == $blogUrl::CONTROLLER_POST)
@@ -218,12 +230,135 @@ class Router
             return [$authorId, 4];
         }
 
-        if ($this->_isArchiveIdentifier($pathInfo[0])) {
+        if ($archiveId) {
             $identifier = explode('/', $identifier);
             return [end($identifier), 5];
         }
 
+        if ($searchId) {
+            $identifier = explode('/', $identifier);
+            return [end($identifier), 6];
+        }
+
         return null;
+    }
+
+    /**
+     * @param $identifier
+     * @return array
+     */
+    public function getBlogPlusPage($identifier)
+    {
+        if ($this->moduleList->has('Magefan_BlogPlus')) {
+            $identifierLen = strlen($identifier);
+            $basePath = trim($this->getBlogUrl()->getBasePath(), '/');
+
+            if ($identifier != $basePath) {
+                $schemas = $this->getBlogUrl()->getPathChemas();
+
+                foreach ($schemas as $controllerName => $schema) {
+                    $schema = trim($schema, '/');
+                    $startVar = strpos($schema, '{');
+                    $endVar = strrpos($schema, '}');
+
+                    if (false === $startVar || false === $endVar) {
+                        continue;
+                    }
+
+                    if (substr($schema, 0, $startVar) != substr($identifier, 0, $startVar)) {
+                        continue;
+                    }
+
+                    $endVar++;
+
+                    if (substr($schema, $endVar)
+                        != substr($identifier, $identifierLen - (strlen($schema) - $endVar))) {
+                        continue;
+                    }
+
+                    $subSchema = substr($schema, $startVar, $endVar - $startVar);
+                    $subIdentifier = substr(
+                        $identifier,
+                        $startVar,
+                        $identifierLen - (strlen($schema) - $endVar) - $startVar
+                    );
+                    $pathInfo = explode('/', $subIdentifier);
+                    $subSchema = explode('/', $subSchema);
+
+                    if (($subSchema[0] == '{{blog_route}}') && (strpos($subIdentifier, $basePath) === false)) {
+                        continue;
+                    }
+
+                    if ('{' != $subSchema[0]{0} && $subSchema[0] != $pathInfo[0]) {
+                        continue;
+                    }
+
+                    if ($subSchema[count($subSchema) - 1] == '{{url_key}}') {
+                        switch ($controllerName) {
+                            case 'post':
+                            case 'category':
+                            case 'tag':
+                            case 'author':
+                                $method = '_get' . ucfirst($controllerName) . 'Id';
+                                $id = $this->$method($pathInfo[count($pathInfo) - 1]);
+
+                                if ($id) {
+                                    $model = $this->$controllerName->load($id);
+
+                                    if ($model->getId()) {
+                                        $path = $this->getBlogUrl()->getUrlPath($model, $controllerName);
+                                        $path = trim($path, '/');
+
+                                        if ($path == $identifier) {
+                                            switch ($controllerName) {
+                                                case 'post':
+                                                    return [$id, 1];
+                                                case 'category':
+                                                    return [$id, 2];
+                                                case 'tag':
+                                                    return [$id, 3];
+                                                case 'author':
+                                                    return [$id, 4];
+                                            }
+                                        }
+                                    }
+                                }
+                            break;
+                            case 'archive':
+                                $date = $pathInfo[count($pathInfo) - 1];
+
+                                if ($this->_isArchiveIdentifier($date)) {
+                                    $path = $this->getBlogUrl()->getUrlPath($date, $controllerName);
+                                    $path = trim($path, '/');
+
+                                    if ($path == $identifier) {
+                                        $path = explode('/', $path);
+                                        return [end($path), 5];
+                                    }
+                                }
+                            break;
+                            case 'search':
+                                $q = '';
+                                for ($x = 1; $x <=4; $x++) {
+                                    if (!isset($pathInfo[count($pathInfo) - $x])) {
+                                        break;
+                                    }
+                                    $q = $pathInfo[count($pathInfo) - $x] . ($q ? '/' : '') . $q;
+                                    $path = $this->getBlogUrl()->getUrlPath($q, $controllerName);
+                                    $path = trim($path, '/');
+
+                                    if ($path == $identifier) {
+                                        $path = explode('/', $path);
+                                        return [end($path), 6];
+                                    }
+                                }
+                            default:
+                                /* do nothing */
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -306,11 +441,21 @@ class Router
     protected function _isArchiveIdentifier($identifier)
     {
         $info = explode('-', $identifier);
+
         return count($info) == 2
             && strlen($info[0]) == 4
             && strlen($info[1]) == 2
             && is_numeric($info[0])
             && is_numeric($info[1]);
+    }
+
+    /**
+     * @param $identifier
+     * @return bool
+     */
+    protected function _isSearchIdentifier($identifier)
+    {
+        return strlen($identifier) > 0;
     }
 
     /**
@@ -324,8 +469,8 @@ class Router
     protected function getObjectId($object, $controllerName, $identifier, $checkSuffix)
     {
         $storeId = $this->storeManager->getStore()->getId();
-
         $stores = [];
+
         foreach ($this->storeManager->getStores() as $value) {
             $stores[] = $value->getId();
         }
@@ -351,7 +496,6 @@ class Router
                 $this->ids[$key] = 0;
             } else {
                 //$object = $factory->create();
-
                 $this->ids[$key] = $object->checkIdentifier(
                     $trimmedIdentifier,
                     $this->blogObjectStoreId //$this->storeManager->getStore()->getId()

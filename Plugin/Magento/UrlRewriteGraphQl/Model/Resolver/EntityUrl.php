@@ -10,6 +10,8 @@ namespace Magefan\BlogGraphQl\Plugin\Magento\UrlRewriteGraphQl\Model\Resolver;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magefan\BlogGraphQl\Model\UrlResolver\Router;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
 
 /**
  * Class Entity Url Plugin
@@ -22,13 +24,46 @@ class EntityUrl
     protected $router;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    protected $scopeConfig;
+
+    /**
      * EntityUrl constructor.
      * @param Router $router
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
-        Router $router
+        Router $router,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->router = $router;
+        $this->scopeConfig = $scopeConfig;
+    }
+
+    /**
+     * @param $path
+     * @param null $storeId
+     * @return mixed
+     */
+    protected function getConfigValue($path, $storeId = null)
+    {
+        return $this->scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    /**
+     * @param null $storeId
+     * @return bool
+     */
+    protected function isBlogPlusPermalinkEnabled($storeId = null)
+    {
+        return $this->getConfigValue(
+                'mfblog/advanced_permalink/enabled',
+                $storeId
+            ) && $this->getConfigValue(
+                'mfblog/general/enabled',
+                $storeId
+            );
     }
 
     /**
@@ -56,8 +91,9 @@ class EntityUrl
             $url = ltrim($url, '/');
         }
 
-        $blogPage = $this->router->getBlogPage($url);
-//        var_dump($blogPage);
+        $this->isBlogPlusPermalinkEnabled()
+            ? $blogPage = $this->router->getBlogPlusPage($url)
+            : $blogPage = $this->router->getBlogPage($url);
 
         switch ($blogPage[1]) {
             case 1:
@@ -74,6 +110,9 @@ class EntityUrl
                 break;
             case 5:
                 $type = 'ARCHIVE';
+                break;
+            case 6:
+                $type = 'SEARCH';
                 break;
             default:
                 $type = null;
