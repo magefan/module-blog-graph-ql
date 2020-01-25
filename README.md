@@ -1,6 +1,6 @@
 # GraphQL for [Magento 2 Blog Module](https://magefan.com/magento2-blog-extension) by Magefan
 
-[![Total Downloads](https://poser.pugx.org/magefan/module-blog-graph-ql/downloads)](https://packagist.org/packages/magefan/module-blog)
+[![Total Downloads](https://poser.pugx.org/magefan/module-blog-graph-ql/downloads)](https://packagist.org/packages/magefan/module-blog-graph-ql)
 [![Latest Stable Version](https://poser.pugx.org/magefan/module-blog-graph-ql/v/stable)](https://packagist.org/packages/magefan/module-blog-graph-ql)
 
 This [Magento 2 GraphQL Blog module](https://magefan.com/magento2-blog-extension) allows you to create a PWA Blog on your Magento 2 Store.
