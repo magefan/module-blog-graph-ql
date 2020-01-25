@@ -16,4 +16,12 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\UrlRewriteGraphQl\Model\Resolver\EntityUrl">
+        <plugin
+            name="Magefan_BlogGraphQl_Plugin_Magento_UrlRewriteGraphQl_Model_Resolver_EntityUrl"
+            type="Magefan\BlogGraphQl\Plugin\Magento\UrlRewriteGraphQl\Model\Resolver\EntityUrl"
+            sortOrder="10"
+            disabled="false"
+        />
+    </type>
 </config>
