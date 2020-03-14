@@ -5,7 +5,7 @@
 
 [Magento 2 Blog GraphQL](https://magefan.com/magento2-blog-extension) module allows you to create a PWA Blog on your Magento 2 Store.
 
-Attention!!! If you use Magento lower then v2.3.4 please use BlogGraphQl extension v2.0.1. BlogGraphQl v2.0.2 is only for Magento 2.3.4 or greater.
+**Attention!!!** If you use Magento lower then v2.3.4 please use BlogGraphQl extension v2.0.1. BlogGraphQl v2.0.2 is only for Magento 2.3.4 or greater.
 
 ## Demo
 
