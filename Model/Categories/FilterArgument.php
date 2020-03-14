@@ -39,6 +39,6 @@ class FilterArgument implements FieldEntityAttributesInterface
         foreach ($this->config->getConfigElement('BlogCategories')->getFields() as $field) {
             $fields[$field->getName()] = 'String';
         }
-        return array_keys($fields);
+        return $fields;
     }
 }
