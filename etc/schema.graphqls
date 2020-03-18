@@ -19,6 +19,7 @@ type Query {
         pageSize: Int = 5 @doc(description: "Specifies the maximum number of results to return at once. This attribute is optional.")
         currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1.")
         sort: [String] @doc(description: "Specifies which attribute to sort on, and whether to return the results in ascending or descending order.")
+        sortFiled: String = "publish_time" @doc(description: "Specifies what field to sort posts by. The default value is publish_time.")
     ): blogPostsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Posts") @doc(description: "The posts query searches for posts that match the criteria specified in the search and filter attributes")
     blogComments(
         filter: BlogCommentsFilterInput @doc(description: "Identifies which comment attributes to search for and return."),
