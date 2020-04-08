@@ -75,7 +75,7 @@ class Posts implements ResolverInterface
 
         if (isset($args['sort'])) {
             $sortOrder = $this->sortOrderBuilder
-                ->setField('update_time')
+                ->setField($args['sortFiled'])
                 ->setDirection($args['sort'][0])
                 ->create();
             $searchCriteria->setSortOrders([$sortOrder]);
