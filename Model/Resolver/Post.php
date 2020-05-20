@@ -44,9 +44,9 @@ class Post implements ResolverInterface
         array $value = null,
         array $args = null
     ) {
+        $fields = $info->getFieldSelection();
         $postId = $this->getPostId($args);
-        $postData = $this->getPostData($postId);
-        return  $postData;
+        return $this->getPostData($postId, $fields);
     }
 
     /**
@@ -65,13 +65,14 @@ class Post implements ResolverInterface
 
     /**
      * @param string $postId
+     * @param array $fields
      * @return array
      * @throws GraphQlNoSuchEntityException
      */
-    private function getPostData(string $postId): array
+    private function getPostData(string $postId, array $fields): array
     {
         try {
-            $postData = $this->postDataProvider->getData($postId);
+            $postData = $this->postDataProvider->getData($postId, $fields);
         } catch (NoSuchEntityException $e) {
             throw new GraphQlNoSuchEntityException(__($e->getMessage()), $e);
         }

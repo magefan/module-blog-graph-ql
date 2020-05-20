@@ -101,9 +101,10 @@ class Posts implements ResolverInterface
         }
 
         $items = $searchResult->getItems();
+        $fields = $info->getFieldSelection(1);
 
         foreach ($items as $k => $data) {
-            $items[$k] = $this->postDataProvider->getData($data['post_id']);
+            $items[$k] = $this->postDataProvider->getData($data['post_id'], $fields['items']);
         }
 
         return [

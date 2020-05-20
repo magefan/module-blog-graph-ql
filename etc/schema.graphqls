@@ -117,7 +117,7 @@ type BlogPost {
     is_recent_posts_skip: Int @doc(description: "Blog Post Is recent posts skip")
     short_content: String @doc(description: "Blog Post Short content")
     related_posts: [BlogPost] @doc(description: "Blog Related posts")
-    related_products: [ProductInterface] @doc(description: "Blog Related products")
+    related_products: [String] @doc(description: "Blog Related products")
     #fb_auto_publish: Int @doc(description: "Blog Post Fb auto publish")
     #fb_post_format: String @doc(description: "Blog Post Fb post format")
     #fb_published: Int @doc(description: "Blog Post Fb published")

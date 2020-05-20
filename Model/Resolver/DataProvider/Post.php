@@ -42,10 +42,11 @@ class Post
 
     /**
      * @param string $postId
+     * @param array $fields
      * @return array
      * @throws NoSuchEntityException
      */
-    public function getData(string $postId): array
+    public function getData(string $postId, array $fields): array
     {
         $post = $this->postRepository->getFactory()->create();
         $post->getResource()->load($post, $postId);
@@ -54,6 +55,6 @@ class Post
             throw new NoSuchEntityException();
         }
 
-        return $post->getDynamicData();
+        return $post->getDynamicData($fields);
     }
 }
