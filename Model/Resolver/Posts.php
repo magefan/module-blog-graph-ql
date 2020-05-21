@@ -75,7 +75,7 @@ class Posts implements ResolverInterface
 
         if (isset($args['sort'])) {
             $sortOrder = $this->sortOrderBuilder
-                ->setField($args['sortFiled'])
+                ->setField(isset($args['sortFiled']) ? $args['sortFiled'] : 'update_time')
                 ->setDirection($args['sort'][0])
                 ->create();
             $searchCriteria->setSortOrders([$sortOrder]);
@@ -101,9 +101,13 @@ class Posts implements ResolverInterface
         }
 
         $items = $searchResult->getItems();
+        $fields = $info ? $info->getFieldSelection(10) : null;
 
         foreach ($items as $k => $data) {
-            $items[$k] = $this->postDataProvider->getData($data['post_id']);
+            $items[$k] = $this->postDataProvider->getData(
+                $data['post_id'],
+                isset($fields['items']) ? $fields['items'] : null
+            );
         }
 
         return [

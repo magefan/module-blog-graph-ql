@@ -116,11 +116,8 @@ type BlogPost {
     views_count: Int @doc(description: "Blog Post Views count")
     is_recent_posts_skip: Int @doc(description: "Blog Post Is recent posts skip")
     short_content: String @doc(description: "Blog Post Short content")
-    #fb_auto_publish: Int @doc(description: "Blog Post Fb auto publish")
-    #fb_post_format: String @doc(description: "Blog Post Fb post format")
-    #fb_published: Int @doc(description: "Blog Post Fb published")
-    #rp_conditions_serialized: String @doc(description: "Blog Post Rp conditions serialized")
-    #rp_conditions_generation_time: String @doc(description: "Blog Post Rp conditions generation time")
+    related_posts: [BlogPost] @doc(description: "Blog Related posts")
+    related_products: [String] @doc(description: "Blog Related products")
 }
 
 type BlogCategory {

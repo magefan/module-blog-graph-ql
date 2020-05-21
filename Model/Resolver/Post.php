@@ -45,7 +45,14 @@ class Post implements ResolverInterface
         array $args = null
     ) {
         $postId = $this->getPostId($args);
-        $postData = $this->getPostData($postId);
+        $fields = $info ? $info->getFieldSelection(10) : null;
+
+        try {
+            $postData = $this->postDataProvider->getData($postId, $fields);
+        } catch (NoSuchEntityException $e) {
+            throw new GraphQlNoSuchEntityException(__($e->getMessage()), $e);
+        }
+
         return  $postData;
     }
 
@@ -61,20 +68,5 @@ class Post implements ResolverInterface
         }
 
         return (string)$args['id'];
-    }
-
-    /**
-     * @param string $postId
-     * @return array
-     * @throws GraphQlNoSuchEntityException
-     */
-    private function getPostData(string $postId): array
-    {
-        try {
-            $postData = $this->postDataProvider->getData($postId);
-        } catch (NoSuchEntityException $e) {
-            throw new GraphQlNoSuchEntityException(__($e->getMessage()), $e);
-        }
-        return $postData;
     }
 }
