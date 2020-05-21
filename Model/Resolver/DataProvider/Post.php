@@ -42,11 +42,11 @@ class Post
 
     /**
      * @param string $postId
-     * @param array $fields
+     * @param array|null $fields
      * @return array
      * @throws NoSuchEntityException
      */
-    public function getData(string $postId, array $fields): array
+    public function getData(string $postId, $fields = null): array
     {
         $post = $this->postRepository->getFactory()->create();
         $post->getResource()->load($post, $postId);
