@@ -143,6 +143,7 @@ type BlogCategory {
     custom_layout_update_xml: String @doc(description: "Blog Category Custom layout update xml")
     custom_theme_from: String @doc(description: "Blog Category Custom theme from")
     custom_theme_to: String @doc(description: "Blog Category Custom theme to")
+    breadcrumbs: [Breadcrumb] @doc(description: "Breadcrumbs, parent categories info.")
 }
 
 type BlogTag {

@@ -61,9 +61,13 @@ class Categories implements ResolverInterface
         $searchCriteria = $this->searchCriteriaBuilder->build('magefan_blog_categories', $args);
         $searchResult = $this->categoryRepositoryInterface->getList($searchCriteria);
         $items = $searchResult->getItems();
+        $fields = $info ? $info->getFieldSelection(10) : null;
 
         foreach ($items as $k => $data) {
-            $items[$k] = $this->categoryDataProvider->getData($data['category_id']);
+            $items[$k] = $this->categoryDataProvider->getData(
+                $data['category_id'],
+                isset($fields['items']) ? $fields['items'] : null
+            );
         }
 
         return [

@@ -42,10 +42,11 @@ class Category
 
     /**
      * @param string $categoryId
+     * @param null $fields
      * @return array
      * @throws NoSuchEntityException
      */
-    public function getData(string $categoryId): array
+    public function getData(string $categoryId , $fields = null): array
     {
         $category = $this->categoryRepository->getFactory()->create();
         $category->getResource()->load($category, $categoryId);
@@ -54,6 +55,6 @@ class Category
             throw new NoSuchEntityException();
         }
 
-        return $category->getDynamicData();
+        return $category->getDynamicData($fields);
     }
 }

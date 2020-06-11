@@ -46,8 +46,15 @@ class Category implements ResolverInterface
         array $args = null
     ) {
         $categoryId = $this->getCategoryId($args);
-        $categoryData = $this->getCategoryData($categoryId);
-        return  $categoryData;
+        $fields = $info ? $info->getFieldSelection(10) : null;
+
+        try {
+            $categoryData = $this->categoryDataProvider->getData($categoryId, $fields);
+        } catch (NoSuchEntityException $e) {
+            throw new GraphQlNoSuchEntityException(__($e->getMessage()), $e);
+        }
+
+        return $categoryData;
     }
 
     /**
@@ -62,20 +69,5 @@ class Category implements ResolverInterface
         }
 
         return (string)$args['id'];
-    }
-
-    /**
-     * @param string $categoryId
-     * @return array
-     * @throws GraphQlNoSuchEntityException
-     */
-    private function getCategoryData(string $categoryId): array
-    {
-        try {
-            $categoryData = $this->categoryDataProvider->getData($categoryId);
-        } catch (NoSuchEntityException $e) {
-            throw new GraphQlNoSuchEntityException(__($e->getMessage()), $e);
-        }
-        return $categoryData;
     }
 }
