@@ -122,7 +122,9 @@ type BlogPost {
 
 type BlogCategory {
     category_id: Int @doc(description: "Id of the Blog Post Category")
+    parent_category_id: Int @doc(description: "Id of the Blog Post Parent Category")
     category_url: String @doc(description: "URL of the Blog Post Category")
+    category_level: Int @doc(description: "Category Level")
     identifier: String @doc(description: "URL key of Blog Category")
     title: String @doc(description: "Blog Category title")
     meta_title: String @doc(description: "Blog Category Meta title")
