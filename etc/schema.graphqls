@@ -145,6 +145,8 @@ type BlogCategory {
     custom_layout_update_xml: String @doc(description: "Blog Category Custom layout update xml")
     custom_theme_from: String @doc(description: "Blog Category Custom theme from")
     custom_theme_to: String @doc(description: "Blog Category Custom theme to")
+    category_url_path: String @doc(description: "Relative URL of the Blog Post Category")
+    posts_count: Int @doc(description: "Blog Category Posts Count")
     breadcrumbs: [Breadcrumb] @doc(description: "Breadcrumbs, parent categories info.")
 }
 
