@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\StoreGraphQl\Model\Resolver\Store\StoreConfigDataProvider">
+        <arguments>
+            <argument name="extendedConfigData">
+                <item name="posts_per_page" xsi:type="string">mfblog/post_list/posts_per_page</item>
+                <item name="sidebar_search" xsi:type="string">mfblog/sidebar/search/enabled</item>
+                <item name="sidebar_categories" xsi:type="string">mfblog/sidebar/categories/enabled</item>
+                <item name="sidebar_recent_posts" xsi:type="string">mfblog/sidebar/recent_posts/enabled</item>
+                <item name="sidebar_tag" xsi:type="string">mfblog/sidebar/tag_claud/enabled</item>
+            </argument>
+        </arguments>
+    </type>
+</config>
