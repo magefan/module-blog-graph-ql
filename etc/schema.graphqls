@@ -207,9 +207,9 @@ type BlogComment {
 }
 
 type StoreConfig {
-    posts_per_page : String  @doc(description: "Extended Config Data - mfblog/post_list/posts_per_page")
-    sidebar_search : String  @doc(description: "Extended Config Data - mfblog/sidebar/search/enabled")
-    sidebar_categories : String  @doc(description: "Extended Config Data - mfblog/sidebar/categories/enabled")
-    sidebar_recent_posts : String  @doc(description: "Extended Config Data - mfblog/sidebar/recent_posts/enabled")
-    sidebar_tag : String  @doc(description: "Extended Config Data - mfblog/sidebar/tag_claud/enabled")
+    mfblog_post_list_posts_per_page : String  @doc(description: "Extended Config Data - mfblog/post_list/posts_per_page")
+    mfblog_sidebar_search_enabled : String  @doc(description: "Extended Config Data - mfblog/sidebar/search/enabled")
+    mfblog_sidebar_categories_enabled : String  @doc(description: "Extended Config Data - mfblog/sidebar/categories/enabled")
+    mfblog_sidebar_recent_posts_enabled : String  @doc(description: "Extended Config Data - mfblog/sidebar/recent_posts/enabled")
+    mfblog_sidebar_tag_claud_enabled : String  @doc(description: "Extended Config Data - mfblog/sidebar/tag_claud/enabled")
 }
