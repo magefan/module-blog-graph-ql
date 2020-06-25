@@ -175,6 +175,8 @@ type BlogAuthor {
     identifier: String @doc(description: "URL key of Blog Author")
     title: String @doc(description: "Blog Author title")
     name: String @doc(description: "Blog Author Name")
+    meta_description: String @doc(description: "Blog Author Meta description")
+    meta_title: String @doc(description: "Blog Author Meta title")
     url: String @doc(description: "Blog Author Url")
     author_url: String @doc(description: "Blog Author Author url")
     is_active: Int @doc(description: "Blog Author Is active")
