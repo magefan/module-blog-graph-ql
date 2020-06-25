@@ -209,6 +209,9 @@ type BlogComment {
 }
 
 type StoreConfig {
+    mfblog_index_page_title : String  @doc(description: "Extended Config Data - mfblog/index_page/title")
+    mfblog_index_page_meta_title : String  @doc(description: "Extended Config Data - mfblog/index_page/meta_title")
+    mfblog_index_page_meta_description : String  @doc(description: "Extended Config Data - mfblog/index_page/meta_description")
     mfblog_post_list_posts_per_page : String  @doc(description: "Extended Config Data - mfblog/post_list/posts_per_page")
     mfblog_sidebar_search_enabled : String  @doc(description: "Extended Config Data - mfblog/sidebar/search/enabled")
     mfblog_sidebar_categories_enabled : String  @doc(description: "Extended Config Data - mfblog/sidebar/categories/enabled")

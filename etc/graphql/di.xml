@@ -9,6 +9,9 @@
     <type name="Magento\StoreGraphQl\Model\Resolver\Store\StoreConfigDataProvider">
         <arguments>
             <argument name="extendedConfigData">
+                <item name="mfblog_index_page_title" xsi:type="string">mfblog/index_page/title</item>
+                <item name="mfblog_index_page_meta_title" xsi:type="string">mfblog/index_page/meta_title</item>
+                <item name="mfblog_index_page_meta_description" xsi:type="string">mfblog/index_page/meta_description</item>
                 <item name="mfblog_post_list_posts_per_page" xsi:type="string">mfblog/post_list/posts_per_page</item>
                 <item name="mfblog_sidebar_search_enabled" xsi:type="string">mfblog/sidebar/search/enabled</item>
                 <item name="mfblog_sidebar_categories_enabled" xsi:type="string">mfblog/sidebar/categories/enabled</item>
