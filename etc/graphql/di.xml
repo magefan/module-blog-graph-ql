@@ -17,6 +17,7 @@
                 <item name="mfblog_sidebar_categories_enabled" xsi:type="string">mfblog/sidebar/categories/enabled</item>
                 <item name="mfblog_sidebar_recent_posts_enabled" xsi:type="string">mfblog/sidebar/recent_posts/enabled</item>
                 <item name="mfblog_sidebar_tag_claud_enabled" xsi:type="string">mfblog/sidebar/tag_claud/enabled</item>
+                <item name="mfblog_sidebar_archive_enabled" xsi:type="string">mfblog/sidebar/archive/enabled</item>
             </argument>
         </arguments>
     </type>
