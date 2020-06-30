@@ -32,6 +32,7 @@ type Query {
 }
 
 input BlogPostsFilterInput {
+    post_id: FilterTypeInput @doc(description: "")
     author_id: FilterTypeInput @doc(description: "")
     tag_id: FilterTypeInput @doc(description: "")
     category_id: FilterTypeInput @doc(description: "")
@@ -218,4 +219,6 @@ type StoreConfig {
     mfblog_sidebar_recent_posts_enabled : String  @doc(description: "Extended Config Data - mfblog/sidebar/recent_posts/enabled")
     mfblog_sidebar_tag_claud_enabled : String  @doc(description: "Extended Config Data - mfblog/sidebar/tag_claud/enabled")
     mfblog_sidebar_archive_enabled : String  @doc(description: "Extended Config Data - mfblog/sidebar/archive/enabled")
+    mfblog_sidebar_featured_posts_enabled : String  @doc(description: "Extended Config Data - mfblog/sidebar/featured_posts/enabled")
+    mfblog_sidebar_featured_posts_posts_ids : String  @doc(description: "Extended Config Data - mfblog/sidebar/featured_posts/posts_ids")
 }
