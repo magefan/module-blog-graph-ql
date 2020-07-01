@@ -29,7 +29,10 @@ type Query {
     ):blogCommentsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Comments") @doc(description: "The comments query searches for posts that match the criteria specified in the search and filter attributes")
     blogTags: blogTagsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Tags") @doc(description: "")
     blogCategories: blogCategoriesOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Categories") @doc(description: "")
+}
 
+type Mutation {
+    addCommentToPost(): @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\AddCommentToPost") @doc(description: "")
 }
 
 input BlogPostsFilterInput {
