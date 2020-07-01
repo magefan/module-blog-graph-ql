@@ -69,9 +69,10 @@ class Posts implements ResolverInterface
         array $args = null
     ) {
         $searchCriteria = $this->searchCriteriaBuilder->build('di_build_magefan_blog_post', $args);
-        $searchCriteria
-            ->setPageSize($args['pageSize'])
-            ->setCurrentPage($args['currentPage']);
+        array_key_exists('allPosts', $args) && $args['allPosts'] ?:
+            $searchCriteria
+                ->setPageSize($args['pageSize'])
+                ->setCurrentPage($args['currentPage']);
 
         if (isset($args['sort'])) {
             $sortOrder = $this->sortOrderBuilder

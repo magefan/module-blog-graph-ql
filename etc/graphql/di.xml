@@ -12,21 +12,27 @@
                 <item name="mfblog_index_page_title" xsi:type="string">mfblog/index_page/title</item>
                 <item name="mfblog_index_page_meta_title" xsi:type="string">mfblog/index_page/meta_title</item>
                 <item name="mfblog_index_page_meta_description" xsi:type="string">mfblog/index_page/meta_description</item>
-
                 <item name="mfblog_post_list_posts_per_page" xsi:type="string">mfblog/post_list/posts_per_page</item>
-
                 <item name="mfblog_sidebar_search_enabled" xsi:type="string">mfblog/sidebar/search/enabled</item>
-
+                <item name="mfblog_sidebar_search_sort_order" xsi:type="string">mfblog/sidebar/search/sort_order</item>
                 <item name="mfblog_sidebar_categories_enabled" xsi:type="string">mfblog/sidebar/categories/enabled</item>
-
+                <item name="mfblog_sidebar_categories_show_posts_count" xsi:type="string">mfblog/sidebar/categories/show_posts_count</item>
+                <item name="mfblog_sidebar_categories_max_depth" xsi:type="string">mfblog/sidebar/categories/max_depth</item>
+                <item name="mfblog_sidebar_categories_sort_order" xsi:type="string">mfblog/sidebar/categories/sort_order</item>
                 <item name="mfblog_sidebar_recent_posts_enabled" xsi:type="string">mfblog/sidebar/recent_posts/enabled</item>
-
-                <item name="mfblog_sidebar_tag_claud_enabled" xsi:type="string">mfblog/sidebar/tag_claud/enabled</item>
-
-                <item name="mfblog_sidebar_archive_enabled" xsi:type="string">mfblog/sidebar/archive/enabled</item>
-
+                <item name="mfblog_sidebar_recent_posts_posts_per_page" xsi:type="string">mfblog/sidebar/recent_posts/posts_per_page</item>
+                <item name="mfblog_sidebar_recent_posts_sort_ordere" xsi:type="string">mfblog/sidebar/recent_posts/sort_order</item>
                 <item name="mfblog_sidebar_featured_posts_enabled" xsi:type="string">mfblog/sidebar/featured_posts/enabled</item>
                 <item name="mfblog_sidebar_featured_posts_posts_ids" xsi:type="string">mfblog/sidebar/featured_posts/posts_ids</item>
+                <item name="mfblog_sidebar_featured_posts_sort_order" xsi:type="string">mfblog/sidebar/featured_posts/sort_order</item>
+                <item name="mfblog_sidebar_popular_posts_enabled" xsi:type="string">mfblog/sidebar/popular_posts/enabled</item>
+                <item name="mfblog_sidebar_popular_posts_posts_per_page" xsi:type="string">mfblog/sidebar/popular_posts/posts_per_page</item>
+                <item name="mfblog_sidebar_popular_posts_sort_order" xsi:type="string">mfblog/sidebar/popular_posts/sort_order</item>
+                <item name="mfblog_sidebar_archive_enabled" xsi:type="string">mfblog/sidebar/archive/enabled</item>
+                <item name="mfblog_sidebar_archive_sort_order" xsi:type="string">mfblog/sidebar/archive/sort_order</item>
+                <item name="mfblog_sidebar_tag_claud_enabled" xsi:type="string">mfblog/sidebar/tag_claud/enabled</item>
+                <item name="mfblog_sidebar_tag_claud_tag_count" xsi:type="string">mfblog/sidebar/tag_claud/tag_count</item>
+                <item name="mfblog_sidebar_tag_claud_sort_order" xsi:type="string">mfblog/sidebar/tag_claud/sort_order</item>
             </argument>
         </arguments>
     </type>
