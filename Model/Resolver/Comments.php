@@ -7,11 +7,14 @@ declare(strict_types=1);
 
 namespace Magefan\BlogGraphQl\Model\Resolver;
 
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\Search\FilterGroupBuilder;
 use Magento\Framework\GraphQl\Query\Resolver\Argument\SearchCriteria\Builder as SearchCriteriaBuilder;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magefan\Blog\Api\CommentRepositoryInterface;
+use Magento\Framework\Api\SortOrderBuilder;
 
 /**
  * Class Comments
@@ -23,22 +26,55 @@ class Comments implements ResolverInterface
      * @var SearchCriteriaBuilder
      */
     private $searchCriteriaBuilder;
+
     /**
      * @var CommentRepositoryInterface
      */
     private $commentRepository;
 
     /**
+     * @var DataProvider\Comment
+     */
+    private $commentDataProvider;
+
+    /**
+     * @var FilterBuilder
+     */
+    private $filterBuilder;
+
+    /**
+     * @var FilterGroupBuilder
+     */
+    private $filterGroupBuilder;
+
+    /**
+     * @var SortOrderBuilder
+     */
+    private $sortOrderBuilder;
+
+    /**
      * Comments constructor.
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param CommentRepositoryInterface $commentRepository
+     * @param DataProvider\Comment $commentDataProvider
+     * @param FilterBuilder $filterBuilder
+     * @param FilterGroupBuilder $filterGroupBuilder
+     * @param SortOrderBuilder $sortOrderBuilder
      */
     public function __construct(
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        CommentRepositoryInterface $commentRepository
+        CommentRepositoryInterface $commentRepository,
+        DataProvider\Comment $commentDataProvider,
+        FilterBuilder $filterBuilder,
+        FilterGroupBuilder $filterGroupBuilder,
+        SortOrderBuilder $sortOrderBuilder
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->commentRepository = $commentRepository;
+        $this->commentDataProvider = $commentDataProvider;
+        $this->filterBuilder = $filterBuilder;
+        $this->filterGroupBuilder = $filterGroupBuilder;
+        $this->sortOrderBuilder = $sortOrderBuilder;
     }
     /**
      * @inheritdoc
@@ -50,13 +86,51 @@ class Comments implements ResolverInterface
         array $value = null,
         array $args = null
     ) {
+        $parentIdFilter = $this->filterBuilder
+            ->setField('parent_id')
+            ->setValue(0)
+            ->setConditionType('eq')
+            ->create();
+        $statusFilter = $this->filterBuilder
+            ->setField('status')
+            ->setValue(1)
+            ->setConditionType('eq')
+            ->create();
+        $postIdFilter = $this->filterBuilder
+            ->setField('post_id')
+            ->setValue($args['filter']['post_id']['eq'])
+            ->setConditionType('eq')
+            ->create();
+
+        $sortByCreationTime = $this->sortOrderBuilder
+            ->setField('creation_time')
+            ->setDescendingDirection()
+            ->create();
+
         $searchCriteria = $this->searchCriteriaBuilder->build('magefan_blog_comments', $args);
         $searchCriteria->setCurrentPage($args['currentPage']);
         $searchCriteria->setPageSize($args['pageSize']);
+        $searchCriteria->setSortOrders([$sortByCreationTime]);
+        $searchCriteria->setFilterGroups([
+            $this->filterGroupBuilder->setFilters([$parentIdFilter])->create(),
+            $this->filterGroupBuilder->setFilters([$statusFilter])->create(),
+            $this->filterGroupBuilder->setFilters([$postIdFilter])->create()
+        ]);
+
         $searchResult = $this->commentRepository->getList($searchCriteria);
+        $items = $searchResult->getItems();
+        $fields = $info ? $info->getFieldSelection(10) : null;
+
+        foreach ($items as $k => $data) {
+            $items[$k] = $this->commentDataProvider->getData(
+                $data['comment_id'],
+                isset($fields['items']) ? $fields['items'] : null
+            );
+        }
+
         return [
             'total_count' => $searchResult->getTotalCount(),
-            'items' => $searchResult->getItems()
+            'items' => $items
         ];
     }
 }

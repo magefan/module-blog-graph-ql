@@ -32,7 +32,8 @@ type Query {
 }
 
 type Mutation {
-    addCommentToPost(): @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\AddCommentToPost") @doc(description: "")
+    addCommentToPostAsGuest(input: addCommentToPostAsGuestInput): AddCommentToPostAsGuestOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\AddCommentToPostAsGuest") @doc(description: "")
+    addCommentToPostAsCustomer(input: addCommentToPostAsCustomerInput): Int @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\AddCommentToPostAsCustomer") @doc(description: "")
 }
 
 input BlogPostsFilterInput {
@@ -45,6 +46,23 @@ input BlogPostsFilterInput {
     publish_time: FilterTypeInput @doc(description: "")
     search: FilterTypeInput @doc(description: "")
     or: BlogPostsFilterInput @doc(description: "The keyword required to perform a logical OR comparison")
+}
+
+input addCommentToPostAsGuestInput {
+    post_id: Int!
+    text: String!
+    author_nickname: String!
+    author_email: String!
+    parent_id: Int!
+}
+
+input addCommentToPostAsCustomerInput {
+    text: String!
+}
+
+type AddCommentToPostAsGuestOutput {
+    total_count: Int @doc(description: "")
+    comments: [BlogComment]
 }
 
 enum UrlRewriteEntityTypeEnum {
@@ -211,6 +229,7 @@ type BlogComment {
     text: String @doc(description: "Blog Comment Text")
     creation_time: String @doc(description: "Blog Comment Creation time")
     update_time: String @doc(description: "Blog Comment Update time")
+    replies: [BlogComment] @doc(description: "Blog Comment Replies")
 }
 
 type StoreConfig {
