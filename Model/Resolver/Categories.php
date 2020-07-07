@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magefan\BlogGraphQl\Model\Resolver;
 
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\Search\FilterGroupBuilder;
 use Magento\Framework\GraphQl\Query\Resolver\Argument\SearchCriteria\Builder as SearchCriteriaBuilder;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
@@ -32,21 +34,35 @@ class Categories implements ResolverInterface
      * @var DataProvider\Category
      */
     protected $categoryDataProvider;
+    /**
+     * @var FilterBuilder
+     */
+    protected $filterBuilder;
+    /**
+     * @var FilterGroupBuilder
+     */
+    protected $filterGroupBuilder;
 
     /**
      * Categories constructor.
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param CategoryRepositoryInterface $categoryRepositoryInterface
      * @param DataProvider\Category $categoryDataProvider
+     * @param FilterBuilder $filterBuilder
+     * @param FilterGroupBuilder $filterGroupBuilder
      */
     public function __construct(
         SearchCriteriaBuilder $searchCriteriaBuilder,
         CategoryRepositoryInterface $categoryRepositoryInterface,
-        DataProvider\Category $categoryDataProvider
+        DataProvider\Category $categoryDataProvider,
+        FilterBuilder $filterBuilder,
+        FilterGroupBuilder $filterGroupBuilder
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->categoryRepositoryInterface = $categoryRepositoryInterface;
         $this->categoryDataProvider = $categoryDataProvider;
+        $this->filterBuilder = $filterBuilder;
+        $this->filterGroupBuilder = $filterGroupBuilder;
     }
     /**
      * @inheritdoc
@@ -59,6 +75,15 @@ class Categories implements ResolverInterface
         array $args = null
     ) {
         $searchCriteria = $this->searchCriteriaBuilder->build('magefan_blog_categories', $args);
+        $statusFilter = $this->filterBuilder
+            ->setField('is_active')
+            ->setValue(1)
+            ->setConditionType('eq')
+            ->create();
+        $searchCriteria->setFilterGroups([
+            $this->filterGroupBuilder->setFilters([$statusFilter])->create()
+        ]);
+
         $searchResult = $this->categoryRepositoryInterface->getList($searchCriteria);
         $items = $searchResult->getItems();
         $fields = $info ? $info->getFieldSelection(10) : null;
