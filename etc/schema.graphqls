@@ -213,6 +213,7 @@ input BlogCommentsFilterInput {
 
 type blogCommentsOutput {
     total_count: Int @doc(description: "")
+    total_pages: Int @doc(description: "")
     items: [BlogComment] @doc(description: "")
 }
 

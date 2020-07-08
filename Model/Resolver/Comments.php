@@ -9,6 +9,7 @@ namespace Magefan\BlogGraphQl\Model\Resolver;
 
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\FilterGroupBuilder;
+use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 use Magento\Framework\GraphQl\Query\Resolver\Argument\SearchCriteria\Builder as SearchCriteriaBuilder;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
@@ -118,6 +119,24 @@ class Comments implements ResolverInterface
         ]);
 
         $searchResult = $this->commentRepository->getList($searchCriteria);
+
+        //possible division by 0
+        if ($searchCriteria->getPageSize()) {
+            $maxPages = ceil($searchResult->getTotalCount() / $searchCriteria->getPageSize());
+        } else {
+            $maxPages = 0;
+        }
+
+        $currentPage = $searchCriteria->getCurrentPage();
+        if ($searchCriteria->getCurrentPage() > $maxPages && $searchResult->getTotalCount() > 0) {
+            throw new GraphQlInputException(
+                __(
+                    'currentPage value %1 specified is greater than the %2 page(s) available.',
+                    [$currentPage, $maxPages]
+                )
+            );
+        }
+
         $items = $searchResult->getItems();
         $fields = $info ? $info->getFieldSelection(10) : null;
 
@@ -130,6 +149,7 @@ class Comments implements ResolverInterface
 
         return [
             'total_count' => $searchResult->getTotalCount(),
+            'total_pages' => $maxPages,
             'items' => $items
         ];
     }
