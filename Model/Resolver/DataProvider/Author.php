@@ -49,6 +49,39 @@ class Author
         $author = $this->authorRepository->getFactory()->create();
         $author->getResource()->load($author, $authorId);
 
-        return $author->getDynamicData();
+        return $this->getDynamicData($author);
+    }
+
+    /**
+     * Prepare all additional data
+     * @param $author
+     * @param null $fields
+     * @return mixed
+     */
+    public function getDynamicData($author, $fields = null)
+    {
+        $data = $author->getData();
+
+        $keys = [
+            'meta_description',
+            'meta_title',
+            'author_url',
+            'name',
+            'title',
+            'identifier',
+        ];
+
+        $data['author_id'] = $author->getId();
+
+        foreach ($keys as $key) {
+            $method = 'get' . str_replace(
+                    '_',
+                    '',
+                    ucwords($key, '_')
+                );
+            $data[$key] = $author->$method();
+        }
+
+        return $data;
     }
 }

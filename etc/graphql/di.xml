@@ -12,8 +12,11 @@
                 <item name="mfblog_index_page_title" xsi:type="string">mfblog/index_page/title</item>
                 <item name="mfblog_index_page_meta_title" xsi:type="string">mfblog/index_page/meta_title</item>
                 <item name="mfblog_index_page_meta_description" xsi:type="string">mfblog/index_page/meta_description</item>
+                <item name="mfblog_post_view_comments_type" xsi:type="string">mfblog/post_view/comments/type</item>
                 <item name="mfblog_post_view_comments_number_of_comments" xsi:type="string">mfblog/post_view/comments/number_of_comments</item>
                 <item name="mfblog_post_view_comments_number_of_replies" xsi:type="string">mfblog/post_view/comments/number_of_replies</item>
+                <item name="mfblog_post_view_comments_guest_comments" xsi:type="string">mfblog/post_view/comments/guest_comments</item>
+                <item name="mfblog_post_view_comments_display_privacy_policy_checkbox" xsi:type="string">mfblog/post_view/comments/display_privacy_policy_checkbox</item>
                 <item name="mfblog_post_list_posts_per_page" xsi:type="string">mfblog/post_list/posts_per_page</item>
                 <item name="mfblog_sidebar_search_enabled" xsi:type="string">mfblog/sidebar/search/enabled</item>
                 <item name="mfblog_sidebar_search_sort_order" xsi:type="string">mfblog/sidebar/search/sort_order</item>

@@ -54,6 +54,34 @@ class Tag
             throw new NoSuchEntityException();
         }
 
-        return $tag->getDynamicData();
+        return $this->getDynamicData($tag);
+    }
+
+    /**
+     * Prepare all additional data
+     * @param $tag
+     * @param null $fields
+     * @return mixed
+     */
+    public function getDynamicData($tag, $fields = null)
+    {
+        $data = $tag->getData();
+
+        $keys = [
+            'meta_description',
+            'meta_title',
+            'tag_url',
+        ];
+
+        foreach ($keys as $key) {
+            $method = 'get' . str_replace(
+                    '_',
+                    '',
+                    ucwords($key, '_')
+                );
+            $data[$key] = $tag->$method();
+        }
+
+        return $data;
     }
 }

@@ -94,7 +94,7 @@ class Posts implements ResolverInterface
             $this->filterGroupBuilder->setFilters([$statusFilter])->create()
         ]);
 
-        if (isset($args['filter'])) {
+        if (isset($args['filter']['post_id']['in'])) {
             $postIdFilter = $this->filterBuilder
                 ->setField('post_id')
                 ->setValue($args['filter']['post_id']['in'])

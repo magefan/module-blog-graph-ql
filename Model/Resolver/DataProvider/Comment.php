@@ -46,6 +46,29 @@ class Comment
             throw new NoSuchEntityException();
         }
 
-        return $comment->getDynamicData($fields);
+        return $this->getDynamicData($comment, $fields);
+    }
+
+    /**
+     * Prepare all additional data
+     * @param $comment
+     * @param null $fields
+     * @return mixed
+     */
+    public function getDynamicData($comment, $fields = null)
+    {
+        $data = $comment->getData();
+
+        if (is_array($fields) && array_key_exists('replies', $fields)) {
+            $replies = [];
+            foreach ($comment->getRepliesCollection() as $reply) {
+                $replies[] = $reply->getDynamicData(
+                    isset($fields['replies']) ? $fields['replies'] : null
+                );
+            }
+            $data['replies'] = $replies;
+        }
+
+        return $data;
     }
 }
