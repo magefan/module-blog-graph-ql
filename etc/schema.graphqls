@@ -32,7 +32,11 @@ type Query {
 }
 
 type Mutation {
-    addCommentToPostAsGuest(input: addCommentToPostAsGuestInput): AddCommentToPostAsGuestOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\AddCommentToPostAsGuest") @doc(description: "")
+    addCommentToPostAsGuest(
+        pageSize: Int = 5 @doc(description: "Specifies the maximum number of results to return at once. This attribute is optional."),
+        currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1."),
+        input: addCommentToPostAsGuestInput
+    ): AddCommentToPostAsGuestOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\AddCommentToPostAsGuest") @doc(description: "")
     addCommentToPostAsCustomer(input: addCommentToPostAsCustomerInput): Int @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\AddCommentToPostAsCustomer") @doc(description: "")
 }
 
@@ -62,6 +66,7 @@ input addCommentToPostAsCustomerInput {
 
 type AddCommentToPostAsGuestOutput {
     total_count: Int @doc(description: "")
+    total_pages: Int @doc(description: "")
     comments: [BlogComment]
 }
 

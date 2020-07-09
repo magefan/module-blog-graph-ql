@@ -133,7 +133,26 @@ class AddCommentToPostAsGuest implements ResolverInterface
         $commentsCollection = $post->getComments()
             ->addActiveFilter()
             ->addFieldToFilter('parent_id', 0)
+            ->setPageSize($args['pageSize'])
+            ->setCurPage($args['currentPage'])
             ->setOrder('creation_time', 'DESC');
+
+        //possible division by 0
+        if ($commentsCollection->getPageSize()) {
+            $maxPages = ceil($commentsCollection->getSize() / $commentsCollection->getPageSize());
+        } else {
+            $maxPages = 0;
+        }
+
+        $currentPage = $commentsCollection->getCurPage();
+        if ($commentsCollection->getCurPage() > $maxPages && $commentsCollection->getSize() > 0) {
+            throw new GraphQlInputException(
+                __(
+                    'currentPage value %1 specified is greater than the %2 page(s) available.',
+                    [$currentPage, $maxPages]
+                )
+            );
+        }
 
         $fields = $info ? $info->getFieldSelection(10) : null;
 
@@ -143,7 +162,8 @@ class AddCommentToPostAsGuest implements ResolverInterface
         }
 
         return [
-            'total_count' => count($commentsCollection),
+            'total_count' => $commentsCollection->getSize(),
+            'total_pages' => $maxPages,
             'comments' => $comments
         ];
     }
