@@ -21,9 +21,9 @@ use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 use Magento\Store\Model\ScopeInterface;
 
 /**
- * Class AddCommentToPostAsGuest
+ * Class AddCommentToPost
  */
-class AddCommentToPostAsGuest implements ResolverInterface
+class AddCommentToPost implements ResolverInterface
 {
     /**
      * @var ScopeConfigInterface
@@ -41,7 +41,7 @@ class AddCommentToPostAsGuest implements ResolverInterface
     private $postFactory;
 
     /**
-     * AddCommentToPostAsGuest constructor.
+     * AddCommentToPost constructor.
      * @param ScopeConfigInterface $scopeConfig
      * @param CommentFactory $commentFactory
      * @param PostFactory $postFactory
