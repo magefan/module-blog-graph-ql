@@ -8,9 +8,9 @@ declare(strict_types=1);
 namespace Magefan\BlogGraphQl\Model\Resolver;
 
 use Magefan\Blog\Helper\Config;
-use Magefan\Blog\Model\CommentFactory;
+use Magefan\Blog\Api\CommentRepositoryInterface;
 use Magefan\Blog\Model\Config\Source\AuthorType;
-use Magefan\Blog\Model\PostFactory;
+use Magefan\Blog\Api\PostRepositoryInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
@@ -31,29 +31,29 @@ class AddCommentToPost implements ResolverInterface
     private $scopeConfig;
 
     /**
-     * @var CommentFactory
+     * @var CommentRepositoryInterface
      */
-    private $commentFactory;
+    private $commentRepository;
 
     /**
-     * @var PostFactory
+     * @var PostRepositoryInterface
      */
-    private $postFactory;
+    private $postRepository;
 
     /**
      * AddCommentToPost constructor.
      * @param ScopeConfigInterface $scopeConfig
-     * @param CommentFactory $commentFactory
-     * @param PostFactory $postFactory
+     * @param CommentRepositoryInterface $commentRepository
+     * @param PostRepositoryInterface $postRepository
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        CommentFactory $commentFactory,
-        PostFactory $postFactory
+        CommentRepositoryInterface $commentRepository,
+        PostRepositoryInterface $postRepository
     ) {
         $this->scopeConfig = $scopeConfig;
-        $this->commentFactory = $commentFactory;
-        $this->postFactory = $postFactory;
+        $this->commentRepository = $commentRepository;
+        $this->postRepository = $postRepository;
     }
 
     /**
@@ -61,24 +61,27 @@ class AddCommentToPost implements ResolverInterface
      */
     public function resolve(Field $field, $context, ResolveInfo $info, array $value = null, array $args = null)
     {
-        if (!$this->isEnabled()) {
-            throw new GraphQlNoSuchEntityException(__($this->getStatusNotification()));
+        if (!$this->scopeConfig->getValue(Config::XML_PATH_EXTENSION_ENABLED, ScopeInterface::SCOPE_STORE)) {
+            throw new GraphQlNoSuchEntityException(__(
+                strrev('golB > noisnetxE nafegaM > noitarugifnoC > serotS ni noisnetxe elbane esaelP')
+            ));
         }
 
-        if (!$this->getConfig(Config::GUEST_COMMENT)) {
+        if (!$this->scopeConfig->getValue(Config::GUEST_COMMENT, ScopeInterface::SCOPE_STORE)
+            && !$context->getExtensionAttributes()->getIsCustomer()) {
             throw new GraphQlAuthorizationException(__('Login to submit comment.'));
         }
 
-        if (!isset($args['input']['post_id'])) {
+        if (empty($args['input']['post_id'])) {
             throw new GraphQlInputException(__('Post ID should be specified'));
         }
-        if (!isset($args['input']['text'])) {
+        if (empty($args['input']['text'])) {
             throw new GraphQlInputException(__('Comment should be specified'));
         }
-        if (!isset($args['input']['author_nickname'])) {
+        if (empty($args['input']['author_nickname'])) {
             throw new GraphQlInputException(__('Author should be specified'));
         }
-        if (!isset($args['input']['author_email'])) {
+        if (empty($args['input']['author_email'])) {
             throw new GraphQlInputException(__('Author email should be specified'));
         }
 
@@ -86,9 +89,10 @@ class AddCommentToPost implements ResolverInterface
         $text = $args['input']['text'];
         $author = $args['input']['author_nickname'];
         $email = $args['input']['author_email'];
-        $parentId = $args['input']['parent_id'];
 
-        $comment = $this->commentFactory->create();
+        empty($args['input']['parent_id']) ? $parentId = 0 : $parentId = $args['input']['parent_id'];
+
+        $comment = $this->commentRepository->getFactory()->create();
         $comment->setData([
             'post_id' => $postId,
             'text' => $text,
@@ -98,31 +102,41 @@ class AddCommentToPost implements ResolverInterface
 
         /* Set default status */
         $comment->setStatus(
-            $this->getConfig(Config::COMMENT_STATUS)
+            $this->scopeConfig->getValue(Config::COMMENT_STATUS, ScopeInterface::SCOPE_STORE)
         );
 
         /* Guest can post review */
         $comment->setCustomerId(0)->setAuthorType(AuthorType::GUEST);
 
         try {
-            $post = $this->initPost($postId);
-            if (!$post) {
-                throw new GraphQlNoSuchEntityException(__('You cannot post comment. Blog post is not longer exist.'));
+            try {
+                $post = $this->postRepository->getById($postId);
+
+                if (!$post->getIsActive()) {
+                    throw new GraphQlNoSuchEntityException(__('You cannot post comment. Blog post is not longer exist.'));
+                }
+            } catch (\Exception $e) {
+
             }
 
             if ($parentId) {
-                $parentComment = $this->initParentComment($parentId);
-                if (!$parentComment) {
-                    throw new GraphQlNoSuchEntityException(__('You cannot reply to this comment. Comment is not longer exist.'));
-                }
-                if (!$parentComment->getPost()
-                    || $parentComment->getPost()->getId() != $post->getId()
-                    || $parentComment->isReply()
-                ) {
-                    throw new GraphQlNoSuchEntityException(__('You cannot reply to this comment.'));
-                }
+                try {
+                    $parentComment = $this->commentRepository->getById($parentId);
 
-                $comment->setParentId($parentComment->getId());
+                    if (!$parentComment->isActive()) {
+                        throw new GraphQlNoSuchEntityException(__('You cannot reply to this comment. Comment is not longer exist.'));
+                    }
+                    if (!$parentComment->getPost()
+                        || $parentComment->getPost()->getId() != $post->getId()
+                        || $parentComment->isReply()
+                    ) {
+                        throw new GraphQlNoSuchEntityException(__('You cannot reply to this comment.'));
+                    }
+
+                    $comment->setParentId($parentComment->getId());
+                } catch (\Exception $e) {
+
+                }
             }
 
             $comment->save();
@@ -166,58 +180,5 @@ class AddCommentToPost implements ResolverInterface
             'total_pages' => $maxPages,
             'comments' => $comments
         ];
-    }
-
-    /**
-     * @return string
-     */
-    private function getStatusNotification(): string
-    {
-        return strrev('golB > noisnetxE nafegaM > noitarugifnoC > serotS ni noisnetxe elbane esaelP');
-    }
-
-    /**
-     * @param int|null $storeId
-     * @return bool
-     */
-    private function isEnabled(int $storeId = null): bool
-    {
-        return (bool)$this->getConfig(Config::XML_PATH_EXTENSION_ENABLED, $storeId);
-    }
-
-    /**
-     * @param string $path
-     * @param int|null $storeId
-     * @return mixed
-     */
-    private function getConfig(string $path, int $storeId = null)
-    {
-        return $this->scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE, $storeId);
-    }
-
-    /**
-     * @param int $postId
-     * @return bool|\Magefan\Blog\Model\Post
-     */
-    private function initPost(int $postId)
-    {
-        $post = $this->postFactory->create()->load($postId);
-        if (!$post->getIsActive()) {
-            return false;
-        }
-        return $post;
-    }
-
-    /**
-     * @param int $commentId
-     * @return bool|\Magefan\Blog\Model\Comment
-     */
-    private function initParentComment(int $commentId)
-    {
-        $comment = $this->commentFactory->create()->load($commentId);
-        if (!$comment->isActive()) {
-            return false;
-        }
-        return $comment;
     }
 }
