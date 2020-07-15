@@ -235,6 +235,7 @@ type BlogComment {
 
 type StoreConfig {
     mfblog_index_page_title : String  @doc(description: "Extended Config Data - mfblog/index_page/title")
+    mfblog_index_page_posts_sort_by : String  @doc(description: "Extended Config Data - mfblog/index_page/posts_sort_by")
     mfblog_index_page_meta_title : String  @doc(description: "Extended Config Data - mfblog/index_page/meta_title")
     mfblog_index_page_meta_description : String  @doc(description: "Extended Config Data - mfblog/index_page/meta_description")
     mfblog_post_view_comments_type : String  @doc(description: "Extended Config Data - mfblog/post_view/comments/type")
@@ -263,4 +264,6 @@ type StoreConfig {
     mfblog_sidebar_tag_claud_enabled : String  @doc(description: "Extended Config Data - mfblog/sidebar/tag_claud/enabled")
     mfblog_sidebar_tag_claud_tag_count : String  @doc(description: "Extended Config Data - mfblog/sidebar/tag_claud/tag_count")
     mfblog_sidebar_tag_claud_sort_order : String  @doc(description: "Extended Config Data - mfblog/sidebar/tag_claud/sort_order")
+
+    mfblog_design_publication_date : String  @doc(description: "Extended Config Data - mfblog/design/publication_date")
 }

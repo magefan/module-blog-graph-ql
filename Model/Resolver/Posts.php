@@ -90,9 +90,9 @@ class Posts implements ResolverInterface
             ->setValue(1)
             ->setConditionType('eq')
             ->create();
-        $searchCriteria->setFilterGroups([
-            $this->filterGroupBuilder->setFilters([$statusFilter])->create()
-        ]);
+
+        $filterGroups = $searchCriteria->getFilterGroups();
+        $filterGroups[] = $this->filterGroupBuilder->addFilter($statusFilter)->create();
 
         if (isset($args['filter']['post_id']['in'])) {
             $postIdFilter = $this->filterBuilder
@@ -100,11 +100,10 @@ class Posts implements ResolverInterface
                 ->setValue($args['filter']['post_id']['in'])
                 ->setConditionType('in')
                 ->create();
-            $searchCriteria->setFilterGroups([
-                $this->filterGroupBuilder->setFilters([$statusFilter])->create(),
-                $this->filterGroupBuilder->setFilters([$postIdFilter])->create()
-            ]);
+            $filterGroups[] = $this->filterGroupBuilder->addFilter($postIdFilter)->create();
         }
+
+        $searchCriteria->setFilterGroups($filterGroups);
 
         array_key_exists('allPosts', $args) && $args['allPosts'] ?:
             $searchCriteria

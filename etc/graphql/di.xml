@@ -10,6 +10,7 @@
         <arguments>
             <argument name="extendedConfigData">
                 <item name="mfblog_index_page_title" xsi:type="string">mfblog/index_page/title</item>
+                <item name="mfblog_index_page_posts_sort_by" xsi:type="string">mfblog/index_page/posts_sort_by</item>
                 <item name="mfblog_index_page_meta_title" xsi:type="string">mfblog/index_page/meta_title</item>
                 <item name="mfblog_index_page_meta_description" xsi:type="string">mfblog/index_page/meta_description</item>
                 <item name="mfblog_post_view_comments_type" xsi:type="string">mfblog/post_view/comments/type</item>
@@ -38,6 +39,8 @@
                 <item name="mfblog_sidebar_tag_claud_enabled" xsi:type="string">mfblog/sidebar/tag_claud/enabled</item>
                 <item name="mfblog_sidebar_tag_claud_tag_count" xsi:type="string">mfblog/sidebar/tag_claud/tag_count</item>
                 <item name="mfblog_sidebar_tag_claud_sort_order" xsi:type="string">mfblog/sidebar/tag_claud/sort_order</item>
+
+                <item name="mfblog_design_publication_date" xsi:type="string">mfblog/design/publication_date</item>
             </argument>
         </arguments>
     </type>
