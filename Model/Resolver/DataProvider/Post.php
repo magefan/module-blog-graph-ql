@@ -8,7 +8,10 @@ declare(strict_types=1);
 namespace Magefan\BlogGraphQl\Model\Resolver\DataProvider;
 
 use Magefan\Blog\Api\PostRepositoryInterface;
+use Magefan\Blog\Model\Config;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Widget\Model\Template\FilterEmulate;
 
 /**
@@ -43,25 +46,33 @@ class Post
     private $author;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
      * Post constructor.
      * @param PostRepositoryInterface $postRepository
      * @param FilterEmulate $widgetFilter
      * @param Tag $tag
      * @param Category $category
      * @param Author $author
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         PostRepositoryInterface $postRepository,
         FilterEmulate $widgetFilter,
         Tag $tag,
         Category $category,
-        Author $author
+        Author $author,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->postRepository = $postRepository;
         $this->widgetFilter = $widgetFilter;
         $this->tag = $tag;
         $this->category = $category;
         $this->author = $author;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -132,20 +143,52 @@ class Post
          * this checks is used for REST, and related data was not provided via reset */
         if (is_array($fields) && array_key_exists('related_posts', $fields)) {
             $relatedPosts = [];
-            foreach ($post->getRelatedPosts() as $relatedPost) {
-                $relatedPosts[] = $this->getDynamicData(
-                    $relatedPost,
-                    isset($fields['related_posts']) ? $fields['related_posts'] : null
+
+            $isEnabled = $this->scopeConfig->getValue(
+                Config::XML_RELATED_POSTS_ENABLED,
+                ScopeInterface::SCOPE_STORE
+            );
+
+            if ($isEnabled) {
+                $pageSize = (int) $this->scopeConfig->getValue(
+                    Config::XML_RELATED_POSTS_NUMBER,
+                    ScopeInterface::SCOPE_STORE
                 );
+
+                $postCollection = $post->getRelatedPosts()
+                    ->addActiveFilter()
+                    ->setPageSize($pageSize ?: 5);
+                foreach ($postCollection as $relatedPost) {
+                    $relatedPosts[] = $this->getDynamicData(
+                        $relatedPost,
+                        isset($fields['related_posts']) ? $fields['related_posts'] : null
+                    );
+                }
             }
+
             $data['related_posts'] = $relatedPosts;
         }
 
         /* Do not use check for null === $fields here */
         if (is_array($fields) && array_key_exists('related_products', $fields)) {
             $relatedProducts = [];
-            foreach ($post->getRelatedProducts() as $relatedProduct) {
-                $relatedProducts[] = $relatedProduct->getSku();
+
+            $isEnabled = $this->scopeConfig->getValue(
+                Config::XML_RELATED_PRODUCTS_ENABLED,
+                ScopeInterface::SCOPE_STORE
+            );
+
+            if ($isEnabled) {
+                $pageSize = (int) $this->scopeConfig->getValue(
+                    Config::XML_RELATED_PRODUCTS_NUMBER,
+                    ScopeInterface::SCOPE_STORE
+                );
+
+                $productCollection = $post->getRelatedProducts()
+                    ->setPageSize($pageSize ?: 5);
+                foreach ($productCollection as $relatedProduct) {
+                    $relatedProducts[] = $relatedProduct->getSku();
+                }
             }
             $data['related_products'] = $relatedProducts;
         }
