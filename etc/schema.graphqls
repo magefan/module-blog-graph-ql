@@ -48,6 +48,7 @@ input BlogPostsFilterInput {
     content: FilterTypeInput @doc(description: "")
     publish_time: FilterTypeInput @doc(description: "")
     search: FilterTypeInput @doc(description: "")
+    relatedproduct_id: FilterTypeInput @doc(description: "")
     or: BlogPostsFilterInput @doc(description: "The keyword required to perform a logical OR comparison")
 }
 
@@ -141,6 +142,7 @@ type BlogPost {
     short_content: String @doc(description: "Blog Post Short content")
     related_posts: [BlogPost] @doc(description: "Blog Related posts")
     related_products: [String] @doc(description: "Blog Related products")
+    relatedproduct_id: Int @doc(description: "Id of the Related Product (This attribute used only in filter)")
 }
 
 type BlogCategory {
