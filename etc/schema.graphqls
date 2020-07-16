@@ -269,6 +269,17 @@ type StoreConfig {
     mfblog_sidebar_tag_claud_enabled : String  @doc(description: "Extended Config Data - mfblog/sidebar/tag_claud/enabled")
     mfblog_sidebar_tag_claud_tag_count : String  @doc(description: "Extended Config Data - mfblog/sidebar/tag_claud/tag_count")
     mfblog_sidebar_tag_claud_sort_order : String  @doc(description: "Extended Config Data - mfblog/sidebar/tag_claud/sort_order")
+    mfblog_sidebar_custom_enabled : String  @doc(description: "Extended Config Data - mfblog/sidebar/custom/enabled")
+    mfblog_sidebar_custom_sort_order : String  @doc(description: "Extended Config Data - mfblog/sidebar/custom/sort_order")
+    mfblog_sidebar_custom_html : String  @doc(description: "Extended Config Data - mfblog/sidebar/custom/html")
+    mfblog_sidebar_custom2_enabled : String  @doc(description: "Extended Config Data - mfblog/sidebar/custom2/enabled")
+    mfblog_sidebar_custom2_sort_order : String  @doc(description: "Extended Config Data - mfblog/sidebar/custom2/sort_order")
+    mfblog_sidebar_custom2_html : String  @doc(description: "Extended Config Data - mfblog/sidebar/custom2/html")
+
+    mfblog_sidebar_rss_feed_enabled : String  @doc(description: "Extended Config Data - mfblog/sidebar/rss_feed/enabled")
+    mfblog_sidebar_rss_feed_sort_order : String  @doc(description: "Extended Config Data - mfblog/sidebar/rss_feed/sort_order")
+    mfblog_sidebar_rss_feed_title : String  @doc(description: "Extended Config Data - mfblog/sidebar/rss_feed/title")
+    mfblog_sidebar_rss_feed_description : String  @doc(description: "Extended Config Data - mfblog/sidebar/rss_feed/description")
 
     mfblog_design_publication_date : String  @doc(description: "Extended Config Data - mfblog/design/publication_date")
 }
