@@ -9,6 +9,7 @@
     <type name="Magento\StoreGraphQl\Model\Resolver\Store\StoreConfigDataProvider">
         <arguments>
             <argument name="extendedConfigData">
+                <item name="mfblog_design_publication_date" xsi:type="string">mfblog/design/publication_date</item>
                 <item name="mfblog_index_page_title" xsi:type="string">mfblog/index_page/title</item>
                 <item name="mfblog_index_page_posts_sort_by" xsi:type="string">mfblog/index_page/posts_sort_by</item>
                 <item name="mfblog_index_page_meta_title" xsi:type="string">mfblog/index_page/meta_title</item>
@@ -50,15 +51,17 @@
                 <item name="mfblog_sidebar_custom2_enabled" xsi:type="string">mfblog/sidebar/custom2/enabled</item>
                 <item name="mfblog_sidebar_custom2_sort_order" xsi:type="string">mfblog/sidebar/custom2/sort_order</item>
                 <item name="mfblog_sidebar_custom2_html" xsi:type="string">mfblog/sidebar/custom2/html</item>
-                <item name="mfblog_product_page_related_posts_enabled" xsi:type="string">mfblog/product_page/related_posts_enabled</item>
-                <item name="mfblog_product_page_number_of_related_posts" xsi:type="string">mfblog/product_page/number_of_related_posts</item>
-
                 <item name="mfblog_sidebar_rss_feed_enabled" xsi:type="string">mfblog/sidebar/rss_feed/enabled</item>
                 <item name="mfblog_sidebar_rss_feed_sort_order" xsi:type="string">mfblog/sidebar/rss_feed/sort_order</item>
                 <item name="mfblog_sidebar_rss_feed_title" xsi:type="string">mfblog/sidebar/rss_feed/title</item>
                 <item name="mfblog_sidebar_rss_feed_description" xsi:type="string">mfblog/sidebar/rss_feed/description</item>
-
-                <item name="mfblog_design_publication_date" xsi:type="string">mfblog/design/publication_date</item>
+                <item name="mfblog_product_page_related_posts_enabled" xsi:type="string">mfblog/product_page/related_posts_enabled</item>
+                <item name="mfblog_product_page_number_of_related_posts" xsi:type="string">mfblog/product_page/number_of_related_posts</item>
+                <item name="mfblog_author_enabled" xsi:type="string">mfblog/author/enabled</item>
+                <item name="mfblog_author_page_enabled" xsi:type="string">mfblog/author/page_enabled</item>
+                <item name="mfblog_author_robots" xsi:type="string">mfblog/author/robots</item>
+                <item name="mfblog_tag_robots" xsi:type="string">mfblog/tag/robots</item>
+                <item name="mfblog_search_robots" xsi:type="string">mfblog/search/robots</item>
             </argument>
         </arguments>
     </type>
