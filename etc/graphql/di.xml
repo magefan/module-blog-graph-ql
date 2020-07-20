@@ -62,6 +62,21 @@
                 <item name="mfblog_author_robots" xsi:type="string">mfblog/author/robots</item>
                 <item name="mfblog_tag_robots" xsi:type="string">mfblog/tag/robots</item>
                 <item name="mfblog_search_robots" xsi:type="string">mfblog/search/robots</item>
+                <item name="mfblog_permalink_route" xsi:type="string">mfblog/permalink/route</item>
+                <item name="mfblog_permalink_redirect_to_no_slash" xsi:type="string">mfblog/permalink/redirect_to_no_slash</item>
+                <item name="mfblog_permalink_type" xsi:type="string">mfblog/permalink/type</item>
+                <item name="mfblog_permalink_post_route" xsi:type="string">mfblog/permalink/post_route</item>
+                <item name="mfblog_permalink_post_sufix" xsi:type="string">mfblog/permalink/post_sufix</item>
+                <item name="mfblog_permalink_post_use_categories" xsi:type="string">mfblog/permalink/post_use_categories</item>
+                <item name="mfblog_permalink_category_route" xsi:type="string">mfblog/permalink/category_route</item>
+                <item name="mfblog_permalink_category_sufix" xsi:type="string">mfblog/permalink/category_sufix</item>
+                <item name="mfblog_permalink_category_use_categories" xsi:type="string">mfblog/permalink/category_use_categories</item>
+                <item name="mfblog_permalink_archive_route" xsi:type="string">mfblog/permalink/archive_route</item>
+                <item name="mfblog_permalink_tag_route" xsi:type="string">mfblog/permalink/tag_route</item>
+                <item name="mfblog_permalink_tag_sufix" xsi:type="string">mfblog/permalink/tag_sufix</item>
+                <item name="mfblog_permalink_author_route" xsi:type="string">mfblog/permalink/author_route</item>
+                <item name="mfblog_permalink_author_sufix" xsi:type="string">mfblog/permalink/author_sufix</item>
+                <item name="mfblog_permalink_search_route" xsi:type="string">mfblog/permalink/search_route</item>
             </argument>
         </arguments>
     </type>
