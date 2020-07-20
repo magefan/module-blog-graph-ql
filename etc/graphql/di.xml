@@ -50,6 +50,8 @@
                 <item name="mfblog_sidebar_custom2_enabled" xsi:type="string">mfblog/sidebar/custom2/enabled</item>
                 <item name="mfblog_sidebar_custom2_sort_order" xsi:type="string">mfblog/sidebar/custom2/sort_order</item>
                 <item name="mfblog_sidebar_custom2_html" xsi:type="string">mfblog/sidebar/custom2/html</item>
+                <item name="mfblog_product_page_related_posts_enabled" xsi:type="string">mfblog/product_page/related_posts_enabled</item>
+                <item name="mfblog_product_page_number_of_related_posts" xsi:type="string">mfblog/product_page/number_of_related_posts</item>
 
                 <item name="mfblog_sidebar_rss_feed_enabled" xsi:type="string">mfblog/sidebar/rss_feed/enabled</item>
                 <item name="mfblog_sidebar_rss_feed_sort_order" xsi:type="string">mfblog/sidebar/rss_feed/sort_order</item>
