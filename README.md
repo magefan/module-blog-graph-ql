@@ -39,7 +39,7 @@ Try out our open demo and if you like our extension **please give us some star o
 </table>
 
 ## Requirements
-  * Magento Community Edition 2.3.x or Magento Enterprise Edition 2.3.x
+  * Magento Community Edition 2.4.0 or Magento Enterprise Edition 2.4.0
   * **IMPORTANT!** [Magefan Blog Extension](https://github.com/magefan/module-blog) >= 2.9.1 . Please install this extension first if you use installation via FTP.
   * **IMPORTANT!** [Magefan Community Extension](https://github.com/magefan/module-community) >= 2.0.8 . Please install this extension first if you use installation via FTP.
   
