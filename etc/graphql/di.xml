@@ -66,9 +66,11 @@
                 <item name="mfblog_author_robots" xsi:type="string">mfblog/author/robots</item>
                 <item name="mfblog_tag_robots" xsi:type="string">mfblog/tag/robots</item>
                 <item name="mfblog_search_robots" xsi:type="string">mfblog/search/robots</item>
-
                 <item name="mfblog_advanced_permalink_enabled" xsi:type="string">mfblog/advanced_permalink/enabled</item>
-
+                <item name="mfblog_advanced_permalink_redirect_to_no_slash" xsi:type="string">mfblog/advanced_permalink/redirect_to_no_slash</item>
+                <item name="mfblog_advanced_permalink_blog_route" xsi:type="string">mfblog/advanced_permalink/blog_route</item>
+                <item name="mfblog_advanced_permalink_archive_path_schema" xsi:type="string">mfblog/advanced_permalink/archive_path_schema</item>
+                <item name="mfblog_advanced_permalink_search_path_schema" xsi:type="string">mfblog/advanced_permalink/search_path_schema</item>
                 <item name="mfblog_permalink_route" xsi:type="string">mfblog/permalink/route</item>
                 <item name="mfblog_permalink_redirect_to_no_slash" xsi:type="string">mfblog/permalink/redirect_to_no_slash</item>
                 <item name="mfblog_permalink_type" xsi:type="string">mfblog/permalink/type</item>

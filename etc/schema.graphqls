@@ -293,9 +293,11 @@ type StoreConfig {
     mfblog_author_robots : String @doc(description: "Extended Config Data - mfblog/author/robots")
     mfblog_tag_robots : String @doc(description: "Extended Config Data - mfblog/tag/robots")
     mfblog_search_robots : String @doc(description: "Extended Config Data - mfblog/search/robots")
-
     mfblog_advanced_permalink_enabled : Int @doc(description: "Extended Config Data - mfblog/advanced_permalink/enabled")
-
+    mfblog_advanced_permalink_redirect_to_no_slash : Int @doc(description: "Extended Config Data - mfblog/advanced_permalink/redirect_to_no_slash")
+    mfblog_advanced_permalink_blog_route : String @doc(description: "Extended Config Data - mfblog/advanced_permalink/blog_route")
+    mfblog_advanced_permalink_archive_path_schema : String @doc(description: "Extended Config Data - mfblog/advanced_permalink/archive_path_schema")
+    mfblog_advanced_permalink_search_path_schema : String @doc(description: "Extended Config Data - mfblog/advanced_permalink/search_path_schema")
     mfblog_permalink_route : String @doc(description: "Extended Config Data - mfblog/permalink/route")
     mfblog_permalink_redirect_to_no_slash : Int @doc(description: "Extended Config Data - mfblog/permalink/redirect_to_no_slash")
     mfblog_permalink_type : String @doc(description: "Extended Config Data - mfblog/permalink/type")
