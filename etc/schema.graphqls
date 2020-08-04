@@ -68,12 +68,13 @@ type addCommentToPostOutput {
 
 enum UrlRewriteEntityTypeEnum {
     BLOG_INDEX
-    POST
-    TAG
-    AUTHOR
-    COMMENT
-    ARCHIVE
-    SEARCH
+    BLOG_POST
+    BLOG_CATEGORY
+    BLOG_TAG
+    BLOG_AUTHOR
+    BLOG_COMMENT
+    BLOG_ARCHIVE
+    BLOG_SEARCH
 }
 
 type EntityUrl @doc(description: "") {

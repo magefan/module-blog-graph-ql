@@ -62,9 +62,15 @@ class EntityUrl
             return $result;
         }
 
+        $type = $blogPage['type'];
+        if (stripos($type, 'blog_') === false) {
+            $type = 'blog_' . $type;
+        }
+        $type = strtoupper($type);
+
         $result = [
             'id' => $blogPage['id'],
-            'type' => strtoupper($blogPage['type'])
+            'type' => $type
         ];
 
         return $result;
