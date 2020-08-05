@@ -316,6 +316,7 @@ type StoreConfig {
     mfblog_permalink_author_route : String @doc(description: "Extended Config Data - mfblog/permalink/author_route")
     mfblog_permalink_author_sufix : String @doc(description: "Extended Config Data - mfblog/permalink/author_sufix")
     mfblog_permalink_search_route : String @doc(description: "Extended Config Data - mfblog/permalink/search_route")
+    mfblog_seo_use_canonical_meta_tag_for : String @doc(description: "Extended Config Data - mfblog/seo/use_canonical_meta_tag_for")
     mfblog_social_add_this_enabled : String @doc(description: "Extended Config Data - mfblog/social/add_this_enabled")
     mfblog_social_add_this_pubid : String @doc(description: "Extended Config Data - mfblog/social/add_this_pubid")
     mfblog_social_add_this_language : String @doc(description: "Extended Config Data - mfblog/social/add_this_language")

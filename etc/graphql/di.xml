@@ -88,6 +88,7 @@
                 <item name="mfblog_permalink_author_route" xsi:type="string">mfblog/permalink/author_route</item>
                 <item name="mfblog_permalink_author_sufix" xsi:type="string">mfblog/permalink/author_sufix</item>
                 <item name="mfblog_permalink_search_route" xsi:type="string">mfblog/permalink/search_route</item>
+                <item name="mfblog_seo_use_canonical_meta_tag_for" xsi:type="string">mfblog/seo/use_canonical_meta_tag_for</item>
                 <item name="mfblog_social_add_this_enabled" xsi:type="string">mfblog/social/add_this_enabled</item>
                 <item name="mfblog_social_add_this_pubid" xsi:type="string">mfblog/social/add_this_pubid</item>
                 <item name="mfblog_social_add_this_language" xsi:type="string">mfblog/social/add_this_language</item>
