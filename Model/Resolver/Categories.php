@@ -80,9 +80,10 @@ class Categories implements ResolverInterface
             ->setValue(1)
             ->setConditionType('eq')
             ->create();
-        $searchCriteria->setFilterGroups([
-            $this->filterGroupBuilder->setFilters([$statusFilter])->create()
-        ]);
+
+        $filterGroups = $searchCriteria->getFilterGroups();
+        $filterGroups[] = $this->filterGroupBuilder->addFilter($statusFilter)->create();
+        $searchCriteria->setFilterGroups($filterGroups);
 
         $searchResult = $this->categoryRepositoryInterface->getList($searchCriteria);
         $items = $searchResult->getItems();

@@ -109,14 +109,20 @@ class Comments implements ResolverInterface
             ->create();
 
         $searchCriteria = $this->searchCriteriaBuilder->build('magefan_blog_comments', $args);
+        $searchCriteria->setSortOrders([$sortByCreationTime]);
+
+        $filterGroups = $searchCriteria->getFilterGroups();
+        $filterGroups[] = $this->filterGroupBuilder->addFilter($statusFilter)->create();
+        $filterGroups[] = $this->filterGroupBuilder->addFilter($postIdFilter)->create();
+        $searchCriteria->setFilterGroups($filterGroups);
+
+        $totalCount = $this->commentRepository->getList($searchCriteria)->getTotalCount();
+
+        $filterGroups[] = $this->filterGroupBuilder->addFilter($parentIdFilter)->create();
+        $searchCriteria->setFilterGroups($filterGroups);
+
         $searchCriteria->setCurrentPage($args['currentPage']);
         $searchCriteria->setPageSize($args['pageSize']);
-        $searchCriteria->setSortOrders([$sortByCreationTime]);
-        $searchCriteria->setFilterGroups([
-            $this->filterGroupBuilder->setFilters([$parentIdFilter])->create(),
-            $this->filterGroupBuilder->setFilters([$statusFilter])->create(),
-            $this->filterGroupBuilder->setFilters([$postIdFilter])->create()
-        ]);
 
         $searchResult = $this->commentRepository->getList($searchCriteria);
 
@@ -148,7 +154,7 @@ class Comments implements ResolverInterface
         }
 
         return [
-            'total_count' => $searchResult->getTotalCount(),
+            'total_count' => $totalCount,
             'total_pages' => $maxPages,
             'items' => $items
         ];

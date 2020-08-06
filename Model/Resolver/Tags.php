@@ -80,9 +80,10 @@ class Tags implements ResolverInterface
             ->setValue(1)
             ->setConditionType('eq')
             ->create();
-        $searchCriteria->setFilterGroups([
-            $this->filterGroupBuilder->setFilters([$statusFilter])->create()
-        ]);
+
+        $filterGroups = $searchCriteria->getFilterGroups();
+        $filterGroups[] = $this->filterGroupBuilder->addFilter($statusFilter)->create();
+        $searchCriteria->setFilterGroups($filterGroups);
 
         $searchResult = $this->tagRepository->getList($searchCriteria);
         $items = $searchResult->getItems();
