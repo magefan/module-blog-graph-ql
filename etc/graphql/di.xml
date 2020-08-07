@@ -93,6 +93,10 @@
                 <item name="mfblog_social_add_this_enabled" xsi:type="string">mfblog/social/add_this_enabled</item>
                 <item name="mfblog_social_add_this_pubid" xsi:type="string">mfblog/social/add_this_pubid</item>
                 <item name="mfblog_social_add_this_language" xsi:type="string">mfblog/social/add_this_language</item>
+                <item name="mfblog_top_menu_show_item" xsi:type="string">mfblog/top_menu/show_item</item>
+                <item name="mfblog_top_menu_item_text" xsi:type="string">mfblog/top_menu/item_text</item>
+                <item name="mfblog_top_menu_include_categories" xsi:type="string">mfblog/top_menu/include_categories</item>
+                <item name="mfblog_top_menu_max_depth" xsi:type="string">mfblog/top_menu/max_depth</item>
             </argument>
         </arguments>
     </type>
