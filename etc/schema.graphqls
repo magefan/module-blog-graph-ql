@@ -321,8 +321,8 @@ type StoreConfig {
     mfblog_social_add_this_enabled : String @doc(description: "Extended Config Data - mfblog/social/add_this_enabled")
     mfblog_social_add_this_pubid : String @doc(description: "Extended Config Data - mfblog/social/add_this_pubid")
     mfblog_social_add_this_language : String @doc(description: "Extended Config Data - mfblog/social/add_this_language")
-    mfblog_top_menu_show_item : String @doc(description: "Extended Config Data - mfblog/top_menu/show_item")
+    mfblog_top_menu_show_item : Int @doc(description: "Extended Config Data - mfblog/top_menu/show_item")
     mfblog_top_menu_item_text : String @doc(description: "Extended Config Data - mfblog/top_menu/item_text")
-    mfblog_top_menu_include_categories : String @doc(description: "Extended Config Data - mfblog/top_menu/include_categories")
-    mfblog_top_menu_max_depth : String @doc(description: "Extended Config Data - mfblog/top_menu/max_depth")
+    mfblog_top_menu_include_categories : Int @doc(description: "Extended Config Data - mfblog/top_menu/include_categories")
+    mfblog_top_menu_max_depth : Int @doc(description: "Extended Config Data - mfblog/top_menu/max_depth")
 }
