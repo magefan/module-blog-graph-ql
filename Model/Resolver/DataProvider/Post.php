@@ -213,6 +213,10 @@ class Post
             }
         }
 
+        if (is_array($fields) && array_key_exists('canonical_url', $fields)) {
+            $data['canonical_url'] = $post->getCanonicalUrl();
+        }
+
         return $data;
     }
 }

@@ -132,6 +132,10 @@ class Category
             $data['category_url_path'] = $category->getUrl();
         }
 
+        if (is_array($fields) && array_key_exists('canonical_url', $fields)) {
+            $data['canonical_url'] = $category->getCanonicalUrl();
+        }
+
         return $data;
     }
 }
