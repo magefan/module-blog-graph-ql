@@ -28,6 +28,7 @@
                 <item name="mfblog_post_view_comments_disqus_forum_shortname" xsi:type="string">mfblog/post_view/comments/disqus_forum_shortname</item>
                 <item name="mfblog_post_view_comments_guest_comments" xsi:type="string">mfblog/post_view/comments/guest_comments</item>
                 <item name="mfblog_post_view_comments_display_privacy_policy_checkbox" xsi:type="string">mfblog/post_view/comments/display_privacy_policy_checkbox</item>
+                <item name="mfblog_post_view_comments_default_status" xsi:type="string">mfblog/post_view/comments/default_status</item>
                 <item name="mfblog_post_view_comments_format_date" xsi:type="string">mfblog/post_view/comments/format_date</item>
                 <item name="mfblog_post_view_nextprev_enabled" xsi:type="string">mfblog/post_view/nextprev/enabled</item>
                 <item name="mfblog_post_list_posts_per_page" xsi:type="string">mfblog/post_list/posts_per_page</item>

@@ -258,6 +258,7 @@ type StoreConfig {
     mfblog_post_view_comments_disqus_forum_shortname : String @doc(description: "Extended Config Data - mfblog/post_view/comments/disqus_forum_shortname")
     mfblog_post_view_comments_guest_comments : Int @doc(description: "Extended Config Data - mfblog/post_view/comments/guest_comments")
     mfblog_post_view_comments_display_privacy_policy_checkbox : Int @doc(description: "Extended Config Data - mfblog/post_view/comments/display_privacy_policy_checkbox")
+    mfblog_post_view_comments_default_status : Int @doc(description: "Extended Config Data - mfblog/post_view/comments/default_status")
     mfblog_post_view_comments_format_date : String @doc(description: "Extended Config Data - mfblog/post_view/comments/format_date")
     mfblog_post_view_nextprev_enabled : Int @doc(description: "Extended Config Data - mfblog/post_view/nextprev/enabled")
     mfblog_post_list_posts_per_page : Int @doc(description: "Extended Config Data - mfblog/post_list/posts_per_page")
