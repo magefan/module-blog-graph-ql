@@ -199,7 +199,6 @@ class AddCommentToPost implements ResolverInterface
         }
 
         return [
-            'total_count' => $commentsCollection->getSize(),
             'total_pages' => $maxPages,
             'comments' => $comments
         ];
