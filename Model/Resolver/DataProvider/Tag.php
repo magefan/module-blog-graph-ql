@@ -29,6 +29,11 @@ class Tag
     private $tagRepository;
 
     /**
+     * @var Magento\Framework\App\State
+     */
+    protected $state;
+
+    /**
      * Tag constructor.
      * @param TagRepositoryInterface $tagRepository
      * @param FilterEmulate $widgetFilter

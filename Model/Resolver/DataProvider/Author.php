@@ -28,6 +28,11 @@ class Author
     private $authorRepository;
 
     /**
+     * @var Magento\Framework\App\State
+     */
+    protected $state;
+
+    /**
      * Author constructor.
      * @param AuthorRepositoryInterface $authorRepository
      * @param FilterEmulate $widgetFilter

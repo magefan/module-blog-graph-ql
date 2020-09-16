@@ -29,6 +29,11 @@ class Category
     private $categoryRepository;
 
     /**
+     * @var Magento\Framework\App\State
+     */
+    protected $state;
+
+    /**
      * Category constructor.
      * @param CategoryRepositoryInterface $categoryRepository
      * @param FilterEmulate $widgetFilter
