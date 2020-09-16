@@ -3,11 +3,12 @@
  * Copyright © Magefan (support@magefan.com). All rights reserved.
  * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
  */
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace Magefan\BlogGraphQl\Model\Resolver\DataProvider;
 
 use Magefan\Blog\Api\CategoryRepositoryInterface;
+use Magento\Framework\App\State;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Widget\Model\Template\FilterEmulate;
 
@@ -34,10 +35,12 @@ class Category
      */
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
-        FilterEmulate $widgetFilter
+        FilterEmulate $widgetFilter,
+        State $state
     ) {
         $this->categoryRepository = $categoryRepository;
-        $this->widgetFilter = $widgetFilter;
+        $this->widgetFilter       = $widgetFilter;
+        $this->state              = $state;
     }
 
     /**
@@ -54,6 +57,16 @@ class Category
             throw new NoSuchEntityException();
         }
 
-        return $category->getDynamicData();
+        $data = [];
+        $this->state->emulateAreaCode(
+            'frontend',
+            function () use ($category, &$data) {
+                $data = $category->getDynamicData();
+
+                return $data;
+            }
+        );
+
+        return $data;
     }
 }

@@ -3,12 +3,12 @@
  * Copyright © Magefan (support@magefan.com). All rights reserved.
  * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
  */
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace Magefan\BlogGraphQl\Model\Resolver\DataProvider;
 
 use Magefan\Blog\Api\AuthorRepositoryInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\App\State;
 use Magento\Widget\Model\Template\FilterEmulate;
 
 /**
@@ -34,10 +34,12 @@ class Author
      */
     public function __construct(
         AuthorRepositoryInterface $authorRepository,
-        FilterEmulate $widgetFilter
+        FilterEmulate $widgetFilter,
+        State $state
     ) {
         $this->authorRepository = $authorRepository;
-        $this->widgetFilter = $widgetFilter;
+        $this->widgetFilter     = $widgetFilter;
+        $this->state            = $state;
     }
 
     /**
@@ -49,6 +51,16 @@ class Author
         $author = $this->authorRepository->getFactory()->create();
         $author->getResource()->load($author, $authorId);
 
-        return $author->getDynamicData();
+        $data = [];
+        $this->state->emulateAreaCode(
+            'frontend',
+            function () use ($author, &$data) {
+                $data = $author->getDynamicData();
+
+                return $data;
+            }
+        );
+
+        return $data;
     }
 }

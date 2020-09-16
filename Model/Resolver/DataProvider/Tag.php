@@ -3,11 +3,12 @@
  * Copyright © Magefan (support@magefan.com). All rights reserved.
  * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
  */
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace Magefan\BlogGraphQl\Model\Resolver\DataProvider;
 
 use Magefan\Blog\Api\TagRepositoryInterface;
+use Magento\Framework\App\State;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Widget\Model\Template\FilterEmulate;
 
@@ -34,10 +35,12 @@ class Tag
      */
     public function __construct(
         TagRepositoryInterface $tagRepository,
-        FilterEmulate $widgetFilter
+        FilterEmulate $widgetFilter,
+        State $state
     ) {
         $this->tagRepository = $tagRepository;
-        $this->widgetFilter = $widgetFilter;
+        $this->widgetFilter  = $widgetFilter;
+        $this->state         = $state;
     }
 
     /**
@@ -54,6 +57,16 @@ class Tag
             throw new NoSuchEntityException();
         }
 
-        return $tag->getDynamicData();
+        $data = [];
+        $this->state->emulateAreaCode(
+            'frontend',
+            function () use ($tag, &$data) {
+                $data = $tag->getDynamicData();
+
+                return $data;
+            }
+        );
+
+        return $data;
     }
 }
