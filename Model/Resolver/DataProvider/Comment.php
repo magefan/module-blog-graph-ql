@@ -8,7 +8,14 @@ declare(strict_types=1);
 namespace Magefan\BlogGraphQl\Model\Resolver\DataProvider;
 
 use Magefan\Blog\Api\CommentRepositoryInterface;
+use Magento\Framework\App\Area;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\State;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
+use Magento\Framework\View\DesignInterface;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Widget\Model\Template\FilterEmulate;
 
 /**
  * Class Comment
@@ -16,19 +23,59 @@ use Magento\Framework\Exception\NoSuchEntityException;
 class Comment
 {
     /**
+     * @var FilterEmulate
+     */
+    private $widgetFilter;
+
+    /**
      * @var CommentRepositoryInterface
      */
     private $commentRepository;
 
     /**
+     * @var State
+     */
+    protected $state;
+
+    /**
+     * @var DesignInterface
+     */
+    private $design;
+
+    /**
+     * @var ThemeProviderInterface
+     */
+    private $themeProvider;
+
+    /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
      * Comment constructor.
      * @param CommentRepositoryInterface $commentRepository
+     * @param FilterEmulate $widgetFilter
+     * @param State $state
+     * @param DesignInterface $design
+     * @param ThemeProviderInterface $themeProvider
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
-        CommentRepositoryInterface $commentRepository
+        CommentRepositoryInterface $commentRepository,
+        FilterEmulate $widgetFilter,
+        State $state,
+        DesignInterface $design,
+        ThemeProviderInterface $themeProvider,
+        ScopeConfigInterface $scopeConfig
     )
     {
         $this->commentRepository = $commentRepository;
+        $this->widgetFilter = $widgetFilter;
+        $this->state = $state;
+        $this->design = $design;
+        $this->themeProvider = $themeProvider;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -46,7 +93,24 @@ class Comment
             throw new NoSuchEntityException();
         }
 
-        return $this->getDynamicData($comment, $fields);
+        $data = [];
+        $this->state->emulateAreaCode(
+            Area::AREA_FRONTEND,
+            function () use ($comment, $fields, &$data) {
+                $themeId = $this->scopeConfig->getValue(
+                    'design/theme/theme_id',
+                    ScopeInterface::SCOPE_STORE
+                );
+                $theme = $this->themeProvider->getThemeById($themeId);
+                $this->design->setDesignTheme($theme, Area::AREA_FRONTEND);
+
+                $data = $this->getDynamicData($comment, $fields);
+
+                return $data;
+            }
+        );
+
+        return $data;
     }
 
     /**

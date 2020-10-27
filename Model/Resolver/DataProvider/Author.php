@@ -13,6 +13,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\State;
 use Magento\Framework\View\DesignInterface;
 use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Widget\Model\Template\FilterEmulate;
 
 /**
@@ -32,33 +33,33 @@ class Author
     private $authorRepository;
 
     /**
-     * @var Magento\Framework\App\State
+     * @var State
      */
     protected $state;
 
     /**
-     * @var \Magento\Framework\View\DesignInterface
+     * @var DesignInterface
      */
     private $design;
 
     /**
-     * @var \Magento\Framework\View\Design\Theme\ThemeProviderInterface
+     * @var ThemeProviderInterface
      */
     private $themeProvider;
 
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     * @var ScopeConfigInterface
      */
     private $scopeConfig;
 
     /**
      * Author constructor.
      * @param AuthorRepositoryInterface $authorRepository
-     * @param FilterEmulate             $widgetFilter
-     * @param State                     $state
-     * @param DesignInterface           $design
-     * @param ThemeProviderInterface    $themeProvider
-     * @param ScopeConfigInterface      $scopeConfig
+     * @param FilterEmulate $widgetFilter
+     * @param State $state
+     * @param DesignInterface $design
+     * @param ThemeProviderInterface $themeProvider
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         AuthorRepositoryInterface $authorRepository,
@@ -69,11 +70,11 @@ class Author
         ScopeConfigInterface $scopeConfig
     ) {
         $this->authorRepository = $authorRepository;
-        $this->widgetFilter     = $widgetFilter;
-        $this->state            = $state;
-        $this->design           = $design;
-        $this->themeProvider    = $themeProvider;
-        $this->scopeConfig      = $scopeConfig;
+        $this->widgetFilter = $widgetFilter;
+        $this->state = $state;
+        $this->design = $design;
+        $this->themeProvider = $themeProvider;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -88,10 +89,10 @@ class Author
         $data = [];
         $this->state->emulateAreaCode(
             Area::AREA_FRONTEND,
-            function () use ($self, $author, &$data) {
+            function () use ($author, &$data) {
                 $themeId = $this->scopeConfig->getValue(
                     'design/theme/theme_id',
-                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    ScopeInterface::SCOPE_STORE
                 );
                 $theme = $this->themeProvider->getThemeById($themeId);
                 $this->design->setDesignTheme($theme, Area::AREA_FRONTEND);

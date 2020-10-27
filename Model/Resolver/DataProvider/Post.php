@@ -8,12 +8,14 @@ declare (strict_types = 1);
 namespace Magefan\BlogGraphQl\Model\Resolver\DataProvider;
 
 use Magefan\Blog\Api\PostRepositoryInterface;
+use Magefan\Blog\Model\Config;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\DesignInterface;
 use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Widget\Model\Template\FilterEmulate;
 
 /**
@@ -28,53 +30,77 @@ class Post
     private $widgetFilter;
 
     /**
+     * @var Tag
+     */
+    private $tagDataProvider;
+
+    /**
+     * @var Category
+     */
+    private $categoryDataProvider;
+
+    /**
+     * @var Author
+     */
+    private $authorDataProvider;
+
+    /**
      * @var PostRepositoryInterface
      */
     private $postRepository;
 
     /**
-     * @var Magento\Framework\App\State
+     * @var State
      */
     protected $state;
 
     /**
-     * @var \Magento\Framework\View\DesignInterface
+     * @var DesignInterface
      */
     private $design;
 
     /**
-     * @var \Magento\Framework\View\Design\Theme\ThemeProviderInterface
+     * @var ThemeProviderInterface
      */
     private $themeProvider;
 
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     * @var ScopeConfigInterface
      */
     private $scopeConfig;
 
     /**
      * Post constructor.
      * @param PostRepositoryInterface $postRepository
-     * @param FilterEmulate           $widgetFilter
-     * @param State                   $state
-     * @param DesignInterface         $design
-     * @param ThemeProviderInterface  $themeProvider
-     * @param ScopeConfigInterface    $scopeConfig
+     * @param FilterEmulate $widgetFilter
+     * @param Tag $tagDataProvider
+     * @param Category $categoryDataProvider
+     * @param Author $authorDataProvider
+     * @param State $state
+     * @param DesignInterface $design
+     * @param ThemeProviderInterface $themeProvider
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         PostRepositoryInterface $postRepository,
         FilterEmulate $widgetFilter,
+        Tag $tagDataProvider,
+        Category $categoryDataProvider,
+        Author $authorDataProvider,
         State $state,
         DesignInterface $design,
         ThemeProviderInterface $themeProvider,
         ScopeConfigInterface $scopeConfig
     ) {
         $this->postRepository = $postRepository;
-        $this->widgetFilter   = $widgetFilter;
-        $this->state          = $state;
-        $this->design         = $design;
-        $this->themeProvider  = $themeProvider;
-        $this->scopeConfig    = $scopeConfig;
+        $this->widgetFilter = $widgetFilter;
+        $this->tagDataProvider = $tagDataProvider;
+        $this->categoryDataProvider = $categoryDataProvider;
+        $this->authorDataProvider = $authorDataProvider;
+        $this->state = $state;
+        $this->design = $design;
+        $this->themeProvider = $themeProvider;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -98,7 +124,7 @@ class Post
             function () use ($post, $fields, &$data) {
                 $themeId = $this->scopeConfig->getValue(
                     'design/theme/theme_id',
-                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    ScopeInterface::SCOPE_STORE
                 );
                 $theme = $this->themeProvider->getThemeById($themeId);
                 $this->design->setDesignTheme($theme, Area::AREA_FRONTEND);
