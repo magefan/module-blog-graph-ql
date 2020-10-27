@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magefan\BlogGraphQl\Model\Resolver;
 
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\Search\FilterGroupBuilder;
 use Magento\Framework\GraphQl\Query\Resolver\Argument\SearchCriteria\Builder as SearchCriteriaBuilder;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
@@ -32,21 +34,35 @@ class Tags implements ResolverInterface
      * @var DataProvider\Tag
      */
     protected $tagDataProvider;
+    /**
+     * @var FilterBuilder
+     */
+    private $filterBuilder;
+    /**
+     * @var FilterGroupBuilder
+     */
+    private $filterGroupBuilder;
 
     /**
      * Comments constructor.
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param TagRepositoryInterface $tagRepository
      * @param DataProvider\Tag $tagDataProvider
+     * @param FilterBuilder $filterBuilder
+     * @param FilterGroupBuilder $filterGroupBuilder
      */
     public function __construct(
         SearchCriteriaBuilder $searchCriteriaBuilder,
         TagRepositoryInterface $tagRepository,
-        DataProvider\Tag $tagDataProvider
+        DataProvider\Tag $tagDataProvider,
+        FilterBuilder $filterBuilder,
+        FilterGroupBuilder $filterGroupBuilder
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->tagRepository = $tagRepository;
         $this->tagDataProvider = $tagDataProvider;
+        $this->filterBuilder = $filterBuilder;
+        $this->filterGroupBuilder = $filterGroupBuilder;
     }
     /**
      * @inheritdoc
@@ -59,6 +75,16 @@ class Tags implements ResolverInterface
         array $args = null
     ) {
         $searchCriteria = $this->searchCriteriaBuilder->build('magefan_blog_tags', $args);
+        $statusFilter = $this->filterBuilder
+            ->setField('is_active')
+            ->setValue(1)
+            ->setConditionType('eq')
+            ->create();
+
+        $filterGroups = $searchCriteria->getFilterGroups();
+        $filterGroups[] = $this->filterGroupBuilder->addFilter($statusFilter)->create();
+        $searchCriteria->setFilterGroups($filterGroups);
+
         $searchResult = $this->tagRepository->getList($searchCriteria);
         $items = $searchResult->getItems();
 

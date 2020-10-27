@@ -1,0 +1,104 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\StoreGraphQl\Model\Resolver\Store\StoreConfigDataProvider">
+        <arguments>
+            <argument name="extendedConfigData">
+                <item name="mfblog_design_publication_date" xsi:type="string">mfblog/design/publication_date</item>
+                <item name="mfblog_design_format_date" xsi:type="string">mfblog/design/format_date</item>
+                <item name="mfblog_index_page_title" xsi:type="string">mfblog/index_page/title</item>
+                <item name="mfblog_index_page_posts_sort_by" xsi:type="string">mfblog/index_page/posts_sort_by</item>
+                <item name="mfblog_index_page_meta_title" xsi:type="string">mfblog/index_page/meta_title</item>
+                <item name="mfblog_index_page_meta_keywords" xsi:type="string">mfblog/index_page/meta_keywords</item>
+                <item name="mfblog_index_page_meta_description" xsi:type="string">mfblog/index_page/meta_description</item>
+                <item name="mfblog_post_view_related_posts_enabled" xsi:type="string">mfblog/post_view/related_posts/enabled</item>
+                <item name="mfblog_post_view_related_posts_number_of_posts" xsi:type="string">mfblog/post_view/related_posts/number_of_posts</item>
+                <item name="mfblog_post_view_related_products_enabled" xsi:type="string">mfblog/post_view/related_products/enabled</item>
+                <item name="mfblog_post_view_related_products_number_of_products" xsi:type="string">mfblog/post_view/related_products/number_of_products</item>
+                <item name="mfblog_post_view_comments_type" xsi:type="string">mfblog/post_view/comments/type</item>
+                <item name="mfblog_post_view_comments_number_of_comments" xsi:type="string">mfblog/post_view/comments/number_of_comments</item>
+                <item name="mfblog_post_view_comments_number_of_replies" xsi:type="string">mfblog/post_view/comments/number_of_replies</item>
+                <item name="mfblog_post_view_comments_fb_app_id" xsi:type="string">mfblog/post_view/comments/fb_app_id</item>
+                <item name="mfblog_post_view_comments_fb_app_id_header" xsi:type="string">mfblog/post_view/comments/fb_app_id_header</item>
+                <item name="mfblog_post_view_comments_disqus_forum_shortname" xsi:type="string">mfblog/post_view/comments/disqus_forum_shortname</item>
+                <item name="mfblog_post_view_comments_guest_comments" xsi:type="string">mfblog/post_view/comments/guest_comments</item>
+                <item name="mfblog_post_view_comments_display_privacy_policy_checkbox" xsi:type="string">mfblog/post_view/comments/display_privacy_policy_checkbox</item>
+                <item name="mfblog_post_view_comments_default_status" xsi:type="string">mfblog/post_view/comments/default_status</item>
+                <item name="mfblog_post_view_comments_format_date" xsi:type="string">mfblog/post_view/comments/format_date</item>
+                <item name="mfblog_post_view_nextprev_enabled" xsi:type="string">mfblog/post_view/nextprev/enabled</item>
+                <item name="mfblog_post_list_posts_per_page" xsi:type="string">mfblog/post_list/posts_per_page</item>
+                <item name="mfblog_sidebar_search_enabled" xsi:type="string">mfblog/sidebar/search/enabled</item>
+                <item name="mfblog_sidebar_search_sort_order" xsi:type="string">mfblog/sidebar/search/sort_order</item>
+                <item name="mfblog_sidebar_categories_enabled" xsi:type="string">mfblog/sidebar/categories/enabled</item>
+                <item name="mfblog_sidebar_categories_show_posts_count" xsi:type="string">mfblog/sidebar/categories/show_posts_count</item>
+                <item name="mfblog_sidebar_categories_max_depth" xsi:type="string">mfblog/sidebar/categories/max_depth</item>
+                <item name="mfblog_sidebar_categories_sort_order" xsi:type="string">mfblog/sidebar/categories/sort_order</item>
+                <item name="mfblog_sidebar_recent_posts_enabled" xsi:type="string">mfblog/sidebar/recent_posts/enabled</item>
+                <item name="mfblog_sidebar_recent_posts_posts_per_page" xsi:type="string">mfblog/sidebar/recent_posts/posts_per_page</item>
+                <item name="mfblog_sidebar_recent_posts_sort_ordere" xsi:type="string">mfblog/sidebar/recent_posts/sort_order</item>
+                <item name="mfblog_sidebar_featured_posts_enabled" xsi:type="string">mfblog/sidebar/featured_posts/enabled</item>
+                <item name="mfblog_sidebar_featured_posts_posts_ids" xsi:type="string">mfblog/sidebar/featured_posts/posts_ids</item>
+                <item name="mfblog_sidebar_featured_posts_sort_order" xsi:type="string">mfblog/sidebar/featured_posts/sort_order</item>
+                <item name="mfblog_sidebar_popular_posts_enabled" xsi:type="string">mfblog/sidebar/popular_posts/enabled</item>
+                <item name="mfblog_sidebar_popular_posts_posts_per_page" xsi:type="string">mfblog/sidebar/popular_posts/posts_per_page</item>
+                <item name="mfblog_sidebar_popular_posts_sort_order" xsi:type="string">mfblog/sidebar/popular_posts/sort_order</item>
+                <item name="mfblog_sidebar_archive_enabled" xsi:type="string">mfblog/sidebar/archive/enabled</item>
+                <item name="mfblog_sidebar_archive_format_date" xsi:type="string">mfblog/sidebar/archive/format_date</item>
+                <item name="mfblog_sidebar_archive_sort_order" xsi:type="string">mfblog/sidebar/archive/sort_order</item>
+                <item name="mfblog_sidebar_tag_claud_enabled" xsi:type="string">mfblog/sidebar/tag_claud/enabled</item>
+                <item name="mfblog_sidebar_tag_claud_tag_count" xsi:type="string">mfblog/sidebar/tag_claud/tag_count</item>
+                <item name="mfblog_sidebar_tag_claud_sort_order" xsi:type="string">mfblog/sidebar/tag_claud/sort_order</item>
+                <item name="mfblog_sidebar_custom_enabled" xsi:type="string">mfblog/sidebar/custom/enabled</item>
+                <item name="mfblog_sidebar_custom_sort_order" xsi:type="string">mfblog/sidebar/custom/sort_order</item>
+                <item name="mfblog_sidebar_custom_html" xsi:type="string">mfblog/sidebar/custom/html</item>
+                <item name="mfblog_sidebar_custom2_enabled" xsi:type="string">mfblog/sidebar/custom2/enabled</item>
+                <item name="mfblog_sidebar_custom2_sort_order" xsi:type="string">mfblog/sidebar/custom2/sort_order</item>
+                <item name="mfblog_sidebar_custom2_html" xsi:type="string">mfblog/sidebar/custom2/html</item>
+                <item name="mfblog_sidebar_rss_feed_enabled" xsi:type="string">mfblog/sidebar/rss_feed/enabled</item>
+                <item name="mfblog_sidebar_rss_feed_sort_order" xsi:type="string">mfblog/sidebar/rss_feed/sort_order</item>
+                <item name="mfblog_sidebar_rss_feed_title" xsi:type="string">mfblog/sidebar/rss_feed/title</item>
+                <item name="mfblog_sidebar_rss_feed_description" xsi:type="string">mfblog/sidebar/rss_feed/description</item>
+                <item name="mfblog_product_page_related_posts_enabled" xsi:type="string">mfblog/product_page/related_posts_enabled</item>
+                <item name="mfblog_product_page_number_of_related_posts" xsi:type="string">mfblog/product_page/number_of_related_posts</item>
+                <item name="mfblog_author_enabled" xsi:type="string">mfblog/author/enabled</item>
+                <item name="mfblog_author_page_enabled" xsi:type="string">mfblog/author/page_enabled</item>
+                <item name="mfblog_author_robots" xsi:type="string">mfblog/author/robots</item>
+                <item name="mfblog_tag_robots" xsi:type="string">mfblog/tag/robots</item>
+                <item name="mfblog_search_robots" xsi:type="string">mfblog/search/robots</item>
+                <item name="mfblog_advanced_permalink_enabled" xsi:type="string">mfblog/advanced_permalink/enabled</item>
+                <item name="mfblog_advanced_permalink_redirect_to_no_slash" xsi:type="string">mfblog/advanced_permalink/redirect_to_no_slash</item>
+                <item name="mfblog_advanced_permalink_blog_route" xsi:type="string">mfblog/advanced_permalink/blog_route</item>
+                <item name="mfblog_advanced_permalink_archive_path_schema" xsi:type="string">mfblog/advanced_permalink/archive_path_schema</item>
+                <item name="mfblog_advanced_permalink_search_path_schema" xsi:type="string">mfblog/advanced_permalink/search_path_schema</item>
+                <item name="mfblog_permalink_route" xsi:type="string">mfblog/permalink/route</item>
+                <item name="mfblog_permalink_redirect_to_no_slash" xsi:type="string">mfblog/permalink/redirect_to_no_slash</item>
+                <item name="mfblog_permalink_type" xsi:type="string">mfblog/permalink/type</item>
+                <item name="mfblog_permalink_post_route" xsi:type="string">mfblog/permalink/post_route</item>
+                <item name="mfblog_permalink_post_sufix" xsi:type="string">mfblog/permalink/post_sufix</item>
+                <item name="mfblog_permalink_post_use_categories" xsi:type="string">mfblog/permalink/post_use_categories</item>
+                <item name="mfblog_permalink_category_route" xsi:type="string">mfblog/permalink/category_route</item>
+                <item name="mfblog_permalink_category_sufix" xsi:type="string">mfblog/permalink/category_sufix</item>
+                <item name="mfblog_permalink_category_use_categories" xsi:type="string">mfblog/permalink/category_use_categories</item>
+                <item name="mfblog_permalink_archive_route" xsi:type="string">mfblog/permalink/archive_route</item>
+                <item name="mfblog_permalink_tag_route" xsi:type="string">mfblog/permalink/tag_route</item>
+                <item name="mfblog_permalink_tag_sufix" xsi:type="string">mfblog/permalink/tag_sufix</item>
+                <item name="mfblog_permalink_author_route" xsi:type="string">mfblog/permalink/author_route</item>
+                <item name="mfblog_permalink_author_sufix" xsi:type="string">mfblog/permalink/author_sufix</item>
+                <item name="mfblog_permalink_search_route" xsi:type="string">mfblog/permalink/search_route</item>
+                <item name="mfblog_seo_use_canonical_meta_tag_for" xsi:type="string">mfblog/seo/use_canonical_meta_tag_for</item>
+                <item name="mfblog_social_add_this_enabled" xsi:type="string">mfblog/social/add_this_enabled</item>
+                <item name="mfblog_social_add_this_pubid" xsi:type="string">mfblog/social/add_this_pubid</item>
+                <item name="mfblog_social_add_this_language" xsi:type="string">mfblog/social/add_this_language</item>
+                <item name="mfblog_top_menu_show_item" xsi:type="string">mfblog/top_menu/show_item</item>
+                <item name="mfblog_top_menu_item_text" xsi:type="string">mfblog/top_menu/item_text</item>
+                <item name="mfblog_top_menu_include_categories" xsi:type="string">mfblog/top_menu/include_categories</item>
+                <item name="mfblog_top_menu_max_depth" xsi:type="string">mfblog/top_menu/max_depth</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

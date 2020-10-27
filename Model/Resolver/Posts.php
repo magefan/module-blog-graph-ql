@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magefan\BlogGraphQl\Model\Resolver;
 
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\Search\FilterGroupBuilder;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
 use Magento\Framework\GraphQl\Query\Resolver\Argument\SearchCriteria\Builder as SearchCriteriaBuilder;
 use Magento\Framework\GraphQl\Config\Element\Field;
@@ -39,6 +41,14 @@ class Posts implements ResolverInterface
      * @var DataProvider\Post
      */
     protected $postDataProvider;
+    /**
+     * @var FilterBuilder
+     */
+    protected $filterBuilder;
+    /**
+     * @var FilterGroupBuilder
+     */
+    protected $filterGroupBuilder;
 
     /**
      * Posts constructor.
@@ -46,17 +56,23 @@ class Posts implements ResolverInterface
      * @param PostRepositoryInterface $postRepository
      * @param SortOrderBuilder $sortOrderBuilder
      * @param DataProvider\Post $postDataProvider
+     * @param FilterBuilder $filterBuilder
+     * @param FilterGroupBuilder $filterGroupBuilder
      */
     public function __construct(
         SearchCriteriaBuilder $searchCriteriaBuilder,
         PostRepositoryInterface $postRepository,
         SortOrderBuilder $sortOrderBuilder,
-        DataProvider\Post $postDataProvider
+        DataProvider\Post $postDataProvider,
+        FilterBuilder $filterBuilder,
+        FilterGroupBuilder $filterGroupBuilder
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->postRepository = $postRepository;
         $this->sortOrderBuilder = $sortOrderBuilder;
         $this->postDataProvider = $postDataProvider;
+        $this->filterBuilder = $filterBuilder;
+        $this->filterGroupBuilder = $filterGroupBuilder;
     }
     /**
      * @inheritdoc
@@ -69,9 +85,30 @@ class Posts implements ResolverInterface
         array $args = null
     ) {
         $searchCriteria = $this->searchCriteriaBuilder->build('di_build_magefan_blog_post', $args);
-        $searchCriteria
-            ->setPageSize($args['pageSize'])
-            ->setCurrentPage($args['currentPage']);
+        $statusFilter = $this->filterBuilder
+            ->setField('is_active')
+            ->setValue(1)
+            ->setConditionType('eq')
+            ->create();
+
+        $filterGroups = $searchCriteria->getFilterGroups();
+        $filterGroups[] = $this->filterGroupBuilder->addFilter($statusFilter)->create();
+
+        if (isset($args['filter']['post_id']['in'])) {
+            $postIdFilter = $this->filterBuilder
+                ->setField('post_id')
+                ->setValue($args['filter']['post_id']['in'])
+                ->setConditionType('in')
+                ->create();
+            $filterGroups[] = $this->filterGroupBuilder->addFilter($postIdFilter)->create();
+        }
+
+        $searchCriteria->setFilterGroups($filterGroups);
+
+        array_key_exists('allPosts', $args) && $args['allPosts'] ?:
+            $searchCriteria
+                ->setPageSize($args['pageSize'])
+                ->setCurrentPage($args['currentPage']);
 
         if (isset($args['sort'])) {
             $sortOrder = $this->sortOrderBuilder

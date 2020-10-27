@@ -102,11 +102,39 @@ class Tag
                 $theme = $this->themeProvider->getThemeById($themeId);
                 $this->design->setDesignTheme($theme, Area::AREA_FRONTEND);
 
-                $data = $tag->getDynamicData();
+                $data = return $this->getDynamicData($tag);
 
                 return $data;
             }
         );
+
+        return $data;
+    }
+
+    /**
+     * Prepare all additional data
+     * @param $tag
+     * @param null $fields
+     * @return mixed
+     */
+    public function getDynamicData($tag, $fields = null)
+    {
+        $data = $tag->getData();
+
+        $keys = [
+            'meta_description',
+            'meta_title',
+            'tag_url',
+        ];
+
+        foreach ($keys as $key) {
+            $method = 'get' . str_replace(
+                    '_',
+                    '',
+                    ucwords($key, '_')
+                );
+            $data[$key] = $tag->$method();
+        }
 
         return $data;
     }

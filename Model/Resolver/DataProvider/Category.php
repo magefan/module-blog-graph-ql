@@ -79,10 +79,11 @@ class Category
 
     /**
      * @param string $categoryId
+     * @param null $fields
      * @return array
      * @throws NoSuchEntityException
      */
-    public function getData(string $categoryId): array
+    public function getData(string $categoryId , $fields = null): array
     {
         $category = $this->categoryRepository->getFactory()->create();
         $category->getResource()->load($category, $categoryId);
@@ -94,7 +95,7 @@ class Category
         $data = [];
         $this->state->emulateAreaCode(
             Area::AREA_FRONTEND,
-            function () use ($category, &$data) {
+            function () use ($category, $fields, &$data) {
                 $themeId = $this->scopeConfig->getValue(
                     'design/theme/theme_id',
                     \Magento\Store\Model\ScopeInterface::SCOPE_STORE
@@ -102,11 +103,92 @@ class Category
                 $theme = $this->themeProvider->getThemeById($themeId);
                 $this->design->setDesignTheme($theme, Area::AREA_FRONTEND);
 
-                $data = $category->getDynamicData();
+                $data = $this->getDynamicData($category, $fields);
 
                 return $data;
             }
         );
+
+        return $data;
+    }
+
+    /**
+     * Prepare all additional data
+     * @param $category
+     * @param null $fields
+     * @return mixed
+     */
+    public function getDynamicData($category, $fields = null)
+    {
+        $data = $category->getData();
+
+        $keys = [
+            'meta_description',
+            'meta_title',
+            'category_url',
+        ];
+
+        foreach ($keys as $key) {
+            $method = 'get' . str_replace(
+                    '_',
+                    '',
+                    ucwords($key, '_')
+                );
+            $data[$key] = $category->$method();
+        }
+
+        if (is_array($fields) && array_key_exists('breadcrumbs', $fields)) {
+            $breadcrumbs = [];
+
+            $categoryData = $category;
+            $parentCategories = [];
+            while ($parentCategory = $categoryData->getParentCategory()) {
+                $parentCategories[] = $categoryData = $parentCategory;
+            }
+
+            for ($i = count($parentCategories) - 1; $i >= 0; $i--) {
+                $categoryData = $parentCategories[$i];
+
+                $breadcrumbs[] = [
+                    'category_id' => $categoryData->getId(),
+                    'category_name' => $categoryData->getTitle(),
+                    'category_level' => $categoryData->getLevel(),
+                    'category_url_key' => $categoryData->getIdentifier(),
+                    'category_url_path' => $categoryData->getUrl(),
+                ];
+            }
+
+            $categoryData = $category;
+            $breadcrumbs[] = [
+                'category_id' => $categoryData->getId(),
+                'category_name' => $categoryData->getTitle(),
+                'category_level' => $categoryData->getLevel(),
+                'category_url_key' => $categoryData->getIdentifier(),
+                'category_url_path' => $categoryData->getUrl(),
+            ];
+
+            $data['breadcrumbs'] = $breadcrumbs;
+        }
+
+        if (is_array($fields) && array_key_exists('parent_category_id', $fields)) {
+            $data['parent_category_id'] = $category->getParentCategory() ? $category->getParentCategory()->getId() : 0;
+        }
+
+        if (is_array($fields) && array_key_exists('category_level', $fields)) {
+            $data['category_level'] = $category->getLevel();
+        }
+
+        if (is_array($fields) && array_key_exists('posts_count', $fields)) {
+            $data['posts_count'] = $category->getPostsCount();
+        }
+
+        if (is_array($fields) && array_key_exists('category_url_path', $fields)) {
+            $data['category_url_path'] = $category->getUrl();
+        }
+
+        if (is_array($fields) && array_key_exists('canonical_url', $fields)) {
+            $data['canonical_url'] = $category->getCanonicalUrl();
+        }
 
         return $data;
     }

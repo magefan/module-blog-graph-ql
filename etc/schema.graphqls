@@ -20,6 +20,7 @@ type Query {
         currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1.")
         sort: [String] @doc(description: "Specifies which attribute to sort on, and whether to return the results in ascending or descending order.")
         sortFiled: String = "publish_time" @doc(description: "Specifies what field to sort posts by. The default value is publish_time.")
+        allPosts: Boolean @doc(description: "If true get all posts.")
     ): blogPostsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Posts") @doc(description: "The posts query searches for posts that match the criteria specified in the search and filter attributes")
     blogComments(
         filter: BlogCommentsFilterInput @doc(description: "Identifies which comment attributes to search for and return."),
@@ -28,10 +29,18 @@ type Query {
     ):blogCommentsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Comments") @doc(description: "The comments query searches for posts that match the criteria specified in the search and filter attributes")
     blogTags: blogTagsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Tags") @doc(description: "")
     blogCategories: blogCategoriesOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Categories") @doc(description: "")
+}
 
+type Mutation {
+    addCommentToPost(
+        pageSize: Int = 5 @doc(description: "Specifies the maximum number of results to return at once. This attribute is optional."),
+        currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1."),
+        input: addCommentToPostInput
+    ): addCommentToPostOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\AddCommentToPost") @doc(description: "")
 }
 
 input BlogPostsFilterInput {
+    post_id: FilterTypeInput @doc(description: "")
     author_id: FilterTypeInput @doc(description: "")
     tag_id: FilterTypeInput @doc(description: "")
     category_id: FilterTypeInput @doc(description: "")
@@ -39,17 +48,33 @@ input BlogPostsFilterInput {
     content: FilterTypeInput @doc(description: "")
     publish_time: FilterTypeInput @doc(description: "")
     search: FilterTypeInput @doc(description: "")
+    relatedproduct_id: FilterTypeInput @doc(description: "")
     or: BlogPostsFilterInput @doc(description: "The keyword required to perform a logical OR comparison")
 }
 
+input addCommentToPostInput {
+    post_id: Int!
+    text: String!
+    author_nickname: String!
+    author_email: String!
+    parent_id: Int!
+}
+
+type addCommentToPostOutput {
+    total_count: Int @doc(description: "")
+    total_pages: Int @doc(description: "")
+    comments: [BlogComment]
+}
+
 enum UrlRewriteEntityTypeEnum {
-    BLOG_INDEX
-    POST
-    TAG
-    AUTHOR
-    COMMENT
-    ARCHIVE
-    SEARCH
+    MF_BLOG_INDEX
+    MF_BLOG_POST
+    MF_BLOG_CATEGORY
+    MF_BLOG_TAG
+    MF_BLOG_AUTHOR
+    MF_BLOG_COMMENT
+    MF_BLOG_ARCHIVE
+    MF_BLOG_SEARCH
 }
 
 type EntityUrl @doc(description: "") {
@@ -85,6 +110,7 @@ type BlogPost {
     og_description: String @doc(description: "Blog Post Og description")
     og_image: String @doc(description: "Blog Post Og image")
     og_type: String @doc(description: "Blog Post Og type")
+    canonical_url: String @doc(description: "Blog Post Canonical URL")
     content_heading: String @doc(description: "Blog Post Content heading")
     content: String @doc(description: "Blog Post content")
     filtered_content: String @doc(description: "Blog Post filtered content")
@@ -118,16 +144,20 @@ type BlogPost {
     short_content: String @doc(description: "Blog Post Short content")
     related_posts: [BlogPost] @doc(description: "Blog Related posts")
     related_products: [String] @doc(description: "Blog Related products")
+    relatedproduct_id: Int @doc(description: "Id of the Related Product (This attribute used only in filter)")
 }
 
 type BlogCategory {
     category_id: Int @doc(description: "Id of the Blog Post Category")
+    parent_category_id: Int @doc(description: "Id of the Blog Post Parent Category")
     category_url: String @doc(description: "URL of the Blog Post Category")
+    category_level: Int @doc(description: "Category Level")
     identifier: String @doc(description: "URL key of Blog Category")
     title: String @doc(description: "Blog Category title")
     meta_title: String @doc(description: "Blog Category Meta title")
     meta_keywords: String @doc(description: "Blog Category Meta keywords")
     meta_description: String @doc(description: "Blog Category Meta description")
+    canonical_url: String @doc(description: "Blog Category Canonical URL")
     content_heading: String @doc(description: "Blog Category Content heading")
     content: String @doc(description: "Blog Category content")
     path: String @doc(description: "Blog Category Path")
@@ -143,6 +173,9 @@ type BlogCategory {
     custom_layout_update_xml: String @doc(description: "Blog Category Custom layout update xml")
     custom_theme_from: String @doc(description: "Blog Category Custom theme from")
     custom_theme_to: String @doc(description: "Blog Category Custom theme to")
+    category_url_path: String @doc(description: "Relative URL of the Blog Post Category")
+    posts_count: Int @doc(description: "Blog Category Posts Count")
+    breadcrumbs: [Breadcrumb] @doc(description: "Breadcrumbs, parent categories info.")
 }
 
 type BlogTag {
@@ -170,6 +203,8 @@ type BlogAuthor {
     identifier: String @doc(description: "URL key of Blog Author")
     title: String @doc(description: "Blog Author title")
     name: String @doc(description: "Blog Author Name")
+    meta_description: String @doc(description: "Blog Author Meta description")
+    meta_title: String @doc(description: "Blog Author Meta title")
     url: String @doc(description: "Blog Author Url")
     author_url: String @doc(description: "Blog Author Author url")
     is_active: Int @doc(description: "Blog Author Is active")
@@ -183,6 +218,7 @@ input BlogCommentsFilterInput {
 
 type blogCommentsOutput {
     total_count: Int @doc(description: "")
+    total_pages: Int @doc(description: "")
     items: [BlogComment] @doc(description: "")
 }
 
@@ -199,4 +235,97 @@ type BlogComment {
     text: String @doc(description: "Blog Comment Text")
     creation_time: String @doc(description: "Blog Comment Creation time")
     update_time: String @doc(description: "Blog Comment Update time")
+    replies: [BlogComment] @doc(description: "Blog Comment Replies")
+}
+
+type StoreConfig {
+    mfblog_design_publication_date : Int @doc(description: "Extended Config Data - mfblog/design/publication_date")
+    mfblog_design_format_date : String @doc(description: "Extended Config Data - mfblog/design/format_date")
+    mfblog_index_page_title : String @doc(description: "Extended Config Data - mfblog/index_page/title")
+    mfblog_index_page_posts_sort_by : Int @doc(description: "Extended Config Data - mfblog/index_page/posts_sort_by")
+    mfblog_index_page_meta_title : String @doc(description: "Extended Config Data - mfblog/index_page/meta_title")
+    mfblog_index_page_meta_keywords : String @doc(description: "Extended Config Data - mfblog/index_page/meta_keywords")
+    mfblog_index_page_meta_description : String @doc(description: "Extended Config Data - mfblog/index_page/meta_description")
+    mfblog_post_view_related_posts_enabled : Int @doc(description: "Extended Config Data - mfblog/post_view/related_posts/enabled")
+    mfblog_post_view_related_posts_number_of_posts : Int @doc(description: "Extended Config Data - mfblog/post_view/related_posts/number_of_posts")
+    mfblog_post_view_related_products_enabled : Int @doc(description: "Extended Config Data - mfblog/post_view/related_products/enabled")
+    mfblog_post_view_related_products_number_of_products : Int @doc(description: "Extended Config Data - mfblog/post_view/related_products/number_of_products")
+    mfblog_post_view_comments_type : String @doc(description: "Extended Config Data - mfblog/post_view/comments/type")
+    mfblog_post_view_comments_number_of_comments : Int @doc(description: "Extended Config Data - mfblog/post_view/comments/number_of_comments")
+    mfblog_post_view_comments_number_of_replies : Int @doc(description: "Extended Config Data - mfblog/post_view/comments/number_of_replies")
+    mfblog_post_view_comments_fb_app_id : String @doc(description: "Extended Config Data - mfblog/post_view/comments/fb_app_id")
+    mfblog_post_view_comments_fb_app_id_header : Int @doc(description: "Extended Config Data - mfblog/post_view/comments/fb_app_id_header")
+    mfblog_post_view_comments_disqus_forum_shortname : String @doc(description: "Extended Config Data - mfblog/post_view/comments/disqus_forum_shortname")
+    mfblog_post_view_comments_guest_comments : Int @doc(description: "Extended Config Data - mfblog/post_view/comments/guest_comments")
+    mfblog_post_view_comments_display_privacy_policy_checkbox : Int @doc(description: "Extended Config Data - mfblog/post_view/comments/display_privacy_policy_checkbox")
+    mfblog_post_view_comments_default_status : Int @doc(description: "Extended Config Data - mfblog/post_view/comments/default_status")
+    mfblog_post_view_comments_format_date : String @doc(description: "Extended Config Data - mfblog/post_view/comments/format_date")
+    mfblog_post_view_nextprev_enabled : Int @doc(description: "Extended Config Data - mfblog/post_view/nextprev/enabled")
+    mfblog_post_list_posts_per_page : Int @doc(description: "Extended Config Data - mfblog/post_list/posts_per_page")
+    mfblog_sidebar_search_enabled : Int @doc(description: "Extended Config Data - mfblog/sidebar/search/enabled")
+    mfblog_sidebar_search_sort_order : Int @doc(description: "Extended Config Data - mfblog/sidebar/search/sort_order")
+    mfblog_sidebar_categories_enabled : Int @doc(description: "Extended Config Data - mfblog/sidebar/categories/enabled")
+    mfblog_sidebar_categories_show_posts_count : Int @doc(description: "Extended Config Data - mfblog/sidebar/categories/show_posts_count")
+    mfblog_sidebar_categories_max_depth : Int @doc(description: "Extended Config Data - mfblog/sidebar/categories/max_depth")
+    mfblog_sidebar_categories_sort_order : Int @doc(description: "Extended Config Data - mfblog/sidebar/categories/sort_order")
+    mfblog_sidebar_recent_posts_enabled : Int @doc(description: "Extended Config Data - mfblog/sidebar/recent_posts/enabled")
+    mfblog_sidebar_recent_posts_posts_per_page : Int @doc(description: "Extended Config Data - mfblog/sidebar/recent_posts/posts_per_page")
+    mfblog_sidebar_recent_posts_sort_ordere : Int @doc(description: "Extended Config Data - mfblog/sidebar/recent_posts/sort_order")
+    mfblog_sidebar_featured_posts_enabled : Int @doc(description: "Extended Config Data - mfblog/sidebar/featured_posts/enabled")
+    mfblog_sidebar_featured_posts_posts_ids : String @doc(description: "Extended Config Data - mfblog/sidebar/featured_posts/posts_ids")
+    mfblog_sidebar_featured_posts_sort_order : Int @doc(description: "Extended Config Data - mfblog/sidebar/featured_posts/sort_order")
+    mfblog_sidebar_popular_posts_enabled : Int @doc(description: "Extended Config Data - mfblog/sidebar/popular_posts/enabled")
+    mfblog_sidebar_popular_posts_posts_per_page : Int @doc(description: "Extended Config Data - mfblog/sidebar/popular_posts/posts_per_page")
+    mfblog_sidebar_popular_posts_sort_order : Int @doc(description: "Extended Config Data - mfblog/sidebar/popular_posts/sort_order")
+    mfblog_sidebar_archive_enabled : Int @doc(description: "Extended Config Data - mfblog/sidebar/archive/enabled")
+    mfblog_sidebar_archive_format_date : String @doc(description: "Extended Config Data - mfblog/sidebar/archive/format_date")
+    mfblog_sidebar_archive_sort_order : Int @doc(description: "Extended Config Data - mfblog/sidebar/archive/sort_order")
+    mfblog_sidebar_tag_claud_enabled : Int @doc(description: "Extended Config Data - mfblog/sidebar/tag_claud/enabled")
+    mfblog_sidebar_tag_claud_tag_count : Int @doc(description: "Extended Config Data - mfblog/sidebar/tag_claud/tag_count")
+    mfblog_sidebar_tag_claud_sort_order : Int @doc(description: "Extended Config Data - mfblog/sidebar/tag_claud/sort_order")
+    mfblog_sidebar_custom_enabled : Int @doc(description: "Extended Config Data - mfblog/sidebar/custom/enabled")
+    mfblog_sidebar_custom_sort_order : Int @doc(description: "Extended Config Data - mfblog/sidebar/custom/sort_order")
+    mfblog_sidebar_custom_html : String @doc(description: "Extended Config Data - mfblog/sidebar/custom/html")
+    mfblog_sidebar_custom2_enabled : Int @doc(description: "Extended Config Data - mfblog/sidebar/custom2/enabled")
+    mfblog_sidebar_custom2_sort_order : Int @doc(description: "Extended Config Data - mfblog/sidebar/custom2/sort_order")
+    mfblog_sidebar_custom2_html : String @doc(description: "Extended Config Data - mfblog/sidebar/custom2/html")
+    mfblog_sidebar_rss_feed_enabled : Int @doc(description: "Extended Config Data - mfblog/sidebar/rss_feed/enabled")
+    mfblog_sidebar_rss_feed_sort_order : Int @doc(description: "Extended Config Data - mfblog/sidebar/rss_feed/sort_order")
+    mfblog_sidebar_rss_feed_title : String @doc(description: "Extended Config Data - mfblog/sidebar/rss_feed/title")
+    mfblog_sidebar_rss_feed_description : String @doc(description: "Extended Config Data - mfblog/sidebar/rss_feed/description")
+    mfblog_product_page_related_posts_enabled : Int @doc(description: "Extended Config Data - mfblog/product_page/related_posts_enabled")
+    mfblog_product_page_number_of_related_posts : Int @doc(description: "Extended Config Data - mfblog/product_page/number_of_related_posts")
+    mfblog_author_enabled : Int @doc(description: "Extended Config Data - mfblog/author/enabled")
+    mfblog_author_page_enabled : Int @doc(description: "Extended Config Data - mfblog/author/page_enabled")
+    mfblog_author_robots : String @doc(description: "Extended Config Data - mfblog/author/robots")
+    mfblog_tag_robots : String @doc(description: "Extended Config Data - mfblog/tag/robots")
+    mfblog_search_robots : String @doc(description: "Extended Config Data - mfblog/search/robots")
+    mfblog_advanced_permalink_enabled : Int @doc(description: "Extended Config Data - mfblog/advanced_permalink/enabled")
+    mfblog_advanced_permalink_redirect_to_no_slash : Int @doc(description: "Extended Config Data - mfblog/advanced_permalink/redirect_to_no_slash")
+    mfblog_advanced_permalink_blog_route : String @doc(description: "Extended Config Data - mfblog/advanced_permalink/blog_route")
+    mfblog_advanced_permalink_archive_path_schema : String @doc(description: "Extended Config Data - mfblog/advanced_permalink/archive_path_schema")
+    mfblog_advanced_permalink_search_path_schema : String @doc(description: "Extended Config Data - mfblog/advanced_permalink/search_path_schema")
+    mfblog_permalink_route : String @doc(description: "Extended Config Data - mfblog/permalink/route")
+    mfblog_permalink_redirect_to_no_slash : Int @doc(description: "Extended Config Data - mfblog/permalink/redirect_to_no_slash")
+    mfblog_permalink_type : String @doc(description: "Extended Config Data - mfblog/permalink/type")
+    mfblog_permalink_post_route : String @doc(description: "Extended Config Data - mfblog/permalink/post_route")
+    mfblog_permalink_post_sufix : String @doc(description: "Extended Config Data - mfblog/permalink/post_sufix")
+    mfblog_permalink_post_use_categories : Int @doc(description: "Extended Config Data - mfblog/permalink/post_use_categories")
+    mfblog_permalink_category_route : String @doc(description: "Extended Config Data - mfblog/permalink/category_route")
+    mfblog_permalink_category_sufix : String @doc(description: "Extended Config Data - mfblog/permalink/category_sufix")
+    mfblog_permalink_category_use_categories : Int @doc(description: "Extended Config Data - mfblog/permalink/category_use_categories")
+    mfblog_permalink_archive_route : String @doc(description: "Extended Config Data - mfblog/permalink/archive_route")
+    mfblog_permalink_tag_route : String @doc(description: "Extended Config Data - mfblog/permalink/tag_route")
+    mfblog_permalink_tag_sufix : String @doc(description: "Extended Config Data - mfblog/permalink/tag_sufix")
+    mfblog_permalink_author_route : String @doc(description: "Extended Config Data - mfblog/permalink/author_route")
+    mfblog_permalink_author_sufix : String @doc(description: "Extended Config Data - mfblog/permalink/author_sufix")
+    mfblog_permalink_search_route : String @doc(description: "Extended Config Data - mfblog/permalink/search_route")
+    mfblog_seo_use_canonical_meta_tag_for : String @doc(description: "Extended Config Data - mfblog/seo/use_canonical_meta_tag_for")
+    mfblog_social_add_this_enabled : String @doc(description: "Extended Config Data - mfblog/social/add_this_enabled")
+    mfblog_social_add_this_pubid : String @doc(description: "Extended Config Data - mfblog/social/add_this_pubid")
+    mfblog_social_add_this_language : String @doc(description: "Extended Config Data - mfblog/social/add_this_language")
+    mfblog_top_menu_show_item : Int @doc(description: "Extended Config Data - mfblog/top_menu/show_item")
+    mfblog_top_menu_item_text : String @doc(description: "Extended Config Data - mfblog/top_menu/item_text")
+    mfblog_top_menu_include_categories : Int @doc(description: "Extended Config Data - mfblog/top_menu/include_categories")
+    mfblog_top_menu_max_depth : Int @doc(description: "Extended Config Data - mfblog/top_menu/max_depth")
 }

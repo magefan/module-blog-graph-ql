@@ -88,7 +88,7 @@ class Author
         $data = [];
         $this->state->emulateAreaCode(
             Area::AREA_FRONTEND,
-            function () use ($author, &$data) {
+            function () use ($self, $author, &$data) {
                 $themeId = $this->scopeConfig->getValue(
                     'design/theme/theme_id',
                     \Magento\Store\Model\ScopeInterface::SCOPE_STORE
@@ -96,11 +96,44 @@ class Author
                 $theme = $this->themeProvider->getThemeById($themeId);
                 $this->design->setDesignTheme($theme, Area::AREA_FRONTEND);
 
-                $data = $author->getDynamicData();
+                $data = $this->getDynamicData($author);
 
                 return $data;
             }
         );
+
+        return $data;
+    }
+
+    /**
+     * Prepare all additional data
+     * @param $author
+     * @param null $fields
+     * @return mixed
+     */
+    public function getDynamicData($author, $fields = null)
+    {
+        $data = $author->getData();
+
+        $keys = [
+            'meta_description',
+            'meta_title',
+            'author_url',
+            'name',
+            'title',
+            'identifier',
+        ];
+
+        $data['author_id'] = $author->getId();
+
+        foreach ($keys as $key) {
+            $method = 'get' . str_replace(
+                    '_',
+                    '',
+                    ucwords($key, '_')
+                );
+            $data[$key] = $author->$method();
+        }
 
         return $data;
     }
