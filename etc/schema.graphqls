@@ -67,14 +67,14 @@ type addCommentToPostOutput {
 }
 
 enum UrlRewriteEntityTypeEnum {
-    BLOG_INDEX
-    BLOG_POST
-    BLOG_CATEGORY
-    BLOG_TAG
-    BLOG_AUTHOR
-    BLOG_COMMENT
-    BLOG_ARCHIVE
-    BLOG_SEARCH
+    MF_BLOG_INDEX
+    MF_BLOG_POST
+    MF_BLOG_CATEGORY
+    MF_BLOG_TAG
+    MF_BLOG_AUTHOR
+    MF_BLOG_COMMENT
+    MF_BLOG_ARCHIVE
+    MF_BLOG_SEARCH
 }
 
 type EntityUrl @doc(description: "") {

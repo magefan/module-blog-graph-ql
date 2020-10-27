@@ -33,17 +33,17 @@ class Post
     /**
      * @var Tag
      */
-    private $tag;
+    private $tagDataProvider;
 
     /**
      * @var Category
      */
-    private $category;
+    private $categoryDataProvider;
 
     /**
      * @var Author
      */
-    private $author;
+    private $authorDataProvider;
 
     /**
      * @var ScopeConfigInterface
@@ -54,24 +54,24 @@ class Post
      * Post constructor.
      * @param PostRepositoryInterface $postRepository
      * @param FilterEmulate $widgetFilter
-     * @param Tag $tag
-     * @param Category $category
-     * @param Author $author
+     * @param Tag $tagDataProvider
+     * @param Category $categoryDataProvider
+     * @param Author $authorDataProvider
      * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         PostRepositoryInterface $postRepository,
         FilterEmulate $widgetFilter,
-        Tag $tag,
-        Category $category,
-        Author $author,
+        Tag $tagDataProvider,
+        Category $categoryDataProvider,
+        Author $authorDataProvider,
         ScopeConfigInterface $scopeConfig
     ) {
         $this->postRepository = $postRepository;
         $this->widgetFilter = $widgetFilter;
-        $this->tag = $tag;
-        $this->category = $category;
-        $this->author = $author;
+        $this->tagDataProvider = $tagDataProvider;
+        $this->categoryDataProvider = $categoryDataProvider;
+        $this->authorDataProvider = $authorDataProvider;
         $this->scopeConfig = $scopeConfig;
     }
 
@@ -131,7 +131,7 @@ class Post
         if (null === $fields || array_key_exists('tags', $fields)) {
             $tags = [];
             foreach ($post->getRelatedTags() as $tag) {
-                $tags[] = $this->tag->getDynamicData(
+                $tags[] = $this->tagDataProvider->getDynamicData(
                     $tag
                 // isset($fields['tags']) ? $fields['tags'] : null
                 );
@@ -196,7 +196,7 @@ class Post
         if (null === $fields || array_key_exists('categories', $fields)) {
             $categories = [];
             foreach ($post->getParentCategories() as $category) {
-                $categories[] = $this->category->getDynamicData(
+                $categories[] = $this->categoryDataProvider->getDynamicData(
                     $category,
                     isset($fields['categories']) ? $fields['categories'] : null
                 );
@@ -206,7 +206,7 @@ class Post
 
         if (null === $fields || array_key_exists('author', $fields)) {
             if ($author = $post->getAuthor()) {
-                $data['author'] = $this->author->getDynamicData(
+                $data['author'] = $this->authorDataProvider->getDynamicData(
                     $author
                 //isset($fields['author']) ? $fields['author'] : null
                 );

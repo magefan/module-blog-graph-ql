@@ -63,8 +63,9 @@ class EntityUrl
         }
 
         $type = $blogPage['type'];
-        if (stripos($type, 'blog_') === false) {
-            $type = 'blog_' . $type;
+        $type = str_replace('blog_', 'mf_blog_', $type);
+        if (stripos($type, 'mf_blog_') === false) {
+            $type = 'mf_blog_' . $type;
         }
         $type = strtoupper($type);
 
