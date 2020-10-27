@@ -39,7 +39,7 @@ Try out our open demo and if you like our extension **please give us some star o
 </table>
 
 ## Requirements
-  * Magento Community Edition 2.3.x or Magento Enterprise Edition 2.3.x
+  * Magento Community Edition 2.4.0 or Magento Enterprise Edition 2.4.0
   * **IMPORTANT!** [Magefan Blog Extension](https://github.com/magefan/module-blog) >= 2.9.1 . Please install this extension first if you use installation via FTP.
   * **IMPORTANT!** [Magefan Community Extension](https://github.com/magefan/module-community) >= 2.0.8 . Please install this extension first if you use installation via FTP.
   
@@ -71,6 +71,7 @@ The code is licensed under [EULA](https://magefan.com/end-user-license-agreement
   * [Magento 2 Blog Extension](https://magefan.com/magento2-blog-extension)
   * [Magento 2 Blog Plus Extension](https://magefan.com/magento2-blog-extension/pricing)
   * [Magento 2 Blog Extra Extension](https://magefan.com/magento2-blog-extension/pricing)
+  * [Magento 2 Multi Blog Extension](https://magefan.com/magento-2-multi-blog-extension)
   * [Magento 2 Login As Customer Extension](https://magefan.com/login-as-customer-magento-2-extension)
   * [Magento 2 Convert Guest to Customer Extension](https://magefan.com/magento2-convert-guest-to-customer)
   * [Magento 2 Facebook Open Graph Extension](https://magefan.com/magento-2-open-graph-extension-og-tags)
@@ -90,4 +91,6 @@ The code is licensed under [EULA](https://magefan.com/end-user-license-agreement
   * [Magento 2 CMS Display Rules Extension](https://magefan.com/magento-2-cms-display-rules-extension)
   * [Magento 2 Translation Extension](https://magefan.com/magento-2-translation-extension)
   * [Magento 2 WebP Optimized Images Extension](https://magefan.com/magento-2-webp-optimized-images)
+  * [Magento 2 Image Optimization Extension](https://magefan.com/magento-2-image-optimization-extension)
+  * [Magento 2 Zendesk Chat Extension](https://magefan.com/magento-2-zendesk-chat-extension)
   * [Magento 2 Zero Downtime Deployment](https://magefan.com/blog/magento-2-zero-downtime-deployment)

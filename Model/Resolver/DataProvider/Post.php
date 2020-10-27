@@ -3,15 +3,17 @@
  * Copyright © Magefan (support@magefan.com). All rights reserved.
  * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
  */
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace Magefan\BlogGraphQl\Model\Resolver\DataProvider;
 
 use Magefan\Blog\Api\PostRepositoryInterface;
-use Magefan\Blog\Model\Config;
+use Magento\Framework\App\Area;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\State;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Store\Model\ScopeInterface;
+use Magento\Framework\View\DesignInterface;
+use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
 use Magento\Widget\Model\Template\FilterEmulate;
 
 /**
@@ -31,48 +33,48 @@ class Post
     private $postRepository;
 
     /**
-     * @var Tag
+     * @var Magento\Framework\App\State
      */
-    private $tagDataProvider;
+    protected $state;
 
     /**
-     * @var Category
+     * @var \Magento\Framework\View\DesignInterface
      */
-    private $categoryDataProvider;
+    private $design;
 
     /**
-     * @var Author
+     * @var \Magento\Framework\View\Design\Theme\ThemeProviderInterface
      */
-    private $authorDataProvider;
+    private $themeProvider;
 
     /**
-     * @var ScopeConfigInterface
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
     private $scopeConfig;
 
     /**
      * Post constructor.
      * @param PostRepositoryInterface $postRepository
-     * @param FilterEmulate $widgetFilter
-     * @param Tag $tagDataProvider
-     * @param Category $categoryDataProvider
-     * @param Author $authorDataProvider
-     * @param ScopeConfigInterface $scopeConfig
+     * @param FilterEmulate           $widgetFilter
+     * @param State                   $state
+     * @param DesignInterface         $design
+     * @param ThemeProviderInterface  $themeProvider
+     * @param ScopeConfigInterface    $scopeConfig
      */
     public function __construct(
         PostRepositoryInterface $postRepository,
         FilterEmulate $widgetFilter,
-        Tag $tagDataProvider,
-        Category $categoryDataProvider,
-        Author $authorDataProvider,
+        State $state,
+        DesignInterface $design,
+        ThemeProviderInterface $themeProvider,
         ScopeConfigInterface $scopeConfig
     ) {
         $this->postRepository = $postRepository;
-        $this->widgetFilter = $widgetFilter;
-        $this->tagDataProvider = $tagDataProvider;
-        $this->categoryDataProvider = $categoryDataProvider;
-        $this->authorDataProvider = $authorDataProvider;
-        $this->scopeConfig = $scopeConfig;
+        $this->widgetFilter   = $widgetFilter;
+        $this->state          = $state;
+        $this->design         = $design;
+        $this->themeProvider  = $themeProvider;
+        $this->scopeConfig    = $scopeConfig;
     }
 
     /**
@@ -90,7 +92,24 @@ class Post
             throw new NoSuchEntityException();
         }
 
-        return $this->getDynamicData($post, $fields);
+        $data = [];
+        $this->state->emulateAreaCode(
+            Area::AREA_FRONTEND,
+            function () use ($post, $fields, &$data) {
+                $themeId = $this->scopeConfig->getValue(
+                    'design/theme/theme_id',
+                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                );
+                $theme = $this->themeProvider->getThemeById($themeId);
+                $this->design->setDesignTheme($theme, Area::AREA_FRONTEND);
+
+                $data = $this->getDynamicData($post, $fields);
+
+                return $data;
+            }
+        );
+
+        return $data;
     }
 
     /**
