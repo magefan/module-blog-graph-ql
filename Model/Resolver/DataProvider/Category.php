@@ -14,6 +14,7 @@ use Magento\Framework\App\State;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\DesignInterface;
 use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Widget\Model\Template\FilterEmulate;
 
 /**
@@ -33,33 +34,33 @@ class Category
     private $categoryRepository;
 
     /**
-     * @var Magento\Framework\App\State
+     * @var State
      */
     protected $state;
 
     /**
-     * @var \Magento\Framework\View\DesignInterface
+     * @var DesignInterface
      */
     private $design;
 
     /**
-     * @var \Magento\Framework\View\Design\Theme\ThemeProviderInterface
+     * @var ThemeProviderInterface
      */
     private $themeProvider;
 
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     * @var ScopeConfigInterface
      */
     private $scopeConfig;
 
     /**
      * Category constructor.
      * @param CategoryRepositoryInterface $categoryRepository
-     * @param FilterEmulate               $widgetFilter
-     * @param State                       $state
-     * @param DesignInterface             $design
-     * @param ThemeProviderInterface      $themeProvider
-     * @param ScopeConfigInterface        $scopeConfig
+     * @param FilterEmulate $widgetFilter
+     * @param State $state
+     * @param DesignInterface $design
+     * @param ThemeProviderInterface $themeProvider
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
@@ -70,11 +71,11 @@ class Category
         ScopeConfigInterface $scopeConfig
     ) {
         $this->categoryRepository = $categoryRepository;
-        $this->widgetFilter       = $widgetFilter;
-        $this->state              = $state;
-        $this->design             = $design;
-        $this->themeProvider      = $themeProvider;
-        $this->scopeConfig        = $scopeConfig;
+        $this->widgetFilter = $widgetFilter;
+        $this->state = $state;
+        $this->design = $design;
+        $this->themeProvider = $themeProvider;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -83,7 +84,7 @@ class Category
      * @return array
      * @throws NoSuchEntityException
      */
-    public function getData(string $categoryId , $fields = null): array
+    public function getData(string $categoryId, $fields = null): array
     {
         $category = $this->categoryRepository->getFactory()->create();
         $category->getResource()->load($category, $categoryId);
@@ -98,7 +99,7 @@ class Category
             function () use ($category, $fields, &$data) {
                 $themeId = $this->scopeConfig->getValue(
                     'design/theme/theme_id',
-                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    ScopeInterface::SCOPE_STORE
                 );
                 $theme = $this->themeProvider->getThemeById($themeId);
                 $this->design->setDesignTheme($theme, Area::AREA_FRONTEND);

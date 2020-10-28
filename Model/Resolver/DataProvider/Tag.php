@@ -33,33 +33,33 @@ class Tag
     private $tagRepository;
 
     /**
-     * @var Magento\Framework\App\State
+     * @var State
      */
     protected $state;
 
     /**
-     * @var \Magento\Framework\View\DesignInterface
+     * @var DesignInterface
      */
     private $design;
 
     /**
-     * @var \Magento\Framework\View\Design\Theme\ThemeProviderInterface
+     * @var ThemeProviderInterface
      */
     private $themeProvider;
 
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     * @var ScopeConfigInterface
      */
     private $scopeConfig;
 
     /**
      * Tag constructor.
      * @param TagRepositoryInterface $tagRepository
-     * @param FilterEmulate          $widgetFilter
-     * @param State                  $state
-     * @param DesignInterface        $design
+     * @param FilterEmulate $widgetFilter
+     * @param State $state
+     * @param DesignInterface $design
      * @param ThemeProviderInterface $themeProvider
-     * @param ScopeConfigInterface   $scopeConfig
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         TagRepositoryInterface $tagRepository,
@@ -70,11 +70,11 @@ class Tag
         ScopeConfigInterface $scopeConfig
     ) {
         $this->tagRepository = $tagRepository;
-        $this->widgetFilter  = $widgetFilter;
-        $this->state         = $state;
-        $this->design        = $design;
+        $this->widgetFilter = $widgetFilter;
+        $this->state = $state;
+        $this->design = $design;
         $this->themeProvider = $themeProvider;
-        $this->scopeConfig   = $scopeConfig;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -102,7 +102,7 @@ class Tag
                 $theme = $this->themeProvider->getThemeById($themeId);
                 $this->design->setDesignTheme($theme, Area::AREA_FRONTEND);
 
-                $data = return $this->getDynamicData($tag);
+                $data = $this->getDynamicData($tag);
 
                 return $data;
             }
