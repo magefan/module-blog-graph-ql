@@ -209,6 +209,23 @@ type BlogAuthor {
     author_url: String @doc(description: "Blog Author Author url")
     is_active: Int @doc(description: "Blog Author Is active")
     creation_time: String @doc(description: "Blog Author Created")
+    role  : String  @doc(description: "")
+    featured_image  : String  @doc(description: "")
+    content  : String  @doc(description: "")
+    filtered_content  : String  @doc(description: "")
+    short_content  : String  @doc(description: "")
+    short_filtered_content  : String  @doc(description: "")
+    facebook_page_url: String @doc(description: "")
+    twitter_page_url: String @doc(description: "")
+    instagram_page_url: String @doc(description: "")
+    linkedin_page_url: String @doc(description: "")
+    page_layout: String @doc(description: "")
+    layout_update_xml: String @doc(description: "")
+    custom_theme: String @doc(description: "")
+    custom_layout: String @doc(description: "")
+    custom_theme_from: String @doc(description: "")
+    custom_theme_to: String @doc(description: "")
+    custom_layout_update_xml: String @doc(description: "")
 }
 
 input BlogCommentsFilterInput {
