@@ -11,6 +11,7 @@ use Magefan\Blog\Api\AuthorRepositoryInterface;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\State;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\DesignInterface;
 use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
 use Magento\Store\Model\ScopeInterface;
@@ -80,11 +81,16 @@ class Author
     /**
      * @param string $authorId
      * @return array
+     * @throws NoSuchEntityException
      */
     public function getData(string $authorId): array
     {
         $author = $this->authorRepository->getFactory()->create();
         $author->getResource()->load($author, $authorId);
+
+        if (!$author->isActive()) {
+            throw new NoSuchEntityException();
+        }
 
         $data = [];
         $this->state->emulateAreaCode(
@@ -123,6 +129,9 @@ class Author
             'name',
             'title',
             'identifier',
+            'featured_image',
+            'filtered_content',
+            'short_filtered_content'
         ];
 
         $data['author_id'] = $author->getId();
