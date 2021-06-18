@@ -16,6 +16,7 @@ use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magefan\Blog\Api\PostRepositoryInterface;
 use Magento\Framework\Api\SortOrderBuilder;
+use Magento\Framework\App\ScopeResolverInterface;
 
 /**
  * Class Posts
@@ -51,6 +52,11 @@ class Posts implements ResolverInterface
     protected $filterGroupBuilder;
 
     /**
+     * @var ScopeResolverInterface
+     */
+    private $scopeResolver;
+
+    /**
      * Posts constructor.
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param PostRepositoryInterface $postRepository
@@ -58,6 +64,7 @@ class Posts implements ResolverInterface
      * @param DataProvider\Post $postDataProvider
      * @param FilterBuilder $filterBuilder
      * @param FilterGroupBuilder $filterGroupBuilder
+     * @param ScopeResolverInterface $scopeResolver
      */
     public function __construct(
         SearchCriteriaBuilder $searchCriteriaBuilder,
@@ -65,7 +72,8 @@ class Posts implements ResolverInterface
         SortOrderBuilder $sortOrderBuilder,
         DataProvider\Post $postDataProvider,
         FilterBuilder $filterBuilder,
-        FilterGroupBuilder $filterGroupBuilder
+        FilterGroupBuilder $filterGroupBuilder,
+        ScopeResolverInterface $scopeResolver
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->postRepository = $postRepository;
@@ -73,6 +81,7 @@ class Posts implements ResolverInterface
         $this->postDataProvider = $postDataProvider;
         $this->filterBuilder = $filterBuilder;
         $this->filterGroupBuilder = $filterGroupBuilder;
+        $this->scopeResolver = $scopeResolver;
     }
     /**
      * @inheritdoc
@@ -93,6 +102,15 @@ class Posts implements ResolverInterface
 
         $filterGroups = $searchCriteria->getFilterGroups();
         $filterGroups[] = $this->filterGroupBuilder->addFilter($statusFilter)->create();
+
+        $scope = $this->scopeResolver->getScope()->getId();
+
+        $scopeFilter = $this->filterBuilder
+            ->setField('store_id')
+            ->setValue($scope)
+            ->setConditionType('eq')
+            ->create();
+        $filterGroups[] = $this->filterGroupBuilder->addFilter($scopeFilter)->create();
 
         if (isset($args['filter']['post_id']['in'])) {
             $postIdFilter = $this->filterBuilder
