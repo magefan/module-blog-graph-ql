@@ -32,7 +32,7 @@ class EntityUrl
     }
 
     /**
-     * @param \Magento\UrlRewriteGraphQl\Model\Resolver\EntityUrl $subject
+     * @param $subject
      * @param $result
      * @param $field
      * @param $context
@@ -43,7 +43,7 @@ class EntityUrl
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function afterResolve(
-        \Magento\UrlRewriteGraphQl\Model\Resolver\EntityUrl $subject,
+        $subject,
         $result,
         $field,
         $context,
