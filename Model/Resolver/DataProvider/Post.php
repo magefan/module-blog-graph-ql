@@ -159,6 +159,7 @@ class Post
             'filtered_content',
             'first_image',
             'featured_image',
+            'featured_list_image',
             'post_url',
         ];
 
