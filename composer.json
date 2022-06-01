@@ -1,11 +1,8 @@
 {
     "name": "magefan/module-blog-graph-ql",
     "description": "GrapQl for Magento 2 Blog extension by Magefan",
-    "require": {
-        "magefan/module-blog" : ">=2.10.8"
-    },
     "type": "magento2-module",
-    "version": "2.1.5",
+    "version": "2.1.6",
     "autoload": {
         "files": [ "registration.php" ],
         "psr-4": {
