@@ -118,6 +118,7 @@ type BlogPost {
     creation_time: String @doc(description: "Blog Post Creation time")
     update_time: String @doc(description: "Blog Post Update time")
     publish_time: String @doc(description: "Blog Post Publish time")
+    end_time: String @doc(description: "Blog Post End time")
     is_active: Int @doc(description: "Blog Post Is active")
     include_in_recent: Int @doc(description: "Blog Post Include in recent")
     position: Int @doc(description: "Blog Post Position")
