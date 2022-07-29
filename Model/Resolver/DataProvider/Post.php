@@ -109,7 +109,7 @@ class Post
      * @return array
      * @throws NoSuchEntityException
      */
-    public function getData(string $postId, $fields = null): array
+    public function getData(string $postId, $fields = null, $storeId = null): array
     {
         $post = $this->postRepository->getFactory()->create();
         $post->getResource()->load($post, $postId);
@@ -121,14 +121,14 @@ class Post
         $data = [];
         $this->state->emulateAreaCode(
             Area::AREA_FRONTEND,
-            function () use ($post, $fields, &$data) {
+            function () use ($post, $fields, &$data, $storeId) {
                 $themeId = $this->scopeConfig->getValue(
                     'design/theme/theme_id',
                     ScopeInterface::SCOPE_STORE
                 );
                 $theme = $this->themeProvider->getThemeById($themeId);
                 $this->design->setDesignTheme($theme, Area::AREA_FRONTEND);
-
+                $post->setStoreId($storeId);
                 $data = $this->getDynamicData($post, $fields);
 
                 return $data;

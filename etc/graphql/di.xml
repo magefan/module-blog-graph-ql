@@ -101,5 +101,53 @@
             </argument>
         </arguments>
     </type>
-
+    <type name="Magento\UrlRewriteGraphQl\Model\RoutableInterfaceTypeResolver">
+        <arguments>
+            <argument name="productTypeNameResolvers" xsi:type="array">
+                <item name="mf_blog_index_type_resolver" xsi:type="object">Magefan\BlogGraphQl\Model\BlogIndexTypeResolver</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\UrlRewriteGraphQl\Model\RoutableInterfaceTypeResolver">
+        <arguments>
+            <argument name="productTypeNameResolvers" xsi:type="array">
+                <item name="mf_blog_post_type_resolver" xsi:type="object">Magefan\BlogGraphQl\Model\BlogPostTypeResolver</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\UrlRewriteGraphQl\Model\RoutableInterfaceTypeResolver">
+        <arguments>
+            <argument name="productTypeNameResolvers" xsi:type="array">
+                <item name="mf_blog_category_type_resolver" xsi:type="object">Magefan\BlogGraphQl\Model\BlogCategoryTypeResolver</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\UrlRewriteGraphQl\Model\RoutableInterfaceTypeResolver">
+        <arguments>
+            <argument name="productTypeNameResolvers" xsi:type="array">
+                <item name="mf_blog_tag_type_resolver" xsi:type="object">Magefan\BlogGraphQl\Model\BlogTagTypeResolver</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\UrlRewriteGraphQl\Model\RoutableInterfaceTypeResolver">
+        <arguments>
+            <argument name="productTypeNameResolvers" xsi:type="array">
+                <item name="mf_blog_author_type_resolver" xsi:type="object">Magefan\BlogGraphQl\Model\BlogAuthorTypeResolver</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\UrlRewriteGraphQl\Model\RoutableInterfaceTypeResolver">
+        <arguments>
+            <argument name="productTypeNameResolvers" xsi:type="array">
+                <item name="mf_blog_archive_type_resolver" xsi:type="object">Magefan\BlogGraphQl\Model\BlogArchiveTypeResolver</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\UrlRewriteGraphQl\Model\RoutableInterfaceTypeResolver">
+        <arguments>
+            <argument name="productTypeNameResolvers" xsi:type="array">
+                <item name="mf_blog_search_type_resolver" xsi:type="object">Magefan\BlogGraphQl\Model\BlogSearchTypeResolver</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

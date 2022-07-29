@@ -93,6 +93,7 @@ class Posts implements ResolverInterface
         array $value = null,
         array $args = null
     ) {
+        $storeId = (int)$context->getExtensionAttributes()->getStore()->getId();
         $searchCriteria = $this->searchCriteriaBuilder->build('di_build_magefan_blog_post', $args);
         $statusFilter = $this->filterBuilder
             ->setField('is_active')
@@ -161,7 +162,8 @@ class Posts implements ResolverInterface
         foreach ($items as $k => $data) {
             $items[$k] = $this->postDataProvider->getData(
                 $data['post_id'],
-                isset($fields['items']) ? $fields['items'] : null
+                isset($fields['items']) ? $fields['items'] : null,
+                $storeId
             );
         }
 
