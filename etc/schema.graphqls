@@ -82,7 +82,7 @@ type EntityUrl @doc(description: "") {
 
 }
 
-type blogPostsOutput {
+type blogPostsOutput implements RoutableInterface {
     total_count: Int @doc(description: "")
     total_pages: Int @doc(description: "")
     items: [BlogPost] @doc(description: "An array of Blog posts")
@@ -98,7 +98,7 @@ type blogCategoriesOutput {
     items: [BlogCategory] @doc(description: "")
 }
 
-type BlogPost {
+type BlogPost implements RoutableInterface {
     post_id: Int @doc(description: "Id of the Blog Post")
     post_url: String @doc(description: "Blog Post URL")
     identifier: String @doc(description: "URL key of Blog Post")
@@ -151,7 +151,7 @@ type BlogPost {
     relatedproduct_id: Int @doc(description: "Id of the Related Product (This attribute used only in filter)")
 }
 
-type BlogCategory {
+type BlogCategory implements RoutableInterface {
     category_id: Int @doc(description: "Id of the Blog Post Category")
     parent_category_id: Int @doc(description: "Id of the Blog Post Parent Category")
     category_url: String @doc(description: "URL of the Blog Post Category")
@@ -182,7 +182,7 @@ type BlogCategory {
     breadcrumbs: [Breadcrumb] @doc(description: "Breadcrumbs, parent categories info.")
 }
 
-type BlogTag {
+type BlogTag implements RoutableInterface {
     tag_id: Int @doc(description: "Id of the Blog Post Tag")
     tag_url: String @doc(description: "URL of Blog Tag")
     identifier: String @doc(description: "URL key of Blog Tag")
@@ -202,7 +202,7 @@ type BlogTag {
     custom_theme_to: String @doc(description: "Blog Tag Custom theme to")
 }
 
-type BlogAuthor {
+type BlogAuthor implements RoutableInterface {
     author_id: Int @doc(description: "Id of the Blog Post Author")
     identifier: String @doc(description: "URL key of Blog Author")
     title: String @doc(description: "Blog Author title")
@@ -237,7 +237,7 @@ input BlogCommentsFilterInput {
     or: BlogCommentsFilterInput @doc(description: "The keyword required to perform a logical OR comparison")
 }
 
-type blogCommentsOutput {
+type blogCommentsOutput implements RoutableInterface {
     total_count: Int @doc(description: "")
     total_pages: Int @doc(description: "")
     items: [BlogComment] @doc(description: "")

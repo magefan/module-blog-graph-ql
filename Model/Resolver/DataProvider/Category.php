@@ -152,6 +152,7 @@ class Category
 
                 $breadcrumbs[] = [
                     'category_id' => $categoryData->getId(),
+                    'category_uid' => $categoryData->getId(),
                     'category_name' => $categoryData->getTitle(),
                     'category_level' => $categoryData->getLevel(),
                     'category_url_key' => $categoryData->getIdentifier(),
@@ -162,6 +163,7 @@ class Category
             $categoryData = $category;
             $breadcrumbs[] = [
                 'category_id' => $categoryData->getId(),
+                'category_uid' => $categoryData->getId(),
                 'category_name' => $categoryData->getTitle(),
                 'category_level' => $categoryData->getLevel(),
                 'category_url_key' => $categoryData->getIdentifier(),
