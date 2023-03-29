@@ -8,7 +8,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\StoreGraphQl\Model\Resolver\Store\StoreConfigDataProvider">
         <arguments>
-            <argument name="extendedConfigData">
+            <argument name="extendedConfigData" xsi:type="array">
                 <item name="mfblog_design_publication_date" xsi:type="string">mfblog/design/publication_date</item>
                 <item name="mfblog_design_format_date" xsi:type="string">mfblog/design/format_date</item>
                 <item name="mfblog_index_page_title" xsi:type="string">mfblog/index_page/title</item>
