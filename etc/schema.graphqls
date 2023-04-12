@@ -4,13 +4,13 @@
 type Query {
     blogPost (
         id: String @doc(description: "Id of the Blog Post")
-    ): BlogPost @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Post") @doc(description: "")
+    ): BlogPost @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Post") @doc(description: "") @cache(cacheIdentity: "Magefan\\BlogGraphQl\\Model\\Resolver\\BlogIdentity")
     blogCategory (
         id: String @doc(description: "Id of the Blog Category")
-    ): BlogCategory @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Category") @doc(description: "")
+    ): BlogCategory @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Category") @doc(description: "") @cache(cacheIdentity: "Magefan\\BlogGraphQl\\Model\\Resolver\\BlogIdentity")
     blogTag (
         id: String @doc(description: "Id of the Blog Tag")
-    ): BlogTag @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Tag") @doc(description: "")
+    ): BlogTag @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Tag") @doc(description: "") @cache(cacheIdentity: "Magefan\\BlogGraphQl\\Model\\Resolver\\BlogIdentity")
     blogAuthor (
         id: String @doc(description: "Id of the Blog Author")
     ): BlogAuthor @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Author") @doc(description: "")
@@ -21,14 +21,14 @@ type Query {
         sort: [String] @doc(description: "Specifies which attribute to sort on, and whether to return the results in ascending or descending order.")
         sortFiled: String = "publish_time" @doc(description: "Specifies what field to sort posts by. The default value is publish_time.")
         allPosts: Boolean @doc(description: "If true get all posts.")
-    ): blogPostsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Posts") @doc(description: "The posts query searches for posts that match the criteria specified in the search and filter attributes")
+    ): blogPostsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Posts") @doc(description: "The posts query searches for posts that match the criteria specified in the search and filter attributes") @cache(cacheIdentity: "Magefan\\BlogGraphQl\\Model\\Resolver\\BlogIdentity")
     blogComments(
         filter: BlogCommentsFilterInput @doc(description: "Identifies which comment attributes to search for and return."),
         pageSize: Int = 5 @doc(description: "Specifies the maximum number of results to return at once. This attribute is optional."),
         currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1."),
-    ):blogCommentsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Comments") @doc(description: "The comments query searches for posts that match the criteria specified in the search and filter attributes")
-    blogTags: blogTagsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Tags") @doc(description: "")
-    blogCategories: blogCategoriesOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Categories") @doc(description: "")
+    ):blogCommentsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Comments") @doc(description: "The comments query searches for posts that match the criteria specified in the search and filter attributes") @cache(cacheIdentity: "Magefan\\BlogGraphQl\\Model\\Resolver\\BlogIdentity")
+    blogTags: blogTagsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Tags") @doc(description: "") @cache(cacheIdentity: "Magefan\\BlogGraphQl\\Model\\Resolver\\BlogIdentity")
+    blogCategories: blogCategoriesOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Categories") @doc(description: "") @cache(cacheIdentity: "Magefan\\BlogGraphQl\\Model\\Resolver\\BlogIdentity")
 }
 
 type Mutation {
