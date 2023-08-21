@@ -15,7 +15,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\DesignInterface;
 use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
 use Magento\Store\Model\ScopeInterface;
-use Magento\Widget\Model\Template\FilterEmulate;
+use Magento\Framework\App\ScopeResolverInterface;
 
 /**
  * Class Category
@@ -23,11 +23,6 @@ use Magento\Widget\Model\Template\FilterEmulate;
  */
 class Category
 {
-    /**
-     * @var FilterEmulate
-     */
-    private $widgetFilter;
-
     /**
      * @var CategoryRepositoryInterface
      */
@@ -54,28 +49,33 @@ class Category
     private $scopeConfig;
 
     /**
+     * @var ScopeResolverInterface
+     */
+    private $scopeResolver;
+
+    /**
      * Category constructor.
      * @param CategoryRepositoryInterface $categoryRepository
-     * @param FilterEmulate $widgetFilter
      * @param State $state
      * @param DesignInterface $design
      * @param ThemeProviderInterface $themeProvider
      * @param ScopeConfigInterface $scopeConfig
+     * @param ScopeResolverInterface $scopeResolver
      */
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
-        FilterEmulate $widgetFilter,
         State $state,
         DesignInterface $design,
         ThemeProviderInterface $themeProvider,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        ScopeResolverInterface $scopeResolver
     ) {
         $this->categoryRepository = $categoryRepository;
-        $this->widgetFilter = $widgetFilter;
         $this->state = $state;
         $this->design = $design;
         $this->themeProvider = $themeProvider;
         $this->scopeConfig = $scopeConfig;
+        $this->scopeResolver = $scopeResolver;
     }
 
     /**
@@ -136,6 +136,13 @@ class Category
                     ucwords($key, '_')
                 );
             $data[$key] = $category->$method();
+            if ($key === 'category_url') {
+                $data[$key] = str_replace(
+                    '/' . $this->scopeResolver->getScope()->getCode() . '/',
+                    '/',
+                    $category->$method()
+                );
+            }
         }
 
         if (is_array($fields) && array_key_exists('breadcrumbs', $fields)) {

@@ -10,12 +10,12 @@ namespace Magefan\BlogGraphQl\Model\Resolver\DataProvider;
 use Magefan\Blog\Api\AuthorRepositoryInterface;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ScopeResolverInterface;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\DesignInterface;
 use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
 use Magento\Store\Model\ScopeInterface;
-use Magento\Widget\Model\Template\FilterEmulate;
 
 /**
  * Class Author
@@ -23,11 +23,6 @@ use Magento\Widget\Model\Template\FilterEmulate;
  */
 class Author
 {
-    /**
-     * @var FilterEmulate
-     */
-    private $widgetFilter;
-
     /**
      * @var AuthorRepositoryInterface
      */
@@ -54,28 +49,33 @@ class Author
     private $scopeConfig;
 
     /**
+     * @var ScopeResolverInterface
+     */
+    private $scopeResolver;
+
+    /**
      * Author constructor.
      * @param AuthorRepositoryInterface $authorRepository
-     * @param FilterEmulate $widgetFilter
      * @param State $state
      * @param DesignInterface $design
      * @param ThemeProviderInterface $themeProvider
      * @param ScopeConfigInterface $scopeConfig
+     * @param ScopeResolverInterface $scopeResolver
      */
     public function __construct(
         AuthorRepositoryInterface $authorRepository,
-        FilterEmulate $widgetFilter,
         State $state,
         DesignInterface $design,
         ThemeProviderInterface $themeProvider,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        ScopeResolverInterface $scopeResolver
     ) {
         $this->authorRepository = $authorRepository;
-        $this->widgetFilter = $widgetFilter;
         $this->state = $state;
         $this->design = $design;
         $this->themeProvider = $themeProvider;
         $this->scopeConfig = $scopeConfig;
+        $this->scopeResolver = $scopeResolver;
     }
 
     /**
@@ -143,6 +143,13 @@ class Author
                     ucwords($key, '_')
                 );
             $data[$key] = $author->$method();
+            if ($key === 'author_url') {
+                $data[$key] = str_replace(
+                    '/' . $this->scopeResolver->getScope()->getCode() . '/',
+                    '/',
+                    $author->$method()
+                );
+            }
         }
 
         return $data;

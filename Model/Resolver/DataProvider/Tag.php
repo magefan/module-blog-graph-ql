@@ -10,11 +10,11 @@ namespace Magefan\BlogGraphQl\Model\Resolver\DataProvider;
 use Magefan\Blog\Api\TagRepositoryInterface;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ScopeResolverInterface;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\DesignInterface;
 use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
-use Magento\Widget\Model\Template\FilterEmulate;
 
 /**
  * Class Tag
@@ -22,11 +22,6 @@ use Magento\Widget\Model\Template\FilterEmulate;
  */
 class Tag
 {
-    /**
-     * @var FilterEmulate
-     */
-    private $widgetFilter;
-
     /**
      * @var TagRepositoryInterface
      */
@@ -53,28 +48,33 @@ class Tag
     private $scopeConfig;
 
     /**
+     * @var ScopeResolverInterface
+     */
+    private $scopeResolver;
+
+    /**
      * Tag constructor.
      * @param TagRepositoryInterface $tagRepository
-     * @param FilterEmulate $widgetFilter
      * @param State $state
      * @param DesignInterface $design
      * @param ThemeProviderInterface $themeProvider
      * @param ScopeConfigInterface $scopeConfig
+     * @param ScopeResolverInterface $scopeResolver
      */
     public function __construct(
         TagRepositoryInterface $tagRepository,
-        FilterEmulate $widgetFilter,
         State $state,
         DesignInterface $design,
         ThemeProviderInterface $themeProvider,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        ScopeResolverInterface $scopeResolver
     ) {
         $this->tagRepository = $tagRepository;
-        $this->widgetFilter = $widgetFilter;
         $this->state = $state;
         $this->design = $design;
         $this->themeProvider = $themeProvider;
         $this->scopeConfig = $scopeConfig;
+        $this->scopeResolver = $scopeResolver;
     }
 
     /**
@@ -134,6 +134,13 @@ class Tag
                     ucwords($key, '_')
                 );
             $data[$key] = $tag->$method();
+            if ($key === 'tag_url') {
+                $data[$key] = str_replace(
+                    '/' . $this->scopeResolver->getScope()->getCode() . '/',
+                    '/',
+                    $tag->$method()
+                );
+            }
         }
 
         return $data;
