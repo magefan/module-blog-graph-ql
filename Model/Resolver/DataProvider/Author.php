@@ -147,7 +147,7 @@ class Author
                 $data[$key] = str_replace(
                     '/' . $this->scopeResolver->getScope()->getCode() . '/',
                     '/',
-                    $author->$method()
+                    $data[$key]
                 );
             }
         }

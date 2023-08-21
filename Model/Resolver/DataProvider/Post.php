@@ -176,7 +176,7 @@ class Post
                     $data[$key] = str_replace(
                         '/' . $this->scopeResolver->getScope()->getCode() . '/',
                         '/',
-                        $post->$method()
+                        $data[$key]
                     );
                 }
             }

@@ -138,7 +138,7 @@ class Tag
                 $data[$key] = str_replace(
                     '/' . $this->scopeResolver->getScope()->getCode() . '/',
                     '/',
-                    $tag->$method()
+                    $data[$key]
                 );
             }
         }

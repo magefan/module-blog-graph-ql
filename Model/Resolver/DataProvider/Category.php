@@ -140,7 +140,7 @@ class Category
                 $data[$key] = str_replace(
                     '/' . $this->scopeResolver->getScope()->getCode() . '/',
                     '/',
-                    $category->$method()
+                    $data[$key]
                 );
             }
         }
