@@ -77,11 +77,6 @@ enum UrlRewriteEntityTypeEnum {
     MF_BLOG_SEARCH
 }
 
-type EntityUrl @doc(description: "") {
-    id: String @doc(description: "")
-
-}
-
 type blogPostsOutput implements RoutableInterface {
     total_count: Int @doc(description: "")
     total_pages: Int @doc(description: "")
