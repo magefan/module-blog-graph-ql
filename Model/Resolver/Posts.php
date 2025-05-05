@@ -90,8 +90,8 @@ class Posts implements ResolverInterface
         Field $field,
         $context,
         ResolveInfo $info,
-        array $value = null,
-        array $args = null
+        ?array $value = null,
+        ?array $args = null
     ) {
         $storeId = (int)$context->getExtensionAttributes()->getStore()->getId();
         $searchCriteria = $this->searchCriteriaBuilder->build('di_build_magefan_blog_post', $args);

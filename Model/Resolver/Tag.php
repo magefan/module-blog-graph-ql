@@ -41,8 +41,8 @@ class Tag implements ResolverInterface
         Field $field,
         $context,
         ResolveInfo $info,
-        array $value = null,
-        array $args = null
+        ?array $value = null,
+        ?array $args = null
     ) {
         $tagId = $this->getTagId($args);
         $tagData = $this->getTagData($tagId);
