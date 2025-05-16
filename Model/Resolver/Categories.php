@@ -80,8 +80,8 @@ class Categories implements ResolverInterface
         Field $field,
         $context,
         ResolveInfo $info,
-        array $value = null,
-        array $args = null
+        ?array $value = null,
+        ?array $args = null
     ) {
         $searchCriteria = $this->searchCriteriaBuilder->build('magefan_blog_categories', $args);
         $statusFilter = $this->filterBuilder
