@@ -97,7 +97,7 @@ class Tags implements ResolverInterface
 
         $scopeFilter = $this->filterBuilder
             ->setField('store_id')
-            ->setValue($scope)
+            ->setValue($args['storeId'] ?? $scope)
             ->setConditionType('eq')
             ->create();
         $filterGroups[] = $this->filterGroupBuilder->addFilter($scopeFilter)->create();
