@@ -17,10 +17,6 @@ use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magefan\Blog\Api\CommentRepositoryInterface;
 use Magento\Framework\Api\SortOrderBuilder;
 
-/**
- * Class Comments
- * @package Magefan\BlogGraphQl\Model\Resolver
- */
 class Comments implements ResolverInterface
 {
     /**

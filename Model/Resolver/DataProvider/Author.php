@@ -17,10 +17,6 @@ use Magento\Framework\View\DesignInterface;
 use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
 use Magento\Store\Model\ScopeInterface;
 
-/**
- * Class Author
- * @package Magefan\BlogGraphQl\Model\Resolver\DataProvider
- */
 class Author
 {
     /**
@@ -79,6 +75,8 @@ class Author
     }
 
     /**
+     * Get author data
+     *
      * @param string $authorId
      * @return array
      * @throws NoSuchEntityException
@@ -114,8 +112,9 @@ class Author
 
     /**
      * Prepare all additional data
-     * @param $author
-     * @param null $fields
+     *
+     * @param mixed $author
+     * @param mixed $fields
      * @return mixed
      */
     public function getDynamicData($author, $fields = null)
@@ -138,10 +137,10 @@ class Author
 
         foreach ($keys as $key) {
             $method = 'get' . str_replace(
-                    '_',
-                    '',
-                    ucwords($key, '_')
-                );
+                '_',
+                '',
+                ucwords($key, '_')
+            );
             $data[$key] = $author->$method();
             if ($key === 'author_url') {
                 $data[$key] = str_replace(

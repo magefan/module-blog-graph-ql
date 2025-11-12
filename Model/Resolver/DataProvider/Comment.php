@@ -17,9 +17,6 @@ use Magento\Framework\View\DesignInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Widget\Model\Template\FilterEmulate;
 
-/**
- * Class Comment
- */
 class Comment
 {
     /**
@@ -68,8 +65,7 @@ class Comment
         DesignInterface $design,
         ThemeProviderInterface $themeProvider,
         ScopeConfigInterface $scopeConfig
-    )
-    {
+    ) {
         $this->commentRepository = $commentRepository;
         $this->widgetFilter = $widgetFilter;
         $this->state = $state;
@@ -79,8 +75,10 @@ class Comment
     }
 
     /**
+     * Get comment data
+     *
      * @param string $commentId
-     * @param null $fields
+     * @param null|array $fields
      * @return array
      * @throws NoSuchEntityException
      */
@@ -115,8 +113,9 @@ class Comment
 
     /**
      * Prepare all additional data
-     * @param $comment
-     * @param null $fields
+     *
+     * @param mixed $comment
+     * @param null|array $fields
      * @return mixed
      */
     public function getDynamicData($comment, $fields = null)

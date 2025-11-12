@@ -15,8 +15,8 @@ use Magento\Framework\GraphQl\Query\Resolver\TypeResolverInterface;
  */
 class BlogPostTypeResolver implements TypeResolverInterface
 {
-    const MF_BLOG_POST = 'MF_BLOG_POST';
-    const TYPE_RESOLVER = 'BlogPost';
+    private const MF_BLOG_POST = 'MF_BLOG_POST';
+    private const TYPE_RESOLVER = 'BlogPost';
 
     /**
      * @inheritdoc
