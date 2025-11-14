@@ -22,9 +22,6 @@ use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 
-/**
- * Class AddCommentToPost
- */
 class AddCommentToPost implements ResolverInterface
 {
     /**
@@ -150,7 +147,9 @@ class AddCommentToPost implements ResolverInterface
                 }
 
                 if (!$parentComment->isActive()) {
-                    throw new GraphQlNoSuchEntityException(__('You cannot reply to this comment. Comment is not longer exist.'));
+                    throw new GraphQlNoSuchEntityException(
+                        __('You cannot reply to this comment. Comment is not longer exist.')
+                    );
                 }
                 if (!$parentComment->getPost()
                     || $parentComment->getPost()->getId() != $post->getId()

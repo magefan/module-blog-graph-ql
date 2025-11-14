@@ -14,10 +14,6 @@ use Magento\Framework\GraphQl\Exception\GraphQlNoSuchEntityException;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 
-/**
- * Class Post
- * @package Magefan\BlogGraphQl\Model\Resolver
- */
 class Post implements ResolverInterface
 {
     /**
@@ -58,6 +54,8 @@ class Post implements ResolverInterface
     }
 
     /**
+     * Get post id
+     *
      * @param array $args
      * @return string
      * @throws GraphQlInputException

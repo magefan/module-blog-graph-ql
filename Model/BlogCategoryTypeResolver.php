@@ -15,8 +15,8 @@ use Magento\Framework\GraphQl\Query\Resolver\TypeResolverInterface;
  */
 class BlogCategoryTypeResolver implements TypeResolverInterface
 {
-    const MF_BLOG_CATEGORY = 'MF_BLOG_CATEGORY';
-    const TYPE_RESOLVER = 'BlogCategory';
+    private const MF_BLOG_CATEGORY = 'MF_BLOG_CATEGORY';
+    private const TYPE_RESOLVER = 'BlogCategory';
 
     /**
      * @inheritdoc

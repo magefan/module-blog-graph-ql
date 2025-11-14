@@ -10,10 +10,6 @@ namespace Magefan\BlogGraphQl\Model\Categories;
 use Magento\Framework\GraphQl\Query\Resolver\Argument\FieldEntityAttributesInterface;
 use Magento\Framework\GraphQl\ConfigInterface;
 
-/**
- * Class FilterArgument
- * @package Magefan\BlogGraphQl\Model\Categories
- */
 class FilterArgument implements FieldEntityAttributesInterface
 {
     /** @var ConfigInterface */

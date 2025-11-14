@@ -16,10 +16,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\DesignInterface;
 use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
 
-/**
- * Class Tag
- * @package Magefan\BlogGraphQl\Model\Resolver\DataProvider
- */
 class Tag
 {
     /**
@@ -78,6 +74,8 @@ class Tag
     }
 
     /**
+     * Get tag data
+     *
      * @param string $tagId
      * @return array
      * @throws NoSuchEntityException
@@ -113,8 +111,9 @@ class Tag
 
     /**
      * Prepare all additional data
-     * @param $tag
-     * @param null $fields
+     *
+     * @param mixed $tag
+     * @param null|array $fields
      * @return mixed
      */
     public function getDynamicData($tag, $fields = null)
@@ -129,10 +128,10 @@ class Tag
 
         foreach ($keys as $key) {
             $method = 'get' . str_replace(
-                    '_',
-                    '',
-                    ucwords($key, '_')
-                );
+                '_',
+                '',
+                ucwords($key, '_')
+            );
             $data[$key] = $tag->$method();
             if ($key === 'tag_url') {
                 $data[$key] = str_replace(

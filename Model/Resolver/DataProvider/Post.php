@@ -18,10 +18,6 @@ use Magento\Framework\View\DesignInterface;
 use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
 use Magento\Store\Model\ScopeInterface;
 
-/**
- * Class Post
- * @package Magefan\BlogGraphQl\Model\Resolver\DataProvider
- */
 class Post
 {
     /**
@@ -104,9 +100,11 @@ class Post
     }
 
     /**
+     * Get post data
+     *
      * @param string $postId
      * @param array|null $fields
-     * @param null $storeId
+     * @param null|int|string $storeId
      * @return array
      * @throws NoSuchEntityException
      */
@@ -141,7 +139,8 @@ class Post
 
     /**
      * Prepare all additional data
-     * @param $post
+     *
+     * @param mixed $post
      * @param null|array $fields
      * @return array
      */
@@ -167,10 +166,10 @@ class Post
         foreach ($keys as $key) {
             if (null === $fields || array_key_exists($key, $fields)) {
                 $method = 'get' . str_replace(
-                        '_',
-                        '',
-                        ucwords($key, '_')
-                    );
+                    '_',
+                    '',
+                    ucwords($key, '_')
+                );
                 $data[$key] = $post->$method();
                 if ($key === 'post_url') {
                     $data[$key] = str_replace(
@@ -187,7 +186,7 @@ class Post
             foreach ($post->getRelatedTags() as $tag) {
                 $tags[] = $this->tagDataProvider->getDynamicData(
                     $tag
-                // isset($fields['tags']) ? $fields['tags'] : null
+                    // isset($fields['tags']) ? $fields['tags'] : null
                 );
             }
             $data['tags'] = $tags;
@@ -262,7 +261,7 @@ class Post
             if ($author = $post->getAuthor()) {
                 $data['author'] = $this->authorDataProvider->getDynamicData(
                     $author
-                //isset($fields['author']) ? $fields['author'] : null
+                    //isset($fields['author']) ? $fields['author'] : null
                 );
             }
         }

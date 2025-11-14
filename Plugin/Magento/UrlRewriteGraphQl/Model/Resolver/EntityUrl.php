@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Magefan\BlogGraphQl\Plugin\Magento\UrlRewriteGraphQl\Model\Resolver;
 
 use Magento\Framework\GraphQl\Config\Element\Field;
+use Magento\Framework\GraphQl\Query\Resolver\ContextInterface;
+use Magento\Framework\GraphQl\Query\Resolver\Value;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magefan\Blog\Api\UrlResolverInterface;
 
@@ -32,13 +34,15 @@ class EntityUrl
     }
 
     /**
-     * @param $subject
-     * @param $result
-     * @param $field
-     * @param $context
-     * @param $info
-     * @param null $value
-     * @param null $args
+     * Returns a custom blog page data structure if the original result is empty.
+     *
+     * @param mixed $subject
+     * @param mixed|Value $result
+     * @param Field $field
+     * @param ContextInterface $context
+     * @param ResolveInfo $info
+     * @param array|null $value
+     * @param array|null $args
      * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */

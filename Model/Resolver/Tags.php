@@ -16,10 +16,6 @@ use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magefan\Blog\Api\TagRepositoryInterface;
 
-/**
- * Class Tags
- * @package Magefan\BlogGraphQl\Model\Resolver
- */
 class Tags implements ResolverInterface
 {
     /**

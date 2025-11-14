@@ -18,10 +18,6 @@ use Magefan\Blog\Api\PostRepositoryInterface;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\App\ScopeResolverInterface;
 
-/**
- * Class Posts
- * @package Magefan\BlogGraphQl\Model\Resolver
- */
 class Posts implements ResolverInterface
 {
     /**

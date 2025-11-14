@@ -17,10 +17,6 @@ use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\ScopeResolverInterface;
 
-/**
- * Class Category
- * @package Magefan\BlogGraphQl\Model\Resolver\DataProvider
- */
 class Category
 {
     /**
@@ -79,8 +75,10 @@ class Category
     }
 
     /**
+     * Get category data
+     *
      * @param string $categoryId
-     * @param null $fields
+     * @param null|array $fields
      * @return array
      * @throws NoSuchEntityException
      */
@@ -115,8 +113,9 @@ class Category
 
     /**
      * Prepare all additional data
-     * @param $category
-     * @param null $fields
+     *
+     * @param mixed $category
+     * @param null|array $fields
      * @return mixed
      */
     public function getDynamicData($category, $fields = null)
@@ -131,10 +130,10 @@ class Category
 
         foreach ($keys as $key) {
             $method = 'get' . str_replace(
-                    '_',
-                    '',
-                    ucwords($key, '_')
-                );
+                '_',
+                '',
+                ucwords($key, '_')
+            );
             $data[$key] = $category->$method();
             if ($key === 'category_url') {
                 $data[$key] = str_replace(
