@@ -102,16 +102,22 @@ class Post
     /**
      * Get post data
      *
-     * @param string $postId
+     * @param mixed $postId
      * @param array|null $fields
      * @param null|int|string $storeId
      * @return array
      * @throws NoSuchEntityException
      */
-    public function getData(string $postId, $fields = null, $storeId = null): array
+    public function getData($postId, $fields = null, $storeId = null): array
     {
-        $post = $this->postRepository->getFactory()->create();
-        $post->getResource()->load($post, $postId);
+        /*$post = $this->postRepository->getFactory()->create();
+        $post->getResource()->load($post, $postId);*/
+
+        if (is_object($postId)) {
+            $post = $postId;
+        } else {
+            $post = $this->postRepository->getById((int)$postId);
+        }
 
         if (!$post->isActive()) {
             throw new NoSuchEntityException();

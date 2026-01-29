@@ -106,7 +106,7 @@ class Categories implements ResolverInterface
 
         foreach ($items as $k => $data) {
             $items[$k] = $this->categoryDataProvider->getData(
-                $data['category_id'],
+                $data,
                 isset($fields['items']) ? $fields['items'] : null
             );
         }

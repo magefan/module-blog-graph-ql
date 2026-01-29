@@ -157,7 +157,7 @@ class Posts implements ResolverInterface
 
         foreach ($items as $k => $data) {
             $items[$k] = $this->postDataProvider->getData(
-                $data['post_id'],
+                $data,
                 isset($fields['items']) ? $fields['items'] : null,
                 $storeId
             );

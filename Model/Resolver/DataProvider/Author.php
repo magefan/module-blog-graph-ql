@@ -81,10 +81,9 @@ class Author
      * @return array
      * @throws NoSuchEntityException
      */
-    public function getData(string $authorId): array
+    public function getData($authorId): array
     {
-        $author = $this->authorRepository->getFactory()->create();
-        $author->getResource()->load($author, $authorId);
+        $author = $this->authorRepository->getById((int)$authorId);
 
         if (!$author->isActive()) {
             throw new NoSuchEntityException();

@@ -77,15 +77,21 @@ class Category
     /**
      * Get category data
      *
-     * @param string $categoryId
+     * @param mixed $categoryId
      * @param null|array $fields
      * @return array
      * @throws NoSuchEntityException
      */
-    public function getData(string $categoryId, $fields = null): array
+    public function getData($categoryId, $fields = null): array
     {
-        $category = $this->categoryRepository->getFactory()->create();
-        $category->getResource()->load($category, $categoryId);
+        /*$category = $this->categoryRepository->getFactory()->create();
+        $category->getResource()->load($category, $categoryId);*/
+
+        if (is_object($categoryId)) {
+            $category = $categoryId;
+        } else {
+            $category = $this->categoryRepository->getById((int)$categoryId);
+        }
 
         if (!$category->isActive()) {
             throw new NoSuchEntityException();

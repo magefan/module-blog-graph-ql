@@ -77,15 +77,21 @@ class Comment
     /**
      * Get comment data
      *
-     * @param string $commentId
+     * @param mixed $commentId
      * @param null|array $fields
      * @return array
      * @throws NoSuchEntityException
      */
-    public function getData(string $commentId, $fields = null): array
+    public function getData($commentId, $fields = null): array
     {
-        $comment = $this->commentRepository->getFactory()->create();
-        $comment->getResource()->load($comment, $commentId);
+        /*$comment = $this->commentRepository->getFactory()->create();
+        $comment->getResource()->load($comment, $commentId);*/
+
+        if (is_object($commentId)) {
+            $comment = $commentId;
+        } else {
+            $comment = $this->commentRepository->getById((int)$commentId);
+        }
 
         if (!$comment->isActive()) {
             throw new NoSuchEntityException();
