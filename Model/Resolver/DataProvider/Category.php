@@ -84,9 +84,6 @@ class Category
      */
     public function getData($categoryId, $fields = null): array
     {
-        /*$category = $this->categoryRepository->getFactory()->create();
-        $category->getResource()->load($category, $categoryId);*/
-
         if (is_object($categoryId)) {
             $category = $categoryId;
         } else {

@@ -84,9 +84,6 @@ class Comment
      */
     public function getData($commentId, $fields = null): array
     {
-        /*$comment = $this->commentRepository->getFactory()->create();
-        $comment->getResource()->load($comment, $commentId);*/
-
         if (is_object($commentId)) {
             $comment = $commentId;
         } else {

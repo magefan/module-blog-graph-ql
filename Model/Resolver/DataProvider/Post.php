@@ -110,9 +110,6 @@ class Post
      */
     public function getData($postId, $fields = null, $storeId = null): array
     {
-        /*$post = $this->postRepository->getFactory()->create();
-        $post->getResource()->load($post, $postId);*/
-
         if (is_object($postId)) {
             $post = $postId;
         } else {

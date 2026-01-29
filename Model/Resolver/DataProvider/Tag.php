@@ -81,10 +81,7 @@ class Tag
      * @throws NoSuchEntityException
      */
     public function getData($tagId): array
-    {/*
-        $tag = $this->tagRepository->getFactory()->create();
-        $tag->getResource()->load($tag, $tagId);
-        */
+    {
         if (is_object($tagId)) {
            $tag = $tagId;
         } else {
