@@ -87,7 +87,11 @@ class Comment
         if (is_object($commentId)) {
             $comment = $commentId;
         } else {
-            $comment = $this->commentRepository->getById((int)$commentId);
+            try {
+                $comment = $this->commentRepository->getById((int)$commentId);
+            } catch (\Exception $e) {
+                throw new NoSuchEntityException();
+            }
         }
 
         if (!$comment->isActive()) {

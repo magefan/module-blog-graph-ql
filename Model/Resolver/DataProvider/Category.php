@@ -87,7 +87,11 @@ class Category
         if (is_object($categoryId)) {
             $category = $categoryId;
         } else {
-            $category = $this->categoryRepository->getById((int)$categoryId);
+            try {
+                $category = $this->categoryRepository->getById((int)$categoryId);
+            } catch (\Exception $e) {
+                throw new NoSuchEntityException();
+            }
         }
 
         if (!$category->isActive()) {

@@ -113,7 +113,11 @@ class Post
         if (is_object($postId)) {
             $post = $postId;
         } else {
-            $post = $this->postRepository->getById((int)$postId);
+            try {
+                $post = $this->postRepository->getById((int)$postId);
+            } catch (\Exception $e) {
+                throw new NoSuchEntityException();
+            }
         }
 
         if (!$post->isActive()) {

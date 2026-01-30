@@ -85,7 +85,11 @@ class Tag
         if (is_object($tagId)) {
            $tag = $tagId;
         } else {
-            $tag = $this->tagRepository->getById((int)$tagId);
+            try {
+                $tag = $this->tagRepository->getById((int)$tagId);
+            } catch (\Exception $e) {
+                throw new NoSuchEntityException();
+            }
         }
 
         if (!$tag->isActive()) {
