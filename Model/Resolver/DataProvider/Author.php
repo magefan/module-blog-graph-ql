@@ -144,18 +144,20 @@ class Author
         $data['author_id'] = $author->getId();
 
         foreach ($keys as $key) {
-            $method = 'get' . str_replace(
-                '_',
-                '',
-                ucwords($key, '_')
-            );
-            $data[$key] = $author->$method();
-            if ($key === 'author_url') {
-                $data[$key] = str_replace(
-                    '/' . $this->scopeResolver->getScope()->getCode() . '/',
-                    '/',
-                    $data[$key]
-                );
+            if (null === $fields || array_key_exists($key, $fields)) {
+                $method = 'get' . str_replace(
+                        '_',
+                        '',
+                        ucwords($key, '_')
+                    );
+                $data[$key] = $author->$method();
+                if ($key === 'author_url') {
+                    $data[$key] = str_replace(
+                        '/' . $this->scopeResolver->getScope()->getCode() . '/',
+                        '/',
+                        $data[$key]
+                    );
+                }
             }
         }
 
