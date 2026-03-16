@@ -83,7 +83,7 @@ class Tag
     public function getData($tagId): array
     {
         if (is_object($tagId)) {
-           $tag = $tagId;
+            $tag = $tagId;
         } else {
             try {
                 $tag = $this->tagRepository->getById((int)$tagId);
