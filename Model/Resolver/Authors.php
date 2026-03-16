@@ -120,7 +120,6 @@ class Authors implements ResolverInterface
 
         $searchCriteria->setFilterGroups($filterGroups);
 
-
         if (isset($args['sort'])) {
             $sortOrder = $this->sortOrderBuilder
                 ->setField(isset($args['sortFiled']) ? $args['sortFiled'] : 'update_time')

@@ -78,7 +78,7 @@ class Author
      * Get author data
      *
      * @param mixed $authorId
-     * @param null $fields
+     * @param mixed $fields
      * @return array
      * @throws NoSuchEntityException
      */
@@ -146,10 +146,10 @@ class Author
         foreach ($keys as $key) {
             if (null === $fields || array_key_exists($key, $fields)) {
                 $method = 'get' . str_replace(
-                        '_',
-                        '',
-                        ucwords($key, '_')
-                    );
+                    '_',
+                    '',
+                    ucwords($key, '_')
+                );
                 $data[$key] = $author->$method();
                 if ($key === 'author_url') {
                     $data[$key] = str_replace(
