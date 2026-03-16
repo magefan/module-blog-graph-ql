@@ -76,14 +76,21 @@ class Tag
     /**
      * Get tag data
      *
-     * @param string $tagId
+     * @param mixed $tagId
      * @return array
      * @throws NoSuchEntityException
      */
-    public function getData(string $tagId): array
+    public function getData($tagId): array
     {
-        $tag = $this->tagRepository->getFactory()->create();
-        $tag->getResource()->load($tag, $tagId);
+        if (is_object($tagId)) {
+           $tag = $tagId;
+        } else {
+            try {
+                $tag = $this->tagRepository->getById((int)$tagId);
+            } catch (\Exception $e) {
+                throw new NoSuchEntityException();
+            }
+        }
 
         if (!$tag->isActive()) {
             throw new NoSuchEntityException();

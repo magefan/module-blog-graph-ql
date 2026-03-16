@@ -34,6 +34,9 @@ type Query {
     blogCategories(
         storeId: Int = 0 @doc(description: "Specifies the store view ID to filter the results. The default value is 0, meaning no specific store filter applied.")
     ):  blogCategoriesOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Categories") @doc(description: "")
+    blogAuthors(
+        storeId: Int = 0 @doc(description: "Specifies the store view ID to filter the results. The default value is 0, meaning no specific store filter applied.")
+    ):  blogAuthorsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Authors") @doc(description: "")
 }
 
 type Mutation {
@@ -101,6 +104,11 @@ type blogTagsOutput {
 type blogCategoriesOutput {
     total_count: Int @doc(description: "")
     items: [BlogCategory] @doc(description: "")
+}
+
+type blogAuthorsOutput {
+    total_count: Int @doc(description: "")
+    items: [BlogAuthor] @doc(description: "")
 }
 
 type BlogPost implements RoutableInterface {

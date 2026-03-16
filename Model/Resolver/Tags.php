@@ -104,7 +104,7 @@ class Tags implements ResolverInterface
         $items = $searchResult->getItems();
 
         foreach ($items as $k => $data) {
-            $items[$k] = $this->tagDataProvider->getData($data['tag_id']);
+            $items[$k] = $this->tagDataProvider->getData($data);
         }
 
         return [

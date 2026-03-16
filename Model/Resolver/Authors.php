@@ -14,20 +14,20 @@ use Magento\Framework\GraphQl\Query\Resolver\Argument\SearchCriteria\Builder as 
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
-use Magefan\Blog\Api\PostRepositoryInterface;
+use Magefan\Blog\Api\AuthorRepositoryInterface;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\App\ScopeResolverInterface;
 
-class Posts implements ResolverInterface
+class Authors implements ResolverInterface
 {
     /**
      * @var SearchCriteriaBuilder
      */
     private $searchCriteriaBuilder;
     /**
-     * @var PostRepositoryInterface
+     * @var AuthorRepositoryInterface
      */
-    private $postRepository;
+    private $authorRepository;
 
     /**
      * @var SortOrderBuilder
@@ -35,9 +35,9 @@ class Posts implements ResolverInterface
     protected $sortOrderBuilder;
 
     /**
-     * @var DataProvider\Post
+     * @var DataProvider\Author
      */
-    protected $postDataProvider;
+    protected $authorDataProvider;
     /**
      * @var FilterBuilder
      */
@@ -53,28 +53,28 @@ class Posts implements ResolverInterface
     private $scopeResolver;
 
     /**
-     * Posts constructor.
+     * Authors constructor.
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param PostRepositoryInterface $postRepository
+     * @param AuthorRepositoryInterface $authorRepository
      * @param SortOrderBuilder $sortOrderBuilder
-     * @param DataProvider\Post $postDataProvider
+     * @param DataProvider\Author $authorDataProvider
      * @param FilterBuilder $filterBuilder
      * @param FilterGroupBuilder $filterGroupBuilder
      * @param ScopeResolverInterface $scopeResolver
      */
     public function __construct(
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        PostRepositoryInterface $postRepository,
+        AuthorRepositoryInterface $authorRepository,
         SortOrderBuilder $sortOrderBuilder,
-        DataProvider\Post $postDataProvider,
+        DataProvider\Author $authorDataProvider,
         FilterBuilder $filterBuilder,
         FilterGroupBuilder $filterGroupBuilder,
         ScopeResolverInterface $scopeResolver
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->postRepository = $postRepository;
+        $this->authorRepository = $authorRepository;
         $this->sortOrderBuilder = $sortOrderBuilder;
-        $this->postDataProvider = $postDataProvider;
+        $this->authorDataProvider = $authorDataProvider;
         $this->filterBuilder = $filterBuilder;
         $this->filterGroupBuilder = $filterGroupBuilder;
         $this->scopeResolver = $scopeResolver;
@@ -90,7 +90,7 @@ class Posts implements ResolverInterface
         ?array $args = null
     ) {
         $storeId = (int)$context->getExtensionAttributes()->getStore()->getId();
-        $searchCriteria = $this->searchCriteriaBuilder->build('di_build_magefan_blog_post', $args);
+        $searchCriteria = $this->searchCriteriaBuilder->build('di_build_magefan_blog_authot', $args);
         $statusFilter = $this->filterBuilder
             ->setField('is_active')
             ->setValue(1)
@@ -109,21 +109,17 @@ class Posts implements ResolverInterface
             ->create();
         $filterGroups[] = $this->filterGroupBuilder->addFilter($scopeFilter)->create();
 
-        if (isset($args['filter']['post_id']['in'])) {
-            $postIdFilter = $this->filterBuilder
-                ->setField('post_id')
-                ->setValue($args['filter']['post_id']['in'])
+        if (isset($args['filter']['author_id']['in'])) {
+            $authorIdFilter = $this->filterBuilder
+                ->setField('author_id')
+                ->setValue($args['filter']['author_id']['in'])
                 ->setConditionType('in')
                 ->create();
-            $filterGroups[] = $this->filterGroupBuilder->addFilter($postIdFilter)->create();
+            $filterGroups[] = $this->filterGroupBuilder->addFilter($authorIdFilter)->create();
         }
 
         $searchCriteria->setFilterGroups($filterGroups);
 
-        array_key_exists('allPosts', $args) && $args['allPosts'] ?:
-            $searchCriteria
-                ->setPageSize($args['pageSize'])
-                ->setCurrentPage($args['currentPage']);
 
         if (isset($args['sort'])) {
             $sortOrder = $this->sortOrderBuilder
@@ -133,30 +129,13 @@ class Posts implements ResolverInterface
             $searchCriteria->setSortOrders([$sortOrder]);
         }
 
-        $searchResult = $this->postRepository->getList($searchCriteria);
-
-        //possible division by 0
-        if ($searchCriteria->getPageSize()) {
-            $maxPages = ceil($searchResult->getTotalCount() / $searchCriteria->getPageSize());
-        } else {
-            $maxPages = 0;
-        }
-
-        $currentPage = $searchCriteria->getCurrentPage();
-        if ($searchCriteria->getCurrentPage() > $maxPages && $searchResult->getTotalCount() > 0) {
-            throw new GraphQlInputException(
-                __(
-                    'currentPage value %1 specified is greater than the %2 page(s) available.',
-                    [$currentPage, $maxPages]
-                )
-            );
-        }
+        $searchResult = $this->authorRepository->getList($searchCriteria);
 
         $items = $searchResult->getItems();
         $fields = $info ? $info->getFieldSelection(10) : null;
 
         foreach ($items as $k => $data) {
-            $items[$k] = $this->postDataProvider->getData(
+            $items[$k] = $this->authorDataProvider->getData(
                 $data,
                 isset($fields['items']) ? $fields['items'] : null,
                 $storeId
@@ -165,7 +144,6 @@ class Posts implements ResolverInterface
 
         return [
             'total_count' => $searchResult->getTotalCount(),
-            'total_pages' => $maxPages,
             'items' => $items
         ];
     }

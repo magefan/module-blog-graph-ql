@@ -77,14 +77,22 @@ class Author
     /**
      * Get author data
      *
-     * @param string $authorId
+     * @param mixed $authorId
+     * @param null $fields
      * @return array
      * @throws NoSuchEntityException
      */
-    public function getData(string $authorId): array
+    public function getData($authorId, $fields = null): array
     {
-        $author = $this->authorRepository->getFactory()->create();
-        $author->getResource()->load($author, $authorId);
+        if (is_object($authorId)) {
+            $author = $authorId;
+        } else {
+            try {
+                $author = $this->authorRepository->getById((int)$authorId);
+            } catch (\Exception $e) {
+                throw new NoSuchEntityException();
+            }
+        }
 
         if (!$author->isActive()) {
             throw new NoSuchEntityException();
@@ -93,7 +101,7 @@ class Author
         $data = [];
         $this->state->emulateAreaCode(
             Area::AREA_FRONTEND,
-            function () use ($author, &$data) {
+            function () use ($author, $fields, &$data) {
                 $themeId = $this->scopeConfig->getValue(
                     'design/theme/theme_id',
                     ScopeInterface::SCOPE_STORE
@@ -101,7 +109,7 @@ class Author
                 $theme = $this->themeProvider->getThemeById($themeId);
                 $this->design->setDesignTheme($theme, Area::AREA_FRONTEND);
 
-                $data = $this->getDynamicData($author);
+                $data = $this->getDynamicData($author, $fields);
 
                 return $data;
             }
@@ -136,18 +144,20 @@ class Author
         $data['author_id'] = $author->getId();
 
         foreach ($keys as $key) {
-            $method = 'get' . str_replace(
-                '_',
-                '',
-                ucwords($key, '_')
-            );
-            $data[$key] = $author->$method();
-            if ($key === 'author_url') {
-                $data[$key] = str_replace(
-                    '/' . $this->scopeResolver->getScope()->getCode() . '/',
-                    '/',
-                    $data[$key]
-                );
+            if (null === $fields || array_key_exists($key, $fields)) {
+                $method = 'get' . str_replace(
+                        '_',
+                        '',
+                        ucwords($key, '_')
+                    );
+                $data[$key] = $author->$method();
+                if ($key === 'author_url') {
+                    $data[$key] = str_replace(
+                        '/' . $this->scopeResolver->getScope()->getCode() . '/',
+                        '/',
+                        $data[$key]
+                    );
+                }
             }
         }
 
