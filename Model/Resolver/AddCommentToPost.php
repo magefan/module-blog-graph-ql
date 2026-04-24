@@ -20,7 +20,9 @@ use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\Framework\GraphQl\Exception\GraphQlNoSuchEntityException;
 use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Psr\Log\LoggerInterface;
 
 class AddCommentToPost implements ResolverInterface
 {
@@ -45,22 +47,30 @@ class AddCommentToPost implements ResolverInterface
     private $customerRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * AddCommentToPost constructor.
      * @param ScopeConfigInterface $scopeConfig
      * @param CommentRepositoryInterface $commentRepository
      * @param PostRepositoryInterface $postRepository
      * @param CustomerRepositoryInterface $customerRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         CommentRepositoryInterface $commentRepository,
         PostRepositoryInterface $postRepository,
-        CustomerRepositoryInterface $customerRepository
+        CustomerRepositoryInterface $customerRepository,
+        LoggerInterface $logger
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->commentRepository = $commentRepository;
         $this->postRepository = $postRepository;
         $this->customerRepository = $customerRepository;
+        $this->logger = $logger;
     }
 
     /**
@@ -162,8 +172,11 @@ class AddCommentToPost implements ResolverInterface
             }
 
             $this->commentRepository->save($comment);
-        } catch (\Exception $e) {
-            throw new GraphQlNoSuchEntityException(__($e->getMessage()));
+        } catch (LocalizedException $e) {
+            throw new GraphQlInputException(__($e->getMessage()));
+        } catch (\Throwable $e) {
+            $this->logger->critical($e);
+            throw new GraphQlInputException(__('Could not save the comment.'));
         }
 
         $commentsCollection = $post->getComments()
