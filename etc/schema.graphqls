@@ -40,11 +40,11 @@ type Query {
 }
 
 type Mutation {
-    addCommentToPost(
+    addCommentToBlogPost(
         pageSize: Int = 5 @doc(description: "Specifies the maximum number of results to return at once. This attribute is optional."),
         currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1."),
-        input: addCommentToPostInput
-    ): addCommentToPostOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\AddCommentToPost") @doc(description: "")
+        input: addCommentToBlogPostInput
+    ): addCommentToBlogPostOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\AddCommentToPost") @doc(description: "")
 }
 
 input BlogPostsFilterInput {
@@ -60,7 +60,7 @@ input BlogPostsFilterInput {
     or: BlogPostsFilterInput @doc(description: "The keyword required to perform a logical OR comparison")
 }
 
-input addCommentToPostInput {
+input addCommentToBlogPostInput {
     post_id: Int!
     text: String!
     author_nickname: String!
@@ -68,7 +68,7 @@ input addCommentToPostInput {
     parent_id: Int!
 }
 
-type addCommentToPostOutput {
+type addCommentToBlogPostOutput {
     total_count: Int @doc(description: "")
     total_pages: Int @doc(description: "")
     comments: [BlogComment]
