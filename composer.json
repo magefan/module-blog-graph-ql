@@ -9,6 +9,9 @@
             "Magefan\\BlogGraphQl\\": ""
         }
     },
+    "require": {
+        "magefan/module-blog": ">=2.12.0"
+    },
     "require-dev": {
         "magento/magento-coding-standard": "^41",
         "phpstan/phpstan": "^2.1",
