@@ -52,25 +52,34 @@ class AddCommentToPost implements ResolverInterface
     private $logger;
 
     /**
+     * @var DataProvider\Comment
+     */
+    private $commentDataProvider;
+
+    /**
      * AddCommentToPost constructor.
      * @param ScopeConfigInterface $scopeConfig
      * @param CommentRepositoryInterface $commentRepository
      * @param PostRepositoryInterface $postRepository
      * @param CustomerRepositoryInterface $customerRepository
      * @param LoggerInterface $logger
+     * @param DataProvider\Comment|null $commentDataProvider
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         CommentRepositoryInterface $commentRepository,
         PostRepositoryInterface $postRepository,
         CustomerRepositoryInterface $customerRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ?DataProvider\Comment $commentDataProvider = null
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->commentRepository = $commentRepository;
         $this->postRepository = $postRepository;
         $this->customerRepository = $customerRepository;
         $this->logger = $logger;
+        $this->commentDataProvider = $commentDataProvider
+            ?: \Magento\Framework\App\ObjectManager::getInstance()->get(DataProvider\Comment::class);
     }
 
     /**
@@ -207,10 +216,14 @@ class AddCommentToPost implements ResolverInterface
 
         $comments = [];
         foreach ($commentsCollection as $item) {
-            $comments[] = $item->getDynamicData(isset($fields['comments']) ? $fields['comments'] : null);
+            $comments[] = $this->commentDataProvider->getDynamicData(
+                $item,
+                isset($fields['comments']) ? $fields['comments'] : null
+            );
         }
 
         return [
+            'total_count' => $commentsCollection->getSize(),
             'total_pages' => $maxPages,
             'comments' => $comments
         ];

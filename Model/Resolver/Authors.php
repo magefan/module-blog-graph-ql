@@ -118,6 +118,16 @@ class Authors implements ResolverInterface
             $filterGroups[] = $this->filterGroupBuilder->addFilter($authorIdFilter)->create();
         }
 
+        $activePostAuthorIds = $this->authorDataProvider->getActivePostAuthorIds();
+        if (null !== $activePostAuthorIds) {
+            $activeAuthorFilter = $this->filterBuilder
+                ->setField('author_id')
+                ->setValue($activePostAuthorIds ?: [0])
+                ->setConditionType('in')
+                ->create();
+            $filterGroups[] = $this->filterGroupBuilder->addFilter($activeAuthorFilter)->create();
+        }
+
         $searchCriteria->setFilterGroups($filterGroups);
 
         if (isset($args['sort'])) {

@@ -91,6 +91,7 @@ type EntityUrl @doc(description: "") {
 }
 
 type blogPostsOutput implements RoutableInterface {
+    redirect_code: Int! @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\RedirectCode") @doc(description: "Contains 0 when there is no redirect error.")
     total_count: Int @doc(description: "")
     total_pages: Int @doc(description: "")
     items: [BlogPost] @doc(description: "An array of Blog posts")
@@ -112,6 +113,7 @@ type blogAuthorsOutput {
 }
 
 type BlogPost implements RoutableInterface {
+    redirect_code: Int! @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\RedirectCode") @doc(description: "Contains 0 when there is no redirect error.")
     post_id: Int @doc(description: "Id of the Blog Post")
     post_url: String @doc(description: "Blog Post URL")
     identifier: String @doc(description: "URL key of Blog Post")
@@ -164,6 +166,7 @@ type BlogPost implements RoutableInterface {
 }
 
 type BlogCategory implements RoutableInterface {
+    redirect_code: Int! @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\RedirectCode") @doc(description: "Contains 0 when there is no redirect error.")
     category_id: Int @doc(description: "Id of the Blog Post Category")
     parent_category_id: Int @doc(description: "Id of the Blog Post Parent Category")
     category_url: String @doc(description: "URL of the Blog Post Category")
@@ -195,6 +198,7 @@ type BlogCategory implements RoutableInterface {
 }
 
 type BlogTag implements RoutableInterface {
+    redirect_code: Int! @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\RedirectCode") @doc(description: "Contains 0 when there is no redirect error.")
     tag_id: Int @doc(description: "Id of the Blog Post Tag")
     tag_url: String @doc(description: "URL of Blog Tag")
     identifier: String @doc(description: "URL key of Blog Tag")
@@ -215,6 +219,7 @@ type BlogTag implements RoutableInterface {
 }
 
 type BlogAuthor implements RoutableInterface {
+    redirect_code: Int! @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\RedirectCode") @doc(description: "Contains 0 when there is no redirect error.")
     author_id: Int @doc(description: "Id of the Blog Post Author")
     identifier: String @doc(description: "URL key of Blog Author")
     title: String @doc(description: "Blog Author title")
@@ -250,6 +255,7 @@ input BlogCommentsFilterInput {
 }
 
 type blogCommentsOutput implements RoutableInterface {
+    redirect_code: Int! @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\RedirectCode") @doc(description: "Contains 0 when there is no redirect error.")
     total_count: Int @doc(description: "")
     total_pages: Int @doc(description: "")
     items: [BlogComment] @doc(description: "")
