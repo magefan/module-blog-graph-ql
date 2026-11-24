@@ -120,7 +120,7 @@ class Post
             }
         }
 
-        if (!$post->isActive()) {
+        if (!$post->isVisibleOnStore($storeId)) {
             throw new NoSuchEntityException();
         }
 

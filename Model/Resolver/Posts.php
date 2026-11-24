@@ -17,9 +17,16 @@ use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magefan\Blog\Api\PostRepositoryInterface;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\App\ScopeResolverInterface;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Stdlib\DateTime\DateTime;
 
 class Posts implements ResolverInterface
 {
+    /**
+     * @var DateTime
+     */
+    private $date;
+
     /**
      * @var SearchCriteriaBuilder
      */
@@ -61,6 +68,7 @@ class Posts implements ResolverInterface
      * @param FilterBuilder $filterBuilder
      * @param FilterGroupBuilder $filterGroupBuilder
      * @param ScopeResolverInterface $scopeResolver
+     * @param DateTime|null $date
      */
     public function __construct(
         SearchCriteriaBuilder $searchCriteriaBuilder,
@@ -69,7 +77,8 @@ class Posts implements ResolverInterface
         DataProvider\Post $postDataProvider,
         FilterBuilder $filterBuilder,
         FilterGroupBuilder $filterGroupBuilder,
-        ScopeResolverInterface $scopeResolver
+        ScopeResolverInterface $scopeResolver,
+        ?DateTime $date = null
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->postRepository = $postRepository;
@@ -78,6 +87,7 @@ class Posts implements ResolverInterface
         $this->filterBuilder = $filterBuilder;
         $this->filterGroupBuilder = $filterGroupBuilder;
         $this->scopeResolver = $scopeResolver;
+        $this->date = $date ?: ObjectManager::getInstance()->get(DateTime::class);
     }
     /**
      * @inheritdoc
@@ -99,6 +109,13 @@ class Posts implements ResolverInterface
 
         $filterGroups = $searchCriteria->getFilterGroups();
         $filterGroups[] = $this->filterGroupBuilder->addFilter($statusFilter)->create();
+
+        $publishTimeFilter = $this->filterBuilder
+            ->setField('publish_time')
+            ->setValue($this->date->gmtDate())
+            ->setConditionType('lteq')
+            ->create();
+        $filterGroups[] = $this->filterGroupBuilder->addFilter($publishTimeFilter)->create();
 
         $scope = $this->scopeResolver->getScope()->getId();
 
