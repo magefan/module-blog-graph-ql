@@ -9,6 +9,8 @@ namespace Magefan\BlogGraphQl\Model\Resolver;
 
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\FilterGroupBuilder;
+use Magefan\BlogGraphQl\Model\StoreIdResolver;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ScopeResolverInterface;
 use Magento\Framework\GraphQl\Query\Resolver\Argument\SearchCriteria\Builder as SearchCriteriaBuilder;
 use Magento\Framework\GraphQl\Config\Element\Field;
@@ -46,6 +48,11 @@ class Tags implements ResolverInterface
     private $scopeResolver;
 
     /**
+     * @var StoreIdResolver
+     */
+    private $storeIdResolver;
+
+    /**
      * Comments constructor.
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param TagRepositoryInterface $tagRepository
@@ -53,6 +60,7 @@ class Tags implements ResolverInterface
      * @param FilterBuilder $filterBuilder
      * @param FilterGroupBuilder $filterGroupBuilder
      * @param ScopeResolverInterface $scopeResolver
+     * @param StoreIdResolver|null $storeIdResolver
      */
     public function __construct(
         SearchCriteriaBuilder $searchCriteriaBuilder,
@@ -60,7 +68,8 @@ class Tags implements ResolverInterface
         DataProvider\Tag $tagDataProvider,
         FilterBuilder $filterBuilder,
         FilterGroupBuilder $filterGroupBuilder,
-        ScopeResolverInterface $scopeResolver
+        ScopeResolverInterface $scopeResolver,
+        ?StoreIdResolver $storeIdResolver = null
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->tagRepository = $tagRepository;
@@ -68,6 +77,7 @@ class Tags implements ResolverInterface
         $this->filterBuilder = $filterBuilder;
         $this->filterGroupBuilder = $filterGroupBuilder;
         $this->scopeResolver = $scopeResolver;
+        $this->storeIdResolver = $storeIdResolver ?: ObjectManager::getInstance()->get(StoreIdResolver::class);
     }
     /**
      * @inheritdoc
@@ -89,11 +99,11 @@ class Tags implements ResolverInterface
         $filterGroups = $searchCriteria->getFilterGroups();
         $filterGroups[] = $this->filterGroupBuilder->addFilter($statusFilter)->create();
 
-        $scope = $this->scopeResolver->getScope()->getId();
+        $storeId = $this->storeIdResolver->getStoreId($args);
 
         $scopeFilter = $this->filterBuilder
             ->setField('store_id')
-            ->setValue($args['storeId'] ?? $scope)
+            ->setValue($storeId)
             ->setConditionType('eq')
             ->create();
         $filterGroups[] = $this->filterGroupBuilder->addFilter($scopeFilter)->create();
@@ -102,9 +112,14 @@ class Tags implements ResolverInterface
 
         $searchResult = $this->tagRepository->getList($searchCriteria);
         $items = $searchResult->getItems();
+        $fields = $info ? $info->getFieldSelection(10) : null;
 
         foreach ($items as $k => $data) {
-            $items[$k] = $this->tagDataProvider->getData($data);
+            $items[$k] = $this->tagDataProvider->getData(
+                $data,
+                isset($fields['items']) ? $fields['items'] : null,
+                $storeId
+            );
         }
 
         return [

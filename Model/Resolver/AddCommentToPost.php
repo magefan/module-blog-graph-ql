@@ -22,6 +22,7 @@ use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\App\ObjectManager;
 use Psr\Log\LoggerInterface;
 
 class AddCommentToPost implements ResolverInterface
@@ -52,25 +53,34 @@ class AddCommentToPost implements ResolverInterface
     private $logger;
 
     /**
+     * @var DataProvider\Comment
+     */
+    private $commentDataProvider;
+
+    /**
      * AddCommentToPost constructor.
      * @param ScopeConfigInterface $scopeConfig
      * @param CommentRepositoryInterface $commentRepository
      * @param PostRepositoryInterface $postRepository
      * @param CustomerRepositoryInterface $customerRepository
      * @param LoggerInterface $logger
+     * @param DataProvider\Comment|null $commentDataProvider
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         CommentRepositoryInterface $commentRepository,
         PostRepositoryInterface $postRepository,
         CustomerRepositoryInterface $customerRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ?DataProvider\Comment $commentDataProvider = null
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->commentRepository = $commentRepository;
         $this->postRepository = $postRepository;
         $this->customerRepository = $customerRepository;
         $this->logger = $logger;
+        $this->commentDataProvider = $commentDataProvider
+            ?: ObjectManager::getInstance()->get(DataProvider\Comment::class);
     }
 
     /**
@@ -91,6 +101,7 @@ class AddCommentToPost implements ResolverInterface
             throw new GraphQlInputException(__('Comment should be specified'));
         }
 
+        $storeId = (int)$context->getExtensionAttributes()->getStore()->getId();
         $postId = (int)$args['input']['post_id'];
         $text = $args['input']['text'];
         $parentId = empty($args['input']['parent_id']) ?  0 : $args['input']['parent_id'];
@@ -140,12 +151,12 @@ class AddCommentToPost implements ResolverInterface
 
         try {
             try {
-                $post = $this->postRepository->getById($postId);
+                $post = $this->postRepository->getById($postId, false, $storeId);
             } catch (NoSuchEntityException $e) {
                 throw new GraphQlNoSuchEntityException(__('Blog post is not longer exist.'));
             }
 
-            if (!$post->getIsActive()) {
+            if (!$post->isVisibleOnStore($storeId)) {
                 throw new GraphQlNoSuchEntityException(__('You cannot post comment. Blog post is not longer exist.'));
             }
 
@@ -207,7 +218,10 @@ class AddCommentToPost implements ResolverInterface
 
         $comments = [];
         foreach ($commentsCollection as $item) {
-            $comments[] = $item->getDynamicData(isset($fields['comments']) ? $fields['comments'] : null);
+            $comments[] = $this->commentDataProvider->getDynamicData(
+                $item,
+                isset($fields['comments']) ? $fields['comments'] : null
+            );
         }
 
         return [

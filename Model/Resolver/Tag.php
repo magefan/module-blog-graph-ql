@@ -40,9 +40,17 @@ class Tag implements ResolverInterface
         ?array $value = null,
         ?array $args = null
     ) {
+        $storeId = (int)$context->getExtensionAttributes()->getStore()->getId();
         $tagId = $this->getTagId($args);
-        $tagData = $this->getTagData($tagId);
-        return  $tagData;
+        $fields = $info ? $info->getFieldSelection(10) : null;
+
+        try {
+            $tagData = $this->tagDataProvider->getData($tagId, $fields, $storeId);
+        } catch (NoSuchEntityException $e) {
+            throw new GraphQlNoSuchEntityException(__($e->getMessage()), $e);
+        }
+
+        return $tagData;
     }
 
     /**
@@ -59,22 +67,5 @@ class Tag implements ResolverInterface
         }
 
         return (string)$args['id'];
-    }
-
-    /**
-     * Get tag data
-     *
-     * @param string $tagId
-     * @return array
-     * @throws GraphQlNoSuchEntityException
-     */
-    private function getTagData(string $tagId): array
-    {
-        try {
-            $tagData = $this->tagDataProvider->getData($tagId);
-        } catch (NoSuchEntityException $e) {
-            throw new GraphQlNoSuchEntityException(__($e->getMessage()), $e);
-        }
-        return $tagData;
     }
 }

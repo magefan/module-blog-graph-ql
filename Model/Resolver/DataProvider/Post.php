@@ -7,10 +7,13 @@ declare (strict_types = 1);
 
 namespace Magefan\BlogGraphQl\Model\Resolver\DataProvider;
 
+use Magefan\Blog\Api\AuthorRepositoryInterface;
+use Magefan\Blog\Api\CategoryRepositoryInterface;
 use Magefan\Blog\Api\PostRepositoryInterface;
 use Magefan\Blog\Model\Config;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ScopeResolverInterface;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -66,6 +69,16 @@ class Post
     private $scopeResolver;
 
     /**
+     * @var CategoryRepositoryInterface
+     */
+    private $categoryRepository;
+
+    /**
+     * @var AuthorRepositoryInterface
+     */
+    private $authorRepository;
+
+    /**
      * Post constructor.
      * @param PostRepositoryInterface $postRepository
      * @param Tag $tagDataProvider
@@ -76,6 +89,8 @@ class Post
      * @param ThemeProviderInterface $themeProvider
      * @param ScopeConfigInterface $scopeConfig
      * @param ScopeResolverInterface $scopeResolver
+     * @param CategoryRepositoryInterface|null $categoryRepository
+     * @param AuthorRepositoryInterface|null $authorRepository
      */
     public function __construct(
         PostRepositoryInterface $postRepository,
@@ -86,7 +101,9 @@ class Post
         DesignInterface $design,
         ThemeProviderInterface $themeProvider,
         ScopeConfigInterface $scopeConfig,
-        ScopeResolverInterface $scopeResolver
+        ScopeResolverInterface $scopeResolver,
+        ?CategoryRepositoryInterface $categoryRepository = null,
+        ?AuthorRepositoryInterface $authorRepository = null
     ) {
         $this->postRepository = $postRepository;
         $this->tagDataProvider = $tagDataProvider;
@@ -97,6 +114,10 @@ class Post
         $this->themeProvider = $themeProvider;
         $this->scopeConfig = $scopeConfig;
         $this->scopeResolver = $scopeResolver;
+        $this->categoryRepository = $categoryRepository
+            ?: ObjectManager::getInstance()->get(CategoryRepositoryInterface::class);
+        $this->authorRepository = $authorRepository
+            ?: ObjectManager::getInstance()->get(AuthorRepositoryInterface::class);
     }
 
     /**
@@ -110,11 +131,13 @@ class Post
      */
     public function getData($postId, $fields = null, $storeId = null): array
     {
+        $storeId = null === $storeId ? null : (int)$storeId;
+
         if (is_object($postId)) {
             $post = $postId;
         } else {
             try {
-                $post = $this->postRepository->getById((int)$postId);
+                $post = $this->postRepository->getById((int)$postId, false, $storeId);
             } catch (\Exception $e) {
                 throw new NoSuchEntityException();
             }
@@ -134,7 +157,9 @@ class Post
                 );
                 $theme = $this->themeProvider->getThemeById($themeId);
                 $this->design->setDesignTheme($theme, Area::AREA_FRONTEND);
-                $post->setStoreId((int)$storeId);
+                if (null !== $storeId) {
+                    $post->setStoreId($storeId);
+                }
                 $data = $this->getDynamicData($post, $fields);
 
                 return $data;
@@ -255,7 +280,7 @@ class Post
 
         if (null === $fields || array_key_exists('categories', $fields)) {
             $categories = [];
-            foreach ($post->getParentCategories() as $category) {
+            foreach ($this->getParentCategories($post) as $category) {
                 $categories[] = $this->categoryDataProvider->getDynamicData(
                     $category,
                     isset($fields['categories']) ? $fields['categories'] : null
@@ -265,7 +290,7 @@ class Post
         }
 
         if (null === $fields || array_key_exists('author', $fields)) {
-            if ($author = $post->getAuthor()) {
+            if ($author = $this->getAuthor($post)) {
                 $data['author'] = $this->authorDataProvider->getDynamicData(
                     $author
                     //isset($fields['author']) ? $fields['author'] : null
@@ -278,5 +303,68 @@ class Post
         }
 
         return $data;
+    }
+
+    /**
+     * Get post categories loaded for the post store view
+     *
+     * @param mixed $post
+     * @return array
+     */
+    private function getParentCategories($post): array
+    {
+        $storeId = (int)$post->getStoreId();
+        if (!$storeId) {
+            return $post->getParentCategories();
+        }
+
+        $categories = [];
+        foreach ((array)$post->getCategories() as $categoryId) {
+            try {
+                $category = $this->categoryRepository->getById((int)$categoryId, false, $storeId);
+            } catch (NoSuchEntityException $e) {
+                continue;
+            }
+
+            if ($category->isVisibleOnStore($storeId)) {
+                $category->setStoreId($storeId);
+                $categories[$categoryId] = $category;
+            }
+        }
+        uasort($categories, [$post, 'sortByPositionDesc']);
+
+        return $categories;
+    }
+
+    /**
+     * Get post author loaded for the post store view
+     *
+     * @param mixed $post
+     * @return mixed
+     */
+    private function getAuthor($post)
+    {
+        $storeId = (int)$post->getStoreId();
+        if (!$storeId) {
+            return $post->getAuthor();
+        }
+
+        $authorId = (int)$post->getData('author_id');
+        if (!$authorId) {
+            return false;
+        }
+
+        try {
+            $author = $this->authorRepository->getById($authorId, false, $storeId);
+        } catch (NoSuchEntityException $e) {
+            return false;
+        }
+
+        if (!$author->isVisibleOnStore($storeId)) {
+            return false;
+        }
+        $author->setStoreId($storeId);
+
+        return $author;
     }
 }

@@ -21,7 +21,7 @@ type Query {
         sort: [String] @doc(description: "Specifies which attribute to sort on, and whether to return the results in ascending or descending order.")
         sortFiled: String = "publish_time" @doc(description: "Specifies what field to sort posts by. The default value is publish_time.")
         allPosts: Boolean @doc(description: "If true get all posts.")
-        storeId: Int = 0 @doc(description: "Specifies the store view ID to filter the results. The default value is 0, meaning no specific store filter applied.")
+        storeId: Int = 0 @doc(description: "Specifies the store view ID to filter the results. The default value is 0, meaning the current store view is used.")
     ): blogPostsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Posts") @doc(description: "The posts query searches for posts that match the criteria specified in the search and filter attributes")
     blogComments(
         filter: BlogCommentsFilterInput @doc(description: "Identifies which comment attributes to search for and return."),
@@ -29,13 +29,13 @@ type Query {
         currentPage: Int = 1 @doc(description: "Specifies which page of results to return. The default value is 1."),
     ):blogCommentsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Comments") @doc(description: "The comments query searches for posts that match the criteria specified in the search and filter attributes")
     blogTags(
-        storeId: Int = 0 @doc(description: "Specifies the store view ID to filter the results. The default value is 0, meaning no specific store filter applied.")
+        storeId: Int = 0 @doc(description: "Specifies the store view ID to filter the results. The default value is 0, meaning the current store view is used.")
     ): blogTagsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Tags") @doc(description: "")
     blogCategories(
-        storeId: Int = 0 @doc(description: "Specifies the store view ID to filter the results. The default value is 0, meaning no specific store filter applied.")
+        storeId: Int = 0 @doc(description: "Specifies the store view ID to filter the results. The default value is 0, meaning the current store view is used.")
     ):  blogCategoriesOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Categories") @doc(description: "")
     blogAuthors(
-        storeId: Int = 0 @doc(description: "Specifies the store view ID to filter the results. The default value is 0, meaning no specific store filter applied.")
+        storeId: Int = 0 @doc(description: "Specifies the store view ID to filter the results. The default value is 0, meaning the current store view is used.")
     ):  blogAuthorsOutput @resolver(class: "\\Magefan\\BlogGraphQl\\Model\\Resolver\\Authors") @doc(description: "")
 }
 

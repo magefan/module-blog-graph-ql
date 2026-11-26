@@ -40,9 +40,17 @@ class Author implements ResolverInterface
         ?array $value = null,
         ?array $args = null
     ) {
+        $storeId = (int)$context->getExtensionAttributes()->getStore()->getId();
         $authorId = $this->getAuthorId($args);
-        $authorData = $this->getAuthorData($authorId);
-        return  $authorData;
+        $fields = $info ? $info->getFieldSelection(10) : null;
+
+        try {
+            $authorData = $this->authorDataProvider->getData($authorId, $fields, $storeId);
+        } catch (NoSuchEntityException $e) {
+            throw new GraphQlNoSuchEntityException(__($e->getMessage()), $e);
+        }
+
+        return $authorData;
     }
 
     /**
@@ -59,22 +67,5 @@ class Author implements ResolverInterface
         }
 
         return (string)$args['id'];
-    }
-
-    /**
-     * Get author data
-     *
-     * @param string $authorId
-     * @return array
-     * @throws GraphQlNoSuchEntityException
-     */
-    private function getAuthorData(string $authorId): array
-    {
-        try {
-            $authorData = $this->authorDataProvider->getData($authorId);
-        } catch (NoSuchEntityException $e) {
-            throw new GraphQlNoSuchEntityException(__($e->getMessage()), $e);
-        }
-        return $authorData;
     }
 }
