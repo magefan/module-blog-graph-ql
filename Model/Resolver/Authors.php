@@ -16,6 +16,8 @@ use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magefan\Blog\Api\AuthorRepositoryInterface;
 use Magento\Framework\Api\SortOrderBuilder;
+use Magefan\BlogGraphQl\Model\StoreIdResolver;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ScopeResolverInterface;
 
 class Authors implements ResolverInterface
@@ -53,6 +55,11 @@ class Authors implements ResolverInterface
     private $scopeResolver;
 
     /**
+     * @var StoreIdResolver
+     */
+    private $storeIdResolver;
+
+    /**
      * Authors constructor.
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param AuthorRepositoryInterface $authorRepository
@@ -61,6 +68,7 @@ class Authors implements ResolverInterface
      * @param FilterBuilder $filterBuilder
      * @param FilterGroupBuilder $filterGroupBuilder
      * @param ScopeResolverInterface $scopeResolver
+     * @param StoreIdResolver|null $storeIdResolver
      */
     public function __construct(
         SearchCriteriaBuilder $searchCriteriaBuilder,
@@ -69,7 +77,8 @@ class Authors implements ResolverInterface
         DataProvider\Author $authorDataProvider,
         FilterBuilder $filterBuilder,
         FilterGroupBuilder $filterGroupBuilder,
-        ScopeResolverInterface $scopeResolver
+        ScopeResolverInterface $scopeResolver,
+        ?StoreIdResolver $storeIdResolver = null
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->authorRepository = $authorRepository;
@@ -78,6 +87,7 @@ class Authors implements ResolverInterface
         $this->filterBuilder = $filterBuilder;
         $this->filterGroupBuilder = $filterGroupBuilder;
         $this->scopeResolver = $scopeResolver;
+        $this->storeIdResolver = $storeIdResolver ?: ObjectManager::getInstance()->get(StoreIdResolver::class);
     }
     /**
      * @inheritdoc
@@ -89,7 +99,6 @@ class Authors implements ResolverInterface
         ?array $value = null,
         ?array $args = null
     ) {
-        $storeId = (int)$context->getExtensionAttributes()->getStore()->getId();
         $searchCriteria = $this->searchCriteriaBuilder->build('di_build_magefan_blog_authot', $args);
         $statusFilter = $this->filterBuilder
             ->setField('is_active')
@@ -100,11 +109,11 @@ class Authors implements ResolverInterface
         $filterGroups = $searchCriteria->getFilterGroups();
         $filterGroups[] = $this->filterGroupBuilder->addFilter($statusFilter)->create();
 
-        $scope = $this->scopeResolver->getScope()->getId();
+        $storeId = $this->storeIdResolver->getStoreId($args);
 
         $scopeFilter = $this->filterBuilder
             ->setField('store_id')
-            ->setValue($args['storeId'] ?? $scope)
+            ->setValue($storeId)
             ->setConditionType('eq')
             ->create();
         $filterGroups[] = $this->filterGroupBuilder->addFilter($scopeFilter)->create();

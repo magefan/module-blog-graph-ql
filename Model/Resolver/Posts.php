@@ -16,6 +16,7 @@ use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magefan\Blog\Api\PostRepositoryInterface;
 use Magento\Framework\Api\SortOrderBuilder;
+use Magefan\BlogGraphQl\Model\StoreIdResolver;
 use Magento\Framework\App\ScopeResolverInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Stdlib\DateTime\DateTime;
@@ -60,6 +61,11 @@ class Posts implements ResolverInterface
     private $scopeResolver;
 
     /**
+     * @var StoreIdResolver
+     */
+    private $storeIdResolver;
+
+    /**
      * Posts constructor.
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param PostRepositoryInterface $postRepository
@@ -69,6 +75,7 @@ class Posts implements ResolverInterface
      * @param FilterGroupBuilder $filterGroupBuilder
      * @param ScopeResolverInterface $scopeResolver
      * @param DateTime|null $date
+     * @param StoreIdResolver|null $storeIdResolver
      */
     public function __construct(
         SearchCriteriaBuilder $searchCriteriaBuilder,
@@ -78,7 +85,8 @@ class Posts implements ResolverInterface
         FilterBuilder $filterBuilder,
         FilterGroupBuilder $filterGroupBuilder,
         ScopeResolverInterface $scopeResolver,
-        ?DateTime $date = null
+        ?DateTime $date = null,
+        ?StoreIdResolver $storeIdResolver = null
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->postRepository = $postRepository;
@@ -88,6 +96,7 @@ class Posts implements ResolverInterface
         $this->filterGroupBuilder = $filterGroupBuilder;
         $this->scopeResolver = $scopeResolver;
         $this->date = $date ?: ObjectManager::getInstance()->get(DateTime::class);
+        $this->storeIdResolver = $storeIdResolver ?: ObjectManager::getInstance()->get(StoreIdResolver::class);
     }
     /**
      * @inheritdoc
@@ -99,7 +108,6 @@ class Posts implements ResolverInterface
         ?array $value = null,
         ?array $args = null
     ) {
-        $storeId = (int)$context->getExtensionAttributes()->getStore()->getId();
         $searchCriteria = $this->searchCriteriaBuilder->build('di_build_magefan_blog_post', $args);
         $statusFilter = $this->filterBuilder
             ->setField('is_active')
@@ -117,11 +125,11 @@ class Posts implements ResolverInterface
             ->create();
         $filterGroups[] = $this->filterGroupBuilder->addFilter($publishTimeFilter)->create();
 
-        $scope = $this->scopeResolver->getScope()->getId();
+        $storeId = $this->storeIdResolver->getStoreId($args);
 
         $scopeFilter = $this->filterBuilder
             ->setField('store_id')
-            ->setValue($args['storeId'] ?? $scope)
+            ->setValue($storeId)
             ->setConditionType('eq')
             ->create();
         $filterGroups[] = $this->filterGroupBuilder->addFilter($scopeFilter)->create();

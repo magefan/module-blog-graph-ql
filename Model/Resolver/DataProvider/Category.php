@@ -79,29 +79,32 @@ class Category
      *
      * @param mixed $categoryId
      * @param null|array $fields
+     * @param null|int|string $storeId
      * @return array
      * @throws NoSuchEntityException
      */
-    public function getData($categoryId, $fields = null): array
+    public function getData($categoryId, $fields = null, $storeId = null): array
     {
+        $storeId = null === $storeId ? null : (int)$storeId;
+
         if (is_object($categoryId)) {
             $category = $categoryId;
         } else {
             try {
-                $category = $this->categoryRepository->getById((int)$categoryId);
+                $category = $this->categoryRepository->getById((int)$categoryId, false, $storeId);
             } catch (\Exception $e) {
                 throw new NoSuchEntityException();
             }
         }
 
-        if (!$category->isActive()) {
+        if (!$category->isVisibleOnStore($storeId)) {
             throw new NoSuchEntityException();
         }
 
         $data = [];
         $this->state->emulateAreaCode(
             Area::AREA_FRONTEND,
-            function () use ($category, $fields, &$data) {
+            function () use ($category, $fields, &$data, $storeId) {
                 $themeId = $this->scopeConfig->getValue(
                     'design/theme/theme_id',
                     ScopeInterface::SCOPE_STORE
@@ -109,6 +112,9 @@ class Category
                 $theme = $this->themeProvider->getThemeById($themeId);
                 $this->design->setDesignTheme($theme, Area::AREA_FRONTEND);
 
+                if (null !== $storeId) {
+                    $category->setStoreId($storeId);
+                }
                 $data = $this->getDynamicData($category, $fields);
 
                 return $data;
@@ -156,7 +162,7 @@ class Category
 
             $categoryData = $category;
             $parentCategories = [];
-            while ($parentCategory = $categoryData->getParentCategory()) {
+            while ($parentCategory = $this->getParentCategory($categoryData)) {
                 $parentCategories[] = $categoryData = $parentCategory;
             }
 
@@ -187,7 +193,8 @@ class Category
         }
 
         if (is_array($fields) && array_key_exists('parent_category_id', $fields)) {
-            $data['parent_category_id'] = $category->getParentCategory() ? $category->getParentCategory()->getId() : 0;
+            $parentCategory = $this->getParentCategory($category);
+            $data['parent_category_id'] = $parentCategory ? $parentCategory->getId() : 0;
         }
 
         if (is_array($fields) && array_key_exists('category_level', $fields)) {
@@ -207,5 +214,37 @@ class Category
         }
 
         return $data;
+    }
+
+    /**
+     * Get parent category loaded for the category store view
+     *
+     * @param mixed $category
+     * @return mixed
+     */
+    private function getParentCategory($category)
+    {
+        $storeId = (int)$category->getStoreId();
+        if (!$storeId) {
+            return $category->getParentCategory();
+        }
+
+        $parentId = (int)$category->getParentId();
+        if (!$parentId) {
+            return false;
+        }
+
+        try {
+            $parentCategory = $this->categoryRepository->getById($parentId, false, $storeId);
+        } catch (NoSuchEntityException $e) {
+            return false;
+        }
+
+        if (!$parentCategory->isVisibleOnStore($storeId)) {
+            return false;
+        }
+        $parentCategory->setStoreId($storeId);
+
+        return $parentCategory;
     }
 }

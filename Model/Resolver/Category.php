@@ -41,11 +41,12 @@ class Category implements ResolverInterface
         ?array $value = null,
         ?array $args = null
     ) {
+        $storeId = (int)$context->getExtensionAttributes()->getStore()->getId();
         $categoryId = $this->getCategoryId($args);
         $fields = $info ? $info->getFieldSelection(10) : null;
 
         try {
-            $categoryData = $this->categoryDataProvider->getData($categoryId, $fields);
+            $categoryData = $this->categoryDataProvider->getData($categoryId, $fields, $storeId);
         } catch (NoSuchEntityException $e) {
             throw new GraphQlNoSuchEntityException(__($e->getMessage()), $e);
         }

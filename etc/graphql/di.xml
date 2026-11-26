@@ -150,4 +150,40 @@
             </argument>
         </arguments>
     </type>
+    <virtualType name="Magefan\BlogGraphQl\Model\SearchCriteria\FilterProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor">
+        <arguments>
+            <argument name="customFilters" xsi:type="array">
+                <item name="store_id" xsi:type="object">Magefan\BlogGraphQl\Model\SearchCriteria\StoreFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magefan\BlogGraphQl\Model\SearchCriteria\CollectionProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="filters" xsi:type="object">Magefan\BlogGraphQl\Model\SearchCriteria\FilterProcessor</item>
+                <item name="sorting" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\SortingProcessor</item>
+                <item name="pagination" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\PaginationProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magefan\Blog\Model\PostRepository">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">Magefan\BlogGraphQl\Model\SearchCriteria\CollectionProcessor</argument>
+        </arguments>
+    </type>
+    <type name="Magefan\Blog\Model\CategoryRepository">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">Magefan\BlogGraphQl\Model\SearchCriteria\CollectionProcessor</argument>
+        </arguments>
+    </type>
+    <type name="Magefan\Blog\Model\TagRepository">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">Magefan\BlogGraphQl\Model\SearchCriteria\CollectionProcessor</argument>
+        </arguments>
+    </type>
+    <type name="Magefan\Blog\Model\AuthorRepository">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">Magefan\BlogGraphQl\Model\SearchCriteria\CollectionProcessor</argument>
+        </arguments>
+    </type>
 </config>

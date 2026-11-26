@@ -15,6 +15,10 @@ use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magefan\Blog\Api\CommentRepositoryInterface;
+use Magefan\Blog\Api\PostRepositoryInterface;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\GraphQl\Exception\GraphQlNoSuchEntityException;
 use Magento\Framework\Api\SortOrderBuilder;
 
 class Comments implements ResolverInterface
@@ -50,6 +54,11 @@ class Comments implements ResolverInterface
     private $sortOrderBuilder;
 
     /**
+     * @var PostRepositoryInterface
+     */
+    private $postRepository;
+
+    /**
      * Comments constructor.
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param CommentRepositoryInterface $commentRepository
@@ -57,6 +66,7 @@ class Comments implements ResolverInterface
      * @param FilterBuilder $filterBuilder
      * @param FilterGroupBuilder $filterGroupBuilder
      * @param SortOrderBuilder $sortOrderBuilder
+     * @param PostRepositoryInterface|null $postRepository
      */
     public function __construct(
         SearchCriteriaBuilder $searchCriteriaBuilder,
@@ -64,7 +74,8 @@ class Comments implements ResolverInterface
         DataProvider\Comment $commentDataProvider,
         FilterBuilder $filterBuilder,
         FilterGroupBuilder $filterGroupBuilder,
-        SortOrderBuilder $sortOrderBuilder
+        SortOrderBuilder $sortOrderBuilder,
+        ?PostRepositoryInterface $postRepository = null
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->commentRepository = $commentRepository;
@@ -72,6 +83,7 @@ class Comments implements ResolverInterface
         $this->filterBuilder = $filterBuilder;
         $this->filterGroupBuilder = $filterGroupBuilder;
         $this->sortOrderBuilder = $sortOrderBuilder;
+        $this->postRepository = $postRepository ?: ObjectManager::getInstance()->get(PostRepositoryInterface::class);
     }
     /**
      * @inheritdoc
@@ -83,6 +95,23 @@ class Comments implements ResolverInterface
         ?array $value = null,
         ?array $args = null
     ) {
+        if (empty($args['filter']['post_id']['eq'])) {
+            throw new GraphQlInputException(__('Post ID should be specified'));
+        }
+
+        $storeId = (int)$context->getExtensionAttributes()->getStore()->getId();
+        $postId = (int)$args['filter']['post_id']['eq'];
+
+        try {
+            $post = $this->postRepository->getById($postId, false, $storeId);
+        } catch (NoSuchEntityException $e) {
+            throw new GraphQlNoSuchEntityException(__('Blog post is no longer exist.'), $e);
+        }
+
+        if (!$post->isVisibleOnStore($storeId)) {
+            throw new GraphQlNoSuchEntityException(__('Blog post is no longer exist.'));
+        }
+
         $parentIdFilter = $this->filterBuilder
             ->setField('parent_id')
             ->setValue(0)
@@ -95,7 +124,7 @@ class Comments implements ResolverInterface
             ->create();
         $postIdFilter = $this->filterBuilder
             ->setField('post_id')
-            ->setValue($args['filter']['post_id']['eq'])
+            ->setValue($postId)
             ->setConditionType('eq')
             ->create();
 

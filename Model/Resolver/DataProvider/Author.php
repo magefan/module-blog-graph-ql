@@ -79,29 +79,32 @@ class Author
      *
      * @param mixed $authorId
      * @param mixed $fields
+     * @param null|int|string $storeId
      * @return array
      * @throws NoSuchEntityException
      */
-    public function getData($authorId, $fields = null): array
+    public function getData($authorId, $fields = null, $storeId = null): array
     {
+        $storeId = null === $storeId ? null : (int)$storeId;
+
         if (is_object($authorId)) {
             $author = $authorId;
         } else {
             try {
-                $author = $this->authorRepository->getById((int)$authorId);
+                $author = $this->authorRepository->getById((int)$authorId, false, $storeId);
             } catch (\Exception $e) {
                 throw new NoSuchEntityException();
             }
         }
 
-        if (!$author->isActive()) {
+        if (null === $storeId ? !$author->isActive() : !$author->isVisibleOnStore($storeId)) {
             throw new NoSuchEntityException();
         }
 
         $data = [];
         $this->state->emulateAreaCode(
             Area::AREA_FRONTEND,
-            function () use ($author, $fields, &$data) {
+            function () use ($author, $fields, &$data, $storeId) {
                 $themeId = $this->scopeConfig->getValue(
                     'design/theme/theme_id',
                     ScopeInterface::SCOPE_STORE
@@ -109,6 +112,9 @@ class Author
                 $theme = $this->themeProvider->getThemeById($themeId);
                 $this->design->setDesignTheme($theme, Area::AREA_FRONTEND);
 
+                if (null !== $storeId) {
+                    $author->setStoreId($storeId);
+                }
                 $data = $this->getDynamicData($author, $fields);
 
                 return $data;

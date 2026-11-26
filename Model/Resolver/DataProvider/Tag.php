@@ -77,29 +77,33 @@ class Tag
      * Get tag data
      *
      * @param mixed $tagId
+     * @param null|array $fields
+     * @param null|int|string $storeId
      * @return array
      * @throws NoSuchEntityException
      */
-    public function getData($tagId): array
+    public function getData($tagId, $fields = null, $storeId = null): array
     {
+        $storeId = null === $storeId ? null : (int)$storeId;
+
         if (is_object($tagId)) {
             $tag = $tagId;
         } else {
             try {
-                $tag = $this->tagRepository->getById((int)$tagId);
+                $tag = $this->tagRepository->getById((int)$tagId, false, $storeId);
             } catch (\Exception $e) {
                 throw new NoSuchEntityException();
             }
         }
 
-        if (!$tag->isActive()) {
+        if (!$tag->isVisibleOnStore($storeId)) {
             throw new NoSuchEntityException();
         }
 
         $data = [];
         $this->state->emulateAreaCode(
             Area::AREA_FRONTEND,
-            function () use ($tag, &$data) {
+            function () use ($tag, $fields, &$data, $storeId) {
                 $themeId = $this->scopeConfig->getValue(
                     'design/theme/theme_id',
                     \Magento\Store\Model\ScopeInterface::SCOPE_STORE
@@ -107,7 +111,10 @@ class Tag
                 $theme = $this->themeProvider->getThemeById($themeId);
                 $this->design->setDesignTheme($theme, Area::AREA_FRONTEND);
 
-                $data = $this->getDynamicData($tag);
+                if (null !== $storeId) {
+                    $tag->setStoreId($storeId);
+                }
+                $data = $this->getDynamicData($tag, $fields);
 
                 return $data;
             }
