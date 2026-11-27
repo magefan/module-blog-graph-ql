@@ -132,7 +132,8 @@ class Comment
         if (is_array($fields) && array_key_exists('replies', $fields)) {
             $replies = [];
             foreach ($comment->getRepliesCollection() as $reply) {
-                $replies[] = $reply->getDynamicData(
+                $replies[] = $this->getDynamicData(
+                    $reply,
                     isset($fields['replies']) ? $fields['replies'] : null
                 );
             }

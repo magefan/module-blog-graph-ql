@@ -10,9 +10,12 @@ namespace Magefan\BlogGraphQl\Model\Resolver\DataProvider;
 use Magefan\Blog\Api\AuthorRepositoryInterface;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\App\ScopeResolverInterface;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Module\Manager as ModuleManager;
 use Magento\Framework\View\DesignInterface;
 use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
 use Magento\Store\Model\ScopeInterface;
@@ -50,6 +53,21 @@ class Author
     private $scopeResolver;
 
     /**
+     * @var ResourceConnection
+     */
+    private $resourceConnection;
+
+    /**
+     * @var ModuleManager
+     */
+    private $moduleManager;
+
+    /**
+     * @var array|null
+     */
+    private $activePostAuthorIds;
+
+    /**
      * Author constructor.
      * @param AuthorRepositoryInterface $authorRepository
      * @param State $state
@@ -57,6 +75,8 @@ class Author
      * @param ThemeProviderInterface $themeProvider
      * @param ScopeConfigInterface $scopeConfig
      * @param ScopeResolverInterface $scopeResolver
+     * @param ResourceConnection|null $resourceConnection
+     * @param ModuleManager|null $moduleManager
      */
     public function __construct(
         AuthorRepositoryInterface $authorRepository,
@@ -64,7 +84,9 @@ class Author
         DesignInterface $design,
         ThemeProviderInterface $themeProvider,
         ScopeConfigInterface $scopeConfig,
-        ScopeResolverInterface $scopeResolver
+        ScopeResolverInterface $scopeResolver,
+        ?ResourceConnection $resourceConnection = null,
+        ?ModuleManager $moduleManager = null
     ) {
         $this->authorRepository = $authorRepository;
         $this->state = $state;
@@ -72,6 +94,36 @@ class Author
         $this->themeProvider = $themeProvider;
         $this->scopeConfig = $scopeConfig;
         $this->scopeResolver = $scopeResolver;
+        $this->resourceConnection = $resourceConnection
+            ?: ObjectManager::getInstance()->get(ResourceConnection::class);
+        $this->moduleManager = $moduleManager
+            ?: ObjectManager::getInstance()->get(ModuleManager::class);
+    }
+
+    /**
+     * Get IDs of admin users that have at least one active post.
+     *
+     * Returns null when Magefan_BlogAuthor is enabled, as authors are separate entities there.
+     *
+     * @return array|null
+     */
+    public function getActivePostAuthorIds(): ?array
+    {
+        if ($this->moduleManager->isEnabled('Magefan_BlogAuthor')) {
+            return null;
+        }
+
+        if (null === $this->activePostAuthorIds) {
+            $connection = $this->resourceConnection->getConnection();
+            $select = $connection->select()
+                ->distinct()
+                ->from($this->resourceConnection->getTableName('magefan_blog_post'), ['author_id'])
+                ->where('is_active = ?', 1)
+                ->where('author_id > ?', 0);
+            $this->activePostAuthorIds = array_map('intval', $connection->fetchCol($select));
+        }
+
+        return $this->activePostAuthorIds;
     }
 
     /**
@@ -95,6 +147,11 @@ class Author
         }
 
         if (!$author->isActive()) {
+            throw new NoSuchEntityException();
+        }
+
+        $activePostAuthorIds = $this->getActivePostAuthorIds();
+        if (null !== $activePostAuthorIds && !in_array((int)$author->getId(), $activePostAuthorIds, true)) {
             throw new NoSuchEntityException();
         }
 
